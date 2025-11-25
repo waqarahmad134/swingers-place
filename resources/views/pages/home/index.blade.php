@@ -1,179 +1,799 @@
 @extends('layouts.app')
 @section('full-width')
-    <div class="space-y-24 py-10 md:py-10">
-        <section class="relative" data-carousel data-carousel-autoplay="false">
-            <div class="relative mx-auto max-w-6xl h-[22rem] md:h-[30rem] overflow-hidden rounded-3xl border border-gray-200 bg-gray-900 shadow-xl dark:border-gray-700">
-                @foreach ($slides as $index => $slide)
-                    <article
-                        data-carousel-slide
-                        class="absolute inset-0 h-full w-full transition-opacity duration-700 ease-in-out {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 -z-10' }}"
-                    >
-                        <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] }}" class="absolute inset-0 h-full w-full object-cover" loading="lazy">
-                        <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/30"></div>
-                        <div class="relative z-10 flex h-full flex-col justify-center gap-4 p-8 text-white sm:p-20">
-                            @if(!empty($slide['tagline']))
-                                <span class="inline-flex items-center gap-2 self-start rounded-full bg-white/20 px-4 py-1 text-xs font-semibold uppercase tracking-wider">
-                                    <span class="h-2 w-2 rounded-full bg-primary"></span> {{ $slide['tagline'] }}
-                                </span>
-                            @endif
-                            <h2 class="text-3xl font-extrabold sm:text-5xl">{{ $slide['title'] }}</h2>
-                            <p class="max-w-xl text-base text-white/80 sm:text-lg">{{ $slide['subtitle'] }}</p>
-                            @if(!empty($slide['button_label']))
-                                <div>
-                                    <a href="{{ $slide['button_url'] ?? '#' }}" class="inline-flex items-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-secondary">
-                                        {{ $slide['button_label'] }}
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.25 8.75L21 12m0 0l-3.75 3.25M21 12H3" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            @endif
-                        </div>
-                    </article>
-                @endforeach
+      
+    
+    <!-- hero section -->
+    <section class="hero">
+      <div
+        class="flex flex-col justify-center h-[500px] md:h-[700px] md:px-20 px-5 bg-[#00000021]"
+      >
+        <div
+          class="w-[204px] gap-2 py-1 h-[20px] px-2 text-[#9810FA] bg-white rounded-md flex items-center"
+        >
+          <i class="ri-sparkling-line"></i>
+          <h2 class="text-xs font-thin">#1 Social Community Platform</h2>
+        </div>
 
-                <button type="button" data-carousel-prev class="hidden md:block absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/90 dark:bg-gray-800/90 p-3 text-gray-800 dark:text-gray-200 shadow-lg transition hover:bg-white dark:hover:bg-gray-800 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary">
-                    <span class="sr-only">Previous</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 010 1.06L9.06 10l3.72 3.71a.75.75 0 11-1.06 1.06l-4.25-4.25a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-                <button type="button" data-carousel-next class="hidden md:block absolute right-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/90 dark:bg-gray-800/90 p-3 text-gray-800 dark:text-gray-200 shadow-lg transition hover:bg-white dark:hover:bg-gray-800 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary">
-                    <span class="sr-only">Next</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 010-1.06L10.94 10 7.2 6.29a.75.75 0 111.06-1.06l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06 0z" clip-rule="evenodd" />
-                    </svg>
-                </button>
+        <!-- heading -->
+        <div>
+          <h1 class="md:text-[5.6vw] text-[11vw] text-[#101828]">Connect,</h1>
+          <h1
+            class="gradient-text md:w-[22%] w-[50%] text-[11vw] -mt-4 md:-mt-8 md:text-[5.6vw]"
+          >
+            Explore,
+          </h1>
+          <h1 class="md:text-[5.6vw] text-[11vw] -mt-4 md:-mt-8 text-[#101828]">
+            Belong
+          </h1>
+        </div>
 
-                <div class="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
-                    @foreach ($slides as $index => $slide)
-                        <button type="button" data-carousel-indicator class="h-2 w-6 rounded-full transition-all duration-300 hover:w-8 cursor-pointer {{ $index === 0 ? 'bg-primary' : 'bg-white/60' }}">
-                            <span class="sr-only">Go to slide {{ $index + 1 }}</span>
-                        </button>
-                    @endforeach
-                </div>
+        <!-- paragraph -->
+        <p class="text-white text-[13px] md:text-base w-[80%] px-1 md:w-[33%]">
+          Join 50,000+ members in the most advanced social community platform
+          designed for meaningful connections and authentic experiences.
+        </p>
+
+        <!-- buttons -->
+        <div class="flex items-center mt-6 gap-3 flex-wrap">
+          <button
+            class="px-4 py-3 bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)] rounded-3xl text-white"
+          >
+            Start Free Today <i class="ri-arrow-right-line"></i>
+          </button>
+          <button class="bg-white px-3 md:px-4 py-3 rounded-3xl flex gap-3">
+            <i class="ri-play-large-line"></i> Watch Demo
+          </button>
+        </div>
+
+        <!-- numbers <i class="ri-star-fill"></i>-->
+        <div class="flex gap-4 md:gap-24 mt-6 flex-wrap">
+          <div class="text-white">
+            <h1 class="md:text-4xl text-xl">50K<i class="ri-add-line"></i></h1>
+            <h2 class="text-xs md:text-sm md:mt-1">Active Members</h2>
+          </div>
+
+          <div class="text-white">
+            <h1 class="md:text-4xl text-xl">1M<i class="ri-add-line"></i></h1>
+            <h2 class="text-xs md:text-sm md:mt-1">Connection Made</h2>
+          </div>
+
+          <div class="text-white">
+            <h1 class="md:text-4xl text-xl">500<i class="ri-add-line"></i></h1>
+            <h2 class="text-xs md:text-sm md:mt-1">Events Monthly</h2>
+          </div>
+
+          <div class="text-white">
+            <h1 class="md:text-4xl text-xl">
+              4.8 <i class="ri-star-fill"></i>
+            </h1>
+            <h2 class="text-xs md:text-sm md:mt-1">User Rating</h2>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: Choose Your Path -->
+    <section class="py-20 sm:px-0 px-5">
+      <div class="pb-[64px] mx-auto sm:max-w-[730px] max-w-full">
+        <h2
+          class="pb-6 text-[rgba(16,24,40,1)] font-arimo font-normal text-4xl leading-none tracking-normal text-center"
+        >
+          Choose Your Path
+        </h2>
+
+        <p
+          class="font-arimo font-normal text-xl leading-7 tracking-normal text-center mx-auto text-[rgba(74,85,101,1)]"
+        >
+          Whether you're an individual, couple, or business, we have the perfect
+          profile type for you
+        </p>
+      </div>
+
+      <!-- CARDS -->
+      <div
+        class="flex sm:flex-row flex-col gap-[34px] sm:max-w-[1024px] max-w-full mx-auto"
+      >
+        <div class="border-2 border-gray-200 rounded-3xl p-8">
+          <img class="size-[64px] mb-6" src="assets/person.png" alt="person" />
+          <h3 class="font-arimo font-normal text-3xl leading-9 tracking-normal">
+            Personal Profile
+          </h3>
+          <p class="mt-3 text-[rgba(74,85,101,1)] leading-[24px]">
+            Join as an individual or couple to connect with like-minded people.
+            Perfect for dating, friendships, and social connections.
+          </p>
+
+          <div class="mt-6 flex flex-col gap-4">
+            <div class="flex gap-2">
+              <i
+                class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"
+              ></i>
+              <p class="text-[rgba(54,65,83,1)]">Smart matchings</p>
             </div>
-        </section>
 
-        <section class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center">
-                <p class="text-sm font-semibold uppercase tracking-widest text-primary">Explore Profiles</p>
-                <h3 class="mt-2 text-3xl font-extrabold text-dark dark:text-white">Our Business Partners</h3>
+            <div class="flex gap-2">
+              <i
+                class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"
+              ></i>
+              <p class="text-[rgba(54,65,83,1)]">Event access</p>
             </div>
-            <div class="mt-10" data-tab-group data-tab-initial="all">
-                <div class="flex flex-wrap justify-center gap-3">
-                    @foreach ($tabs as $tab)
-                        <button
-                            type="button"
-                            data-tab-trigger
-                            data-tab-target="{{ $tab['id'] }}"
-                            class="rounded-full border border-gray-200 px-6 py-2 text-sm font-semibold text-gray-700 transition hover:border-primary hover:text-primary dark:border-gray-700 dark:text-gray-300"
-                        >
-                            {{ $tab['label'] }}
-                        </button>
-                    @endforeach
-                </div>
 
-                @foreach ($tabs as $tab)
-                    @php
-                        $users = $tabbedUsers[$tab['id']] ?? collect();
-                    @endphp
-                    <div
-                        data-tab-panel
-                        data-tab-id="{{ $tab['id'] }}"
-                        class="mt-10 {{ $loop->first ? '' : 'hidden' }}"
-                    >
-                        @if ($users->isNotEmpty())
-                            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                                @foreach ($users as $user)
-                                    <a href="{{ route('user.profile', $user->id) }}" class="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm text-gray-900 transition hover:-translate-y-1 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 cursor-pointer block">
-                                        <div class="flex items-center gap-4">
-                                            <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                                                @if($user->profile_image)
-                                                    <img src="{{ asset('storage/' . $user->profile_image) }}" alt="{{ $user->name }}" class="h-16 w-16 rounded-full object-cover">
-                                                @else
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                                    </svg>
-                                                @endif
-                                            </div>
-                                            <div class="min-w-0 flex-1">
-                                                <h4 class="text-lg font-bold text-dark dark:text-white truncate">{{ $user->name }}</h4>
-                                                @if($user->company)
-                                                    <p class="text-sm text-gray-600 dark:text-gray-400 truncate">{{ $user->company }}</p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        
-                                        @if($user->email)
-                                            <div class="mt-4 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                                </svg>
-                                                <span class="truncate">{{ $user->email }}</span>
-                                            </div>
-                                        @endif
-
-                                        @if($user->phone)
-                                            <div class="mt-2 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                                </svg>
-                                                <span>{{ $user->phone }}</span>
-                                            </div>
-                                        @endif
-
-                                        @if($user->website_url)
-                                            <div class="mt-2">
-                                                <span class="text-sm text-primary hover:underline">
-                                                    Visit Website →
-                                                </span>
-                                            </div>
-                                        @endif
-                                    </a>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="rounded-2xl border border-dashed border-gray-300 p-10 text-center dark:border-gray-700">
-                                <p class="text-sm text-gray-600 dark:text-gray-400">No profiles available in this category. Check back soon!</p>
-                            </div>
-                        @endif
-                    </div>
-                @endforeach
+            <div class="flex gap-2">
+              <i
+                class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"
+              ></i>
+              <p class="text-[rgba(54,65,83,1)]">Private messaging</p>
             </div>
-        </section>
 
-        <section class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid gap-6 md:grid-cols-3">
-                <article class="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm text-gray-900 transition hover:-translate-y-1 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
-                            <path fill-rule="evenodd" d="M11.54 2.47a.75.75 0 01.92 0l7.5 5.5a.75.75 0 01-.44 1.35H4.48a.75.75 0 01-.44-1.35l7.5-5.5zM3.75 10.25a.75.75 0 01.75-.75h15a.75.75 0 01.75.75v8a3 3 0 01-3 3H6.75a3 3 0 01-3-3v-8z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <h4 class="mt-5 text-xl font-bold text-dark dark:text-white">Verified Profiles</h4>
-                    <p class="mt-3 text-sm text-gray-600 dark:text-gray-300">Connect with trusted businesses and professionals. All profiles are verified for authenticity and quality.</p>
-                </article>
-                <article class="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm text-gray-900 transition hover:-translate-y-1 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75" />
-                        </svg>
-                    </div>
-                    <h4 class="mt-5 text-xl font-bold text-dark dark:text-white">Easy Discovery</h4>
-                    <p class="mt-3 text-sm text-gray-600 dark:text-gray-300">Browse businesses by category and find exactly what you're looking for with our intuitive search and filter system.</p>
-                </article>
-                <article class="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm text-gray-900 transition hover:-translate-y-1 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
-                            <path fill-rule="evenodd" d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.21 5.21 0 0112 5.052 5.21 5.21 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.011-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.002z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <h4 class="mt-5 text-xl font-bold text-dark dark:text-white">Trusted Network</h4>
-                    <p class="mt-3 text-sm text-gray-600 dark:text-gray-300">Join a growing community of businesses and professionals building meaningful connections and partnerships.</p>
-                </article>
+            <div class="flex gap-2">
+              <i
+                class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"
+              ></i>
+              <p class="text-[rgba(54,65,83,1)]">Video calls</p>
             </div>
-        </section>
-    </div>
+          </div>
+
+          <button
+            class="mt-8 flex items-center justify-center h-10 px-4 rounded-full w-full text-white font-arimo font-normal text-sm leading-5 tracking-normal text-center bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)]"
+          >
+            Create Personal Profile
+          </button>
+        </div>
+
+        <div class="border-2 border-gray-200 rounded-3xl p-8">
+          <img
+            class="size-[64px] mb-6"
+            src="assets/business.png"
+            alt="person"
+          />
+          <h3 class="font-arimo font-normal text-3xl leading-9 tracking-normal">
+            Business Profile
+          </h3>
+          <p class="mt-3 text-[rgba(74,85,101,1)] leading-[24px]">
+            Promote your venue, events, or services to our engaged community.
+            Perfect for clubs, resorts, and service providers.
+          </p>
+
+          <div class="mt-6 flex flex-col gap-4">
+            <div class="flex gap-2">
+              <i class="text-[rgba(230,0,118,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Event promotion</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(230,0,118,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Business analytics</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(230,0,118,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Direct bookings</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(230,0,118,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Featured listings</p>
+            </div>
+          </div>
+
+          <button
+            class="mt-8 flex items-center justify-center h-10 px-4 rounded-full w-full text-white font-arimo font-normal text-sm leading-5 tracking-normal text-center bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)]"
+          >
+            Create Business Profile
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: Everything You Need to Connect -->
+    <section class="py-[32px] sm:px-0 px-5 bg-[#F9FAFB]">
+      <div class="pb-[64px] mx-auto sm:max-w-[700px] max-w-full">
+        <div
+          class="bg-[rgba(243,232,255,1)] py-[2px] max-w-[62px] mx-auto mb-6 px-[7px] text-[rgba(130,0,219,1)] rounded-xl"
+        >
+          <h2 class="text-xs font-thin leading-[16px]">Features</h2>
+        </div>
+        <h2
+          class="pb-6 text-[rgba(16,24,40,1)] font-arimo font-normal text-4xl leading-none tracking-normal text-center"
+        >
+          Everything You Need to Connect
+        </h2>
+
+        <p
+          class="font-arimo font-normal text-xl leading-7 tracking-normal text-center text-[rgba(74,85,101,1)]"
+        >
+          Powerful features designed to help you build meaningful relationships
+          safely and authentically
+        </p>
+      </div>
+
+      <!-- Grid 6 columns -->
+      <div
+        class="sm:max-w-[1280px] max-w-full grid md:grid-cols-3 grid-cols-1 gap-8 mx-auto"
+      >
+        <div
+          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
+        >
+          <img src="assets/heart.png" class="size-[56px]" alt="heart" />
+          <h3 class="text-[#101828] text-xl">Smart Matching</h3>
+          <p class="text-[#4A5565] leading-[24px]">
+            Advanced algorithms connect you with compatible people based on
+            interests, preferences, and location.
+          </p>
+        </div>
+
+        <div
+          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
+        >
+          <img src="assets/Safe.png" class="size-[56px]" alt="heart" />
+          <h3 class="text-[#101828] text-xl">Verified & Safe</h3>
+          <p class="text-[#4A5565] leading-[24px]">
+            Identity verification, photo verification, and strict community
+            guidelines ensure a secure environment.
+          </p>
+        </div>
+
+        <div
+          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
+        >
+          <img src="assets/Videocall.png" class="size-[56px]" alt="heart" />
+          <h3 class="text-[#101828] text-xl">Video Calls</h3>
+          <p class="text-[#4A5565] leading-[24px]">
+            Built-in video calling and messaging features let you connect safely
+            before meeting in person.
+          </p>
+        </div>
+
+        <div
+          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
+        >
+          <img src="assets/Events.png" class="size-[56px]" alt="heart" />
+          <h3 class="text-[#101828] text-xl">Events & Travel</h3>
+          <p class="text-[#4A5565] leading-[24px]">
+            Discover local events, plan travel meetups, and join exclusive
+            community gatherings.
+          </p>
+        </div>
+
+        <div
+          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
+        >
+          <img src="assets/Chats.png" class="size-[56px]" alt="heart" />
+          <h3 class="text-[#101828] text-xl">Real-time Chat</h3>
+          <p class="text-[#4A5565] leading-[24px]">
+            Instant messaging with media sharing, voice messages, and read
+            receipts for seamless communication.
+          </p>
+        </div>
+
+        <div
+          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
+        >
+          <img src="assets/Global.png" class="size-[56px]" alt="heart" />
+          <h3 class="text-[#101828] text-xl">Global Community</h3>
+          <p class="text-[#4A5565] leading-[24px]">
+            Connect locally or internationally with members from over 150
+            countries worldwide.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="py-[32px]">
+      <div class="pb-[40px] md:pb-[64px] mx-auto sm:max-w-[700px] max-w-full">
+        <div
+          class="bg-[rgba(243,232,255,1)] py-[2px] max-w-[90px] mx-auto mb-6 px-[7px] text-[rgba(130,0,219,1)] rounded-xl"
+        >
+          <h2 class="text-xs font-thin leading-[16px]">How It Works</h2>
+        </div>
+        <h2
+          class="pb-6 text-[rgba(16,24,40,1)] font-arimo font-normal text-4xl leading-none tracking-normal text-center"
+        >
+          Your Journey Starts Here
+        </h2>
+
+        <p
+          class="font-arimo font-normal text-xl leading-7 tracking-normal text-center text-[rgba(74,85,101,1)]"
+        >
+          Four simple steps to start making meaningful connections
+        </p>
+      </div>
+
+      <!-- Steps -->
+      <div class="py-2 items-center flex flex-col gap-7 md:gap-10">
+        <!-- step 1 -->
+        <div
+          class="md:w-[1024px] w-[90%] rounded-xl items-center flex gap-5 py-3 px-5 border-2 border-[#E5E7EB]"
+        >
+          <img src="./assets/Frame 2.png" class="w-[60px] md:w-[80px]" alt="" />
+
+          <div>
+            <h1 class="md:text-2xl text-[#101828] text-xl">
+              Create Your Profile
+            </h1>
+            <p class="text-[#4A5565] text-xs md:text-sm mt-1">
+              Sign up in minutes with our easy 9-step process. Add photos,
+              preferences, and what you're looking for.
+            </p>
+          </div>
+        </div>
+
+        <!-- step 2 -->
+        <div
+          class="md:w-[1024px] w-[90%] rounded-xl items-center flex gap-5 py-3 px-5 border-2 border-[#E5E7EB]"
+        >
+          <img src="./assets/Frame 1.png" class="w-[60px] md:w-[80px]" alt="" />
+
+          <div>
+            <h1 class="md:text-2xl text-[#101828] text-xl">Get Verified</h1>
+            <p class="text-[#4A5565] text-xs md:text-sm mt-1">
+              Complete identity and photo verification to gain trust and access
+              premium features.
+            </p>
+          </div>
+        </div>
+
+        <!-- step 3 -->
+        <div
+          class="md:w-[1024px] w-[90%] rounded-xl items-center flex gap-5 py-3 px-5 border-2 border-[#E5E7EB]"
+        >
+          <img src="./assets/Frame 3.png" class="w-[60px] md:w-[80px]" alt="" />
+
+          <div>
+            <h1 class="md:text-2xl text-[#101828] text-xl">Discover Matches</h1>
+            <p class="text-[#4A5565] text-xs md:text-sm mt-1">
+              Browse members, receive smart suggestions, and use advanced
+              filters to find your perfect connection.
+            </p>
+          </div>
+        </div>
+
+        <!-- step 4 -->
+        <div
+          class="md:w-[1024px] w-[90%] rounded-xl items-center flex gap-5 py-3 px-5 border-2 border-[#E5E7EB]"
+        >
+          <img src="./assets/Frame 4.png" class="w-[60px] md:w-[80px]" alt="" />
+
+          <div>
+            <h1 class="md:text-2xl text-[#101828] text-xl">Connect & Meet</h1>
+            <p class="text-[#4A5565] text-xs md:text-sm mt-1">
+              Chat, video call, and arrange meetups at events or private
+              locations. Stay safe with our community guidelines.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: Everything You Need to Connect -->
+    <section
+      class="bg-[linear-gradient(135deg,#FAF5FF_0%,#FDF2F8_100%)] py-[32px] sm:px-0 px-5 bg-[#F9FAFB]"
+    >
+      <div class="pb-[64px] mx-auto sm:max-w-[700px] max-w-full">
+        <div
+          class="bg-[rgba(243,232,255,1)] py-[2px] max-w-[62px] mx-auto mb-6 px-[7px] text-[rgba(130,0,219,1)] rounded-xl"
+        >
+          <h2 class="text-xs font-thin leading-[16px]">Testimonials</h2>
+        </div>
+        <h2
+          class="pb-6 text-[rgba(16,24,40,1)] font-arimo font-normal text-4xl leading-none tracking-normal text-center"
+        >
+          Loved by Our Community
+        </h2>
+
+        <p
+          class="font-arimo font-normal text-xl leading-7 tracking-normal text-center text-[rgba(74,85,101,1)]"
+        >
+          See what our members have to say about their experience
+        </p>
+      </div>
+
+      <div
+        class="sm:max-w-[1280px] max-w-full grid md:grid-cols-3 grid-cols-1 gap-8 mx-auto"
+      >
+        <div
+          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
+        >
+          <img src="assets/quote.png" class="size-[40px]" alt="heart" />
+          <p class="text-[#4A5565] leading-[24px]">
+            We've met amazing people through ConnectHub! The verification system
+            makes us feel safe, and the events are fantastic. Best platform
+            we've tried!
+          </p>
+          <img
+            src="assets/stars.png"
+            class="h-auto object-cover md:h-5"
+            alt="heart"
+          />
+
+          <div class="flex gap-4 items-center">
+            <img src="assets/sm-name.png" class="size-[48px]" alt="heart" />
+            <div>
+              <h6 class="text-[#101828] leading-[24px]">Sarah & Mike</h6>
+              <p class="text-[#4A5565] text-sm">Couple Member</p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
+        >
+          <img src="assets/quote.png" class="size-[40px]" alt="heart" />
+          <p class="text-[#4A5565] leading-[24px]">
+            The community here is genuine and respectful. I love the travel
+            planning features - I've made connections in 5 different countries!
+          </p>
+          <img
+            src="assets/stars.png"
+            class="h-auto object-cover md:h-5"
+            alt="heart"
+          />
+
+          <div class="flex gap-4 items-center">
+            <img src="assets/jm name.png" class="size-[48px]" alt="heart" />
+            <div>
+              <h6 class="text-[#101828] leading-[24px]">Jessica Moore</h6>
+              <p class="text-[#4A5565] text-sm">Premium Member</p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
+        >
+          <img src="assets/quote.png" class="size-[40px]" alt="heart" />
+          <p class="text-[#4A5565] leading-[24px]">
+            ConnectHub has been incredible for our business. We host monthly
+            events and the platform makes it easy to reach engaged members.
+          </p>
+          <img
+            src="assets/stars.png"
+            class="h-auto object-cover md:h-5"
+            alt="heart"
+          />
+
+          <div class="flex gap-4 items-center">
+            <img src="assets/bp name.png" class="size-[48px]" alt="heart" />
+            <div>
+              <h6 class="text-[#101828] leading-[24px]">
+                Beach Paradise Resort
+              </h6>
+              <p class="text-[#4A5565] text-sm">Business Member</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-20 sm:px-0 px-5">
+      <div class="pb-[64px] mx-auto sm:max-w-[700px] max-w-full">
+        <div class="bg-[rgba(243,232,255,1)] py-[2px] max-w-[62px] mx-auto mb-6 px-[7px] text-[rgba(130,0,219,1)] rounded-xl">
+          <h2 class="text-xs font-thin leading-[16px] text-center">Pricing</h2>
+        </div>
+        <h2 class="pb-6 text-[rgba(16,24,40,1)] font-arimo font-normal text-4xl leading-none tracking-normal text-center">
+          Choose Your Plan
+        </h2>
+
+        <p class="font-arimo font-normal text-xl leading-7 tracking-normal text-center text-[rgba(74,85,101,1)]">
+          Start free, upgrade when you're ready. Cancel anytime.
+        </p>
+      </div>
+
+      <!-- CARDS -->
+      <div class="sm:max-w-[1280px] max-w-full grid md:grid-cols-3 grid-cols-1 gap-8 mx-auto">
+        <!-- free -->
+        <div class="bg-white flex flex-col p-8 border-[#E5E7EB] border rounded-2xl">
+          <h3 class="text-[#101828] text-center text-xl pb-2">Basic</h3>
+          <p class="text-[#4A5565] text-center leading-[24px]">
+            Perfect for getting started
+          </p>
+
+          <p class="text-[#101828] text-center pb-2 text-[48px]">Free</p>
+          <p class="text-[#4A5565] text-center leading-[24px]">forever</p>
+
+          <div class="flex flex-col gap-4 pt-[56px]">
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Smart matchings</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Create profile</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Create profile</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Join public events</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Basic search filters</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Community forum access</p>
+            </div>
+          </div>
+
+          <button class="bg-[#F3F4F6] h-[48px] rounded-full mt-[56px] text-black">
+            Get Started
+          </button>
+        </div>
+
+        <!-- Premium -->
+        <div class="scale-[1.05] relatives border-2 border-[#9810FA] bg-white flex flex-col p-8 rounded-2xl shadow-[0px_25px_50px_-12px_#00000040]">
+          <span class="-mt-[41px] mb-[21px] text-white bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)] py-0.5 text-xs w-[96px] rounded-xl text-center mx-auto">Most Popular</span>
+          <h3 class="text-[#101828] text-center text-xl pb-2">Premium</h3>
+          <p class="text-[#4A5565] text-center leading-[D24px]">
+            Most popular choice
+          </p>
+
+          <p class="text-[#101828] text-center pb-2 text-[48px]">$29</p>
+          <p class="text-[#4A5565] text-center leading-[24px]">per month</p>
+
+          <div class="flex flex-col gap-4 pt-[56px]">
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Everything in Basic</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Unlimited messaging</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Advanced search filters</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">See who viewed you</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Priority in search results</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Video calls included</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Exclusive events access</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Verified badge</p>
+            </div>
+          </div>
+
+          <button class="bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)] h-[48px] rounded-full mt-[56px] text-white">
+            Upgrade Now
+          </button>
+        </div>
+
+        <!-- VIP -->
+        <div class="bg-white flex flex-col p-8 border-[#E5E7EB] border rounded-2xl">
+          <h3 class="text-[#101828] text-center text-xl pb-2">VIP</h3>
+          <p class="text-[#4A5565] text-center leading-[24px]">
+            The ultimate experience
+          </p>
+
+          <p class="text-[#101828] text-center pb-2 text-[48px]">$99</p>
+          <p class="text-[#4A5565] text-center leading-[24px]">per month</p>
+
+          <div class="flex flex-col gap-4 pt-[56px]">
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Smart matchings</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Create profile</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Create profile</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Join public events</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Basic search filters</p>
+            </div>
+
+            <div class="flex gap-2">
+              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
+              <p class="text-[rgba(54,65,83,1)]">Community forum access</p>
+            </div>
+          </div>
+
+          <button class="bg-[#F3F4F6] h-[48px] rounded-full mt-[56px] text-black">
+            Upgrade Now
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: FAQ -->
+    <section class="py-[32px] bg-[#F9FAFB]">
+      <div class="pb-[40px] md:pb-[64px] mx-auto sm:max-w-[700px] max-w-full">
+        <div
+          class="bg-[rgba(243,232,255,1)] py-[2px] max-w-[40px] mx-auto mb-6 px-[7px] text-[rgba(130,0,219,1)] rounded-xl"
+        >
+          <h2 class="text-xs font-thin leading-[16px]">FAQ</h2>
+        </div>
+        <h2
+          class="pb-6 text-[rgba(16,24,40,1)] font-arimo font-normal text-4xl leading-none tracking-normal text-center"
+        >
+          Frequently Asked Questions
+        </h2>
+
+        <p
+          class="font-arimo font-normal text-xl leading-7 tracking-normal text-center text-[rgba(74,85,101,1)]"
+        >
+          Everything you need to know about ConnectHub
+        </p>
+      </div>
+
+      <div class="py-2 items-center flex flex-col gap-7 md:gap-10">
+        <!-- faq 1 -->
+        <div
+          class="md:w-[896px] flex-col bg-white w-[90%] rounded-xl flex md:gap-[40px] gap-[20px] p-[32px] border-2 border-[#E5E7EB]"
+        >
+          <div>
+            <h1 class="md:text-2xl text-[#101828] text-[18px]">
+              Is ConnectHub safe and secure?
+            </h1>
+          </div>
+          <p
+            class="text-[#4A5565] text-[14px] md:text-[16px] mt-1 leading-5 md:leading-7"
+          >
+            Yes! We use industry-leading security measures including identity
+            verification, photo verification, encrypted communications, and
+            strict community guidelines. Our dedicated moderation team reviews
+            all content and responds to reports within 24 hours.
+          </p>
+        </div>
+
+        <!-- faq 2 -->
+        <div
+          class="md:w-[896px] flex-col bg-white w-[90%] rounded-xl flex md:gap-[40px] gap-[20px] p-[32px] border-2 border-[#E5E7EB]"
+        >
+          <div>
+            <h1 class="md:text-2xl text-[#101828] text-[18px]">
+              Is ConnectHub safe and secure?
+            </h1>
+          </div>
+          <p
+            class="text-[#4A5565] text-[14px] md:text-[16px] mt-1 leading-5 md:leading-7"
+          >
+            Yes! We use industry-leading security measures including identity
+            verification, photo verification, encrypted communications, and
+            strict community guidelines. Our dedicated moderation team reviews
+            all content and responds to reports within 24 hours.
+          </p>
+        </div>
+
+        <!-- faq 3 -->
+        <div
+          class="md:w-[896px] flex-col bg-white w-[90%] rounded-xl flex md:gap-[40px] gap-[20px] p-[32px] border-2 border-[#E5E7EB]"
+        >
+          <div>
+            <h1 class="md:text-2xl text-[#101828] text-[18px]">
+              Is ConnectHub safe and secure?
+            </h1>
+          </div>
+          <p
+            class="text-[#4A5565] text-[14px] md:text-[16px] mt-1 leading-5 md:leading-7"
+          >
+            Yes! We use industry-leading security measures including identity
+            verification, photo verification, encrypted communications, and
+            strict community guidelines. Our dedicated moderation team reviews
+            all content and responds to reports within 24 hours.
+          </p>
+        </div>
+
+        <!-- faq 4 -->
+        <div
+          class="md:w-[896px] flex-col bg-white w-[90%] rounded-xl flex md:gap-[40px] gap-[20px] p-[32px] border-2 border-[#E5E7EB]"
+        >
+          <div>
+            <h1 class="md:text-2xl text-[#101828] text-[18px]">
+              Is ConnectHub safe and secure?
+            </h1>
+          </div>
+          <p
+            class="text-[#4A5565] text-[14px] md:text-[16px] mt-1 leading-5 md:leading-7"
+          >
+            Yes! We use industry-leading security measures including identity
+            verification, photo verification, encrypted communications, and
+            strict community guidelines. Our dedicated moderation team reviews
+            all content and responds to reports within 24 hours.
+          </p>
+        </div>
+
+        <!-- faq 5 -->
+        <div
+          class="md:w-[896px] flex-col bg-white w-[90%] rounded-xl flex md:gap-[40px] gap-[20px] p-[32px] border-2 border-[#E5E7EB]"
+        >
+          <div>
+            <h1 class="md:text-2xl text-[#101828] text-[18px]">
+              Is ConnectHub safe and secure?
+            </h1>
+          </div>
+          <p
+            class="text-[#4A5565] text-[14px] md:text-[16px] mt-1 leading-5 md:leading-7"
+          >
+            Yes! We use industry-leading security measures including identity
+            verification, photo verification, encrypted communications, and
+            strict community guidelines. Our dedicated moderation team reviews
+            all content and responds to reports within 24 hours.
+          </p>
+        </div>
+
+        <!-- faq 6 -->
+        <div
+          class="md:w-[896px] flex-col bg-white w-[90%] rounded-xl flex md:gap-[40px] gap-[20px] p-[32px] border-2 border-[#E5E7EB]"
+        >
+          <div>
+            <h1 class="md:text-2xl text-[#101828] text-[18px]">
+              Is ConnectHub safe and secure?
+            </h1>
+          </div>
+          <p
+            class="text-[#4A5565] text-[14px] md:text-[16px] mt-1 leading-5 md:leading-7"
+          >
+            Yes! We use industry-leading security measures including identity
+            verification, photo verification, encrypted communications, and
+            strict community guidelines. Our dedicated moderation team reviews
+            all content and responds to reports within 24 hours.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: CTA -->
+    <section
+      class="px-5 sm:px-0 md:py-[80px] py-10 flex flex-col md:gap-8 gap-4 items-center bg-gradient-to-r from-[#9810FA] to-[#E60076]"
+    >
+      <h1 class="text-white text-2xl md:text-[48px]">Ready to Start Your Journey?</h1>
+      <p
+        class="max-w-[637px] text-center text-[#F3E8FF] text-[11px] md:text-[20px] text-white font-normal"
+      >
+        Join thousands of members who have found meaningful connections on ConnectHub
+      </p>
+      <div class="flex gap-5">
+        <button class="bg-[#FFFFFF] text-xs md:text-base text-[#9810FA] px-3 py-3 rounded-full md:py-4 md:px-3">
+          Create Free Account <i class="ri-arrow-right-line"></i>
+        </button>
+        <button class="bg-white text-[#484747] text-xs md:text-base rounded-full px-4 py-3 md:px-7 md:py-4">Learn More</button>
+      </div>
+    </section>
+
+      
+
+       
 @endsection
 

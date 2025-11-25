@@ -1,107 +1,402 @@
 @extends('layouts.admin')
 
 @section('title', 'Manage Users - Admin Panel')
+@section('page-title', 'User Management')
 
 @section('content')
-    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 class="text-3xl font-extrabold text-secondary">Manage Users</h1>
-        <a href="{{ route('admin.users.create') }}" class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-secondary">
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Add User
-        </a>
+    <!-- Heading -->
+    <div class="pt-[14px] pb-4 md:pb-8">
+        <h2 class="text-[#0A0A0A] text-[24px] font-medium font-['poppins']">User Management</h2>
+        <p class="text-[#717182] text-xs md:text-base font-['poppins']">Manage and moderate all user accounts</p>
     </div>
 
-    {{-- Search --}}
-    <div class="mb-6">
-        <form action="{{ route('admin.users.index') }}" method="GET" class="flex gap-2">
+    <!-- Search and Filter Bar -->
+    <div class="md:w-[98%] md:gap-0 gap-3 shadow-md flex-col md:flex-row md:justify-between flex py-4 px-3 rounded-2xl border border-[#0000001A]">
+        <!-- Search Bar -->
+        <form action="{{ route('admin.users.index') }}" method="GET" class="flex">
+            @if($status !== 'all')
+                <input type="hidden" name="status" value="{{ $status }}" />
+            @endif
+            <div class="bg-[#F3F3F5] w-[40px] md:w-[50px] rounded-l-xl py-3 px-3 flex items-center justify-center">
+                <img class="md:w-[20px] w-[20px]" src="{{ asset('admin-assets/search.png') }}" alt="Search" />
+            </div>
             <input
-                type="text"
+                type="search"
                 name="search"
                 value="{{ $search }}"
-                placeholder="Search users..."
-                class="flex-1 rounded-md border border-gray-300 bg-light px-4 py-2 text-sm text-gray-900 focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-            >
-            <button type="submit" class="rounded-md bg-gray-600 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-700">
-                Search
-            </button>
-            @if ($search)
-                <a href="{{ route('admin.users.index') }}" class="rounded-md bg-gray-500 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-600">
-                    Clear
-                </a>
-            @endif
+                placeholder="Search by name or email..."
+                class="py-2 font-['Poppins'] md:text-base text-xs active:border-none rounded-r-lg md:rounded-r-2xl active:outline-none px-1 bg-[#F3F3F5] min-w-[200px] md:min-w-[500px]"
+            />
         </form>
-    </div>
 
-    {{-- Users Table --}}
-    <div class="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-50 dark:bg-gray-700">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Name</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Email</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Role</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Joined</th>
-                        <th class="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
-                    @forelse ($users as $user)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <td class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-gray-100">
-                                {{ $user->id }}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-900 dark:text-gray-100">
-                                {{ $user->name }}
-                            </td>
-                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                                {{ $user->email }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4">
-                                <span class="inline-flex rounded-full px-2 text-xs font-semibold leading-5 {{ $user->is_admin ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' }}">
-                                    {{ $user->is_admin ? 'Admin' : 'Customer' }}
-                                </span>
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                                {{ $user->created_at->format('M d, Y') }}
-                            </td>
-                            <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                                <div class="flex items-center justify-end gap-2">
-                                    <a href="{{ route('admin.users.edit', $user) }}" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
-                                        Edit
-                                    </a>
-                                    @if ($user->id !== auth()->id())
-                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
-                                                Delete
-                                            </button>
-                                        </form>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="px-6 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
-                                No users found.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <!-- Filter Buttons -->
+        <div class="flex justify-center flex-wrap gap-2">
+            <a href="{{ route('admin.users.index', array_merge(request()->except('status'), ['status' => 'all'])) }}" class="{{ $status === 'all' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} text-sm md:text-base font-['Poppins'] md:py-2 md:px-5 rounded-xl min-w-[48px] py-1 px-3">
+                All
+            </a>
+            <a href="{{ route('admin.users.index', array_merge(request()->except('status'), ['status' => 'active'])) }}" class="{{ $status === 'active' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] min-w-[86px] rounded-xl">
+                Active
+            </a>
+            <a href="{{ route('admin.users.index', array_merge(request()->except('status'), ['status' => 'pending'])) }}" class="{{ $status === 'pending' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] min-w-[86px] rounded-xl">
+                Pending
+            </a>
+            <a href="{{ route('admin.users.index', array_merge(request()->except('status'), ['status' => 'verified'])) }}" class="{{ $status === 'verified' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] min-w-[86px] rounded-xl">
+                Verified
+            </a>
+            <a href="{{ route('admin.users.index', array_merge(request()->except('status'), ['status' => 'banned'])) }}" class="{{ $status === 'banned' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] min-w-[86px] rounded-xl">
+                Banned
+            </a>
         </div>
     </div>
 
-    {{-- Pagination --}}
+    <!-- Users Table -->
+    <div class="w-full bg-white rounded-md shadow-sm border border-[#0000001A] overflow-auto mt-8">
+        <table class="w-full text-sm text-gray-500">
+            <!-- Table Header -->
+            <thead class="text-sm text-[#0A0A0A] bg-[#FFF5F7] border-[#0000001A] border-b">
+                <tr>
+                    <th scope="col" class="py-6 px-6 text-left font-bold">User</th>
+                    <th scope="col" class="py-3 px-6 text-left font-bold hidden sm:table-cell">Age</th>
+                    <th scope="col" class="py-3 px-6 text-left font-semibold">Email</th>
+                    <th scope="col" class="py-3 px-6 text-left font-semibold hidden md:table-cell">Status</th>
+                    <th scope="col" class="py-3 px-6 text-left font-semibold hidden lg:table-cell">Joined Date</th>
+                    <th scope="col" class="py-3 px-6 text-center font-semibold">Actions</th>
+                </tr>
+            </thead>
+
+            <!-- Table Body -->
+            <tbody>
+                @forelse ($users as $user)
+                    @php
+                        $profile = $user->profile;
+                        $age = null;
+                        if ($profile && $profile->date_of_birth) {
+                            $age = \Carbon\Carbon::parse($profile->date_of_birth)->age;
+                        }
+                        $location = $profile && $profile->home_location ? $profile->home_location : 'N/A';
+                        
+                        // Determine user status
+                        $userStatus = 'pending';
+                        if (!$user->is_active) {
+                            $userStatus = 'banned';
+                        } elseif ($user->is_admin) {
+                            $userStatus = 'verified';
+                        } elseif ($user->email_verified_at) {
+                            $userStatus = 'active';
+                        }
+                    @endphp
+                    <tr class="border-b hover:bg-gray-50 text-gray-900 transition-colors duration-150">
+                        <td class="py-4 px-6 font-medium whitespace-nowrap">
+                            <div class="flex items-center space-x-3">
+                                <!-- Avatar -->
+                                @if($user->profile_image)
+                                    <img src="{{ asset('storage/' . $user->profile_image) }}" alt="{{ $user->name }}" class="w-10 h-10 rounded-full object-cover" />
+                                @else
+                                    <div class="w-10 h-10 bg-gradient-to-b from-[#FF8FA3] to-[#FF6F61] rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-inner">
+                                        {{ strtoupper(substr($user->first_name ?? $user->name, 0, 1)) }}{{ strtoupper(substr($user->last_name ?? '', 0, 1)) }}
+                                    </div>
+                                @endif
+                                <!-- Name & Location -->
+                                <div>
+                                    <div class="font-semibold text-gray-900">{{ $user->name }}</div>
+                                    <div class="text-xs text-gray-500">{{ $location }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6 hidden sm:table-cell">{{ $age ?? 'N/A' }}</td>
+                        <td class="py-4 px-6">{{ $user->email }}</td>
+                        <td class="py-4 px-6 hidden md:table-cell">
+                            @if($userStatus === 'verified')
+                                <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 ring-1 ring-blue-500/30">Verified</span>
+                            @elseif($userStatus === 'active')
+                                <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 ring-1 ring-green-500/30">Active</span>
+                            @elseif($userStatus === 'pending')
+                                <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800 ring-1 ring-yellow-500/30">Pending</span>
+                            @else
+                                <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800 ring-1 ring-red-500/30">Banned</span>
+                            @endif
+                        </td>
+                        <td class="py-4 px-6 hidden lg:table-cell">{{ $user->created_at->format('Y-m-d') }}</td>
+                        <td class="py-4 px-6 text-center">
+                            <div class="group relative inline-block">
+                                <button type="button" class="text-gray-500 hover:text-gray-900 p-1 rounded-full hover:bg-gray-200 transition-colors focus:outline-none" aria-expanded="false">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4z"></path>
+                                    </svg>
+                                </button>
+
+                                <!-- Dropdown -->
+                                <div class="hidden group-hover:block absolute px-2 right-5 top-1 z-10 mt-2 w-48 border border-[#A1A1A1] rounded-md bg-white py-2 ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <!-- Edit Profile -->
+                                    <div class="group/item">
+                                        <button type="button" onclick="openEditModal({{ $user->id }})" class="w-full text-left flex gap-2 items-center px-4 py-3 border-b border-[#A1A1A1] md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors">
+                                            <img src="{{ asset('admin-assets/eye-empty.png') }}" width="24" alt="" class="transition-all group-hover/item:invert group-hover/item:brightness-0" />
+                                            <span class="transition-colors group-hover/item:text-white">Edit Profile</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- Verify Account -->
+                                    <div class="group/item">
+                                        <form action="{{ route('admin.users.verify', $user) }}" method="POST" class="inline">
+                                            @csrf
+                                            <button type="submit" class="w-full text-left flex gap-2 items-center px-4 py-3 border-b border-[#A1A1A1] md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors">
+                                                <img src="{{ asset('admin-assets/edit.png') }}" width="24" alt="" class="transition-all group-hover/item:invert group-hover/item:brightness-0" />
+                                                <span class="transition-colors group-hover/item:text-white">{{ $user->email_verified_at ? 'Unverify Account' : 'Verify Account' }}</span>
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Delete User -->
+                                    @if ($user->id !== auth()->id())
+                                        <div class="group/item">
+                                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="w-full text-left flex gap-2 items-center px-4 py-3 md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors">
+                                                    <img src="{{ asset('admin-assets/delete.png') }}" width="24" alt="" class="transition-all group-hover/item:invert group-hover/item:brightness-0" />
+                                                    <span class="transition-colors group-hover/item:text-white">Delete User</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="py-10 px-6 text-center text-sm text-gray-500">
+                            No users found.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
     @if ($users->hasPages())
         <div class="mt-6">
             {{ $users->links() }}
         </div>
     @endif
-@endsection
 
+    <!-- Edit User Profile Modal -->
+    <div id="editUserModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Background overlay -->
+            <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75 backdrop-blur-sm" onclick="closeEditModal()"></div>
+
+            <!-- Modal panel -->
+            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-3xl sm:w-full">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-xl font-bold text-[#0A0A0A]">Edit User Profile</h3>
+                    <button type="button" onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="ri-close-line text-2xl"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body -->
+                <form id="editUserForm" method="POST" enctype="multipart/form-data" class="px-6 py-4">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" id="edit_user_id" name="user_id" value="">
+
+                    <!-- Two Column Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <!-- First Name -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                            <div class="relative">
+                                <input type="text" id="edit_first_name" name="first_name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF8FA3]">
+                                <i class="ri-pencil-line absolute right-3 top-2.5 text-gray-400"></i>
+                            </div>
+                        </div>
+
+                        <!-- Last Name -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                            <input type="text" id="edit_last_name" name="last_name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF8FA3]">
+                        </div>
+
+                        <!-- Categories -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Categories</label>
+                            <select id="edit_category" name="category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF8FA3]">
+                                <option value="">Select Category</option>
+                                <option value="couple">Couple</option>
+                                <option value="single_female">Single Female</option>
+                                <option value="single_male">Single Male</option>
+                                <option value="bisexual">Bisexual</option>
+                                <option value="transgender">Transgender</option>
+                            </select>
+                        </div>
+
+                        <!-- Age -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Age</label>
+                            <input type="number" id="edit_age" name="age" min="18" max="120" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF8FA3]">
+                        </div>
+
+                        <!-- Location -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                            <div class="relative">
+                                <input type="text" id="edit_location" name="location" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF8FA3]">
+                                <i class="ri-pencil-line absolute right-3 top-2.5 text-gray-400"></i>
+                            </div>
+                        </div>
+
+                        <!-- Gender -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                            <select id="edit_gender" name="gender" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF8FA3]">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer_not_to_say">Prefer not to say</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <div class="relative">
+                            <input type="email" id="edit_email" name="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF8FA3]">
+                            <i class="ri-pencil-line absolute right-3 top-2.5 text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <!-- Bio -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+                        <div class="relative">
+                            <textarea id="edit_bio" name="bio" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FF8FA3]"></textarea>
+                            <i class="ri-pencil-line absolute right-3 top-2.5 text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <!-- Profile Picture -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Profile Picture</label>
+                        <div class="flex items-center gap-4">
+                            <div id="profile_picture_preview" class="w-24 h-24 rounded-lg bg-gradient-to-b from-[#FF8FA3] to-[#FF6F61] flex items-center justify-center text-white text-2xl font-bold">
+                                <span id="profile_initials">E</span>
+                            </div>
+                            <label class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                                <i class="ri-upload-cloud-line"></i>
+                                <span>Change Photo</span>
+                                <input type="file" id="edit_profile_image" name="profile_image" accept="image/*" class="hidden" onchange="previewImage(this, 'profile_picture_preview', 'profile_initials')">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Cover Page -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Cover Page</label>
+                        <div class="flex items-center gap-4">
+                            <div id="cover_photo_preview" class="w-24 h-24 rounded-lg bg-gradient-to-b from-[#FF8FA3] to-[#FF6F61] flex items-center justify-center text-white text-2xl font-bold">
+                                <span id="cover_initials">E</span>
+                            </div>
+                            <label class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
+                                <i class="ri-upload-cloud-line"></i>
+                                <span>Change Photo</span>
+                                <input type="file" id="edit_cover_photo" name="cover_photo" accept="image/*" class="hidden" onchange="previewImage(this, 'cover_photo_preview', 'cover_initials')">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                        <button type="button" onclick="closeEditModal()" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-6 py-2 bg-[#FF8FA3] text-white rounded-lg hover:bg-[#FF7A91] transition-colors">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        function openEditModal(userId) {
+            // Fetch user data
+            const baseUrl = '{{ url("/admin/users") }}';
+            fetch(`${baseUrl}/${userId}/data`)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate form fields
+                    document.getElementById('edit_user_id').value = data.id;
+                    document.getElementById('edit_first_name').value = data.first_name || '';
+                    document.getElementById('edit_last_name').value = data.last_name || '';
+                    document.getElementById('edit_category').value = data.category || '';
+                    document.getElementById('edit_age').value = data.age || '';
+                    document.getElementById('edit_location').value = data.location || '';
+                    document.getElementById('edit_gender').value = data.gender || '';
+                    document.getElementById('edit_email').value = data.email || '';
+                    document.getElementById('edit_bio').value = data.bio || '';
+                    
+                    // Update form action
+                    document.getElementById('editUserForm').action = `${baseUrl}/${userId}`;
+                    
+                    // Set profile picture
+                    const profilePreview = document.getElementById('profile_picture_preview');
+                    const profileInitials = document.getElementById('profile_initials');
+                    if (data.profile_image || data.profile_photo) {
+                        profilePreview.innerHTML = `<img src="${data.profile_image || data.profile_photo}" alt="Profile" class="w-full h-full rounded-lg object-cover">`;
+                    } else {
+                        const initials = (data.first_name ? data.first_name.charAt(0) : '') + (data.last_name ? data.last_name.charAt(0) : '') || 'U';
+                        profilePreview.innerHTML = `<span class="text-white text-2xl font-bold">${initials}</span>`;
+                        profileInitials.textContent = initials;
+                    }
+                    
+                    // Set cover photo
+                    const coverPreview = document.getElementById('cover_photo_preview');
+                    const coverInitials = document.getElementById('cover_initials');
+                    if (data.cover_photo) {
+                        coverPreview.innerHTML = `<img src="${data.cover_photo}" alt="Cover" class="w-full h-full rounded-lg object-cover">`;
+                    } else {
+                        const initials = (data.first_name ? data.first_name.charAt(0) : '') + (data.last_name ? data.last_name.charAt(0) : '') || 'U';
+                        coverPreview.innerHTML = `<span class="text-white text-2xl font-bold">${initials}</span>`;
+                        coverInitials.textContent = initials;
+                    }
+                    
+                    // Show modal
+                    document.getElementById('editUserModal').classList.remove('hidden');
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                    alert('Failed to load user data');
+                });
+        }
+
+        function closeEditModal() {
+            document.getElementById('editUserModal').classList.add('hidden');
+        }
+
+        function previewImage(input, previewId, initialsId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById(previewId);
+                    preview.innerHTML = `<img src="${e.target.result}" alt="Preview" class="w-full h-full rounded-lg object-cover">`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeEditModal();
+            }
+        });
+    </script>
+    @endpush
+@endsection

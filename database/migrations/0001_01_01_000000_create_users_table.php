@@ -22,7 +22,7 @@ return new class extends Migration
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_active')->default(true);
             $table->string('profile_image')->nullable();
-            $table->enum('profile_type', ['public', 'private'])->default('private');
+            $table->enum('profile_type', ['normal', 'business'])->default('normal');
             $table->string('company')->nullable();
             $table->string('website_url')->nullable();
             $table->text('address')->nullable();

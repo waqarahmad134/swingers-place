@@ -1,0 +1,621 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connect Hub</title>
+
+    <!-- Remix Icons CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+
+    <!-- ⭐ Google Font: Poppins -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      .poppins {
+        font-family: "Poppins";
+      }
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        display: flex;
+      }
+    </style>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div class="flex gap-4">
+      <aside
+        class="min-h-screen md:min-w-[290px] min-w-[70px] items-center gap-5 flex flex-col py-14 bg-[#FFF5F7] min-h-screen"
+      ></aside>
+
+      <main class="min-h-screen w-full pe-6">
+        <!-- heading -->
+        <div class="pt-[14px] pb-4 md:pb-8">
+          <h2 class="text-[#0A0A0A] text-[24px] font-medium font-['poppins']">
+            User Management
+          </h2>
+          <p class="text-[#717182] text-xs md:text-base font-['poppins']">
+            Manage and moderate all user accounts
+          </p>
+        </div>
+
+        <div
+          class="md:w-[98%] md:gap-0 gap-3 shadow-md flex-col md:flex-row md:justify-between flex py-4 px-3 rounded-2xl border border-[#0000001A]"
+        >
+          <!-- search bar -->
+          <div class="flex">
+            <div
+              class="bg-[#F3F3F5] w-[40px] md:w-[50px] rounded-l-xl py-3 px-3"
+            >
+              <img
+                class="md:w-[20px] w-[20px]"
+                src="./assets/search.png"
+                alt=""
+              />
+            </div>
+            <input
+              type="search"
+              placeholder="Search by name or email..."
+              class="py-2 font-['Poppins'] md:text-base text-xs active:border-none rounded-r-lg md:rounded-r-2xl active:outline-none px-1 bg-[#F3F3F5] min-w-[20h0px] md:min-w-[500px]"
+              name=""
+              id=""
+            />
+          </div>
+
+          <div class="flex justify-center flex-wrap gap-2">
+            <button
+              class="bg-[#FF8FA3] text-sm md:text-base font-['Poppins'] md:py-2 md:px-5 text-white rounded-xl min-w-[48px]"
+            >
+              All
+            </button>
+            <button
+              class="md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] border border-[#0000001A] min-w-[86px] rounded-xl"
+            >
+              Active
+            </button>
+            <button
+              class="md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] border border-[#0000001A] min-w-[86px] rounded-xl"
+            >
+              Pending
+            </button>
+            <button
+              class="md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] border border-[#0000001A] min-w-[86px] rounded-xl"
+            >
+              Verified
+            </button>
+            <button
+              class="md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] border border-[#0000001A] min-w-[86px] rounded-xl"
+            >
+              Banned
+            </button>
+          </div>
+        </div>
+
+        <!-- table -->
+
+        <div class="">
+          <div
+            class="w-full bg-white rounded-md shadow-sm border border-[#0000001A] overflow-auto mt-8"
+          >
+            <table class="w-full text-sm text-gray-500">
+              <!-- Table Header -->
+              <thead
+                class="text-sm text-[#0A0A0A] bg-[#FFF5F7] border-[#0000001A] border-b"
+              >
+                <tr>
+                  <th scope="col" class="py-6 px-6 text-left font-bold">
+                    User
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-6 text-left font-bold hidden sm:table-cell"
+                  >
+                    Age
+                  </th>
+                  <th scope="col" class="py-3 px-6 text-left font-semibold">
+                    Email
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-6 text-left font-semibold hidden md:table-cell"
+                  >
+                    Status
+                  </th>
+                  <th
+                    scope="col"
+                    class="py-3 px-6 text-left font-semibold hidden lg:table-cell"
+                  >
+                    Joined Date
+                  </th>
+                  <th scope="col" class="py-3 px-6 text-center font-semibold">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+
+              <!-- Table Body (Static Data) -->
+              <tbody>
+                <!-- Row 1: Emma Wilson (Verified) -->
+                <tr
+                  class="border-b hover:bg-gray-50 text-gray-900 transition-colors duration-150"
+                >
+                  <td class="py-4 px-6 font-medium whitespace-nowrap">
+                    <div class="flex items-center space-x-3">
+                      <!-- Avatar -->
+                      <div
+                        class="w-10 h-10 bg-gradient-to-b from-[#FF8FA3] to-[#FF6F61] rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-inner"
+                      >
+                        E
+                      </div>
+                      <!-- Name & Location -->
+                      <div>
+                        <div class="font-semibold text-gray-900">
+                          Emma Wilson
+                        </div>
+                        <div class="text-xs text-gray-500">New York, USA</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-4 px-6 hidden sm:table-cell">28</td>
+                  <td class="py-4 px-6">emma.w@email.com</td>
+                  <td class="py-4 px-6 hidden md:table-cell">
+                    <span
+                      class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 ring-1 ring-blue-500/30"
+                      >Verified</span
+                    >
+                  </td>
+                  <td class="py-4 px-6 hidden lg:table-cell">2024-11-15</td>
+                  <td class="py-4 px-6 text-center">
+                    <div class="group relative inline-block">
+                      <button
+                        type="button"
+                        class="text-gray-500 hover:text-gray-900 p-1 rounded-full hover:bg-gray-200 transition-colors focus:outline-none"
+                        aria-expanded="false"
+                      >
+                        <svg
+                          class="w-5 h-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4z"
+                          ></path>
+                        </svg>
+                      </button>
+
+                      <!-- Dropdown -->
+                      <div
+                        class="hidden group-hover:block absolute px-2 right-5 top-1 z-10 mt-2 w-48 border border-[#A1A1A1] rounded-md bg-white py-2 ring-1 ring-black ring-opacity-5 focus:outline-none"
+                      >
+                        <!-- Menu Item -->
+                        <div class="group/item">
+                          <a
+                            href="#"
+                            class="flex gap-2 items-center px-4 py-3 border-b border-[#A1A1A1] md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors"
+                          >
+                            <img
+                              src="./assets/eye-empty.png"
+                              width="24"
+                              alt=""
+                              class="transition-all group-hover/item:invert group-hover/item:brightness-0"
+                            />
+
+                            <span
+                              class="transition-colors group-hover/item:text-white"
+                            >
+                              Edit Profile
+                            </span>
+                          </a>
+                        </div>
+
+                        <div class="group/item">
+                          <a
+                            href="#"
+                            class="flex gap-2 items-center px-4 py-3 border-b border-[#A1A1A1] md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors"
+                          >
+                            <img
+                              src="./assets/edit.png"
+                              width="24"
+                              alt=""
+                              class="transition-all group-hover/item:invert group-hover/item:brightness-0"
+                            />
+
+                            <span
+                              class="transition-colors group-hover/item:text-white"
+                            >
+                              Verify Account
+                            </span>
+                          </a>
+                        </div>
+
+                        <div class="group/item">
+                          <a
+                            href="#"
+                            class="flex gap-2 items-center px-4 py-3 md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors"
+                          >
+                            <img
+                              src="./assets/delete.png"
+                              width="24"
+                              alt=""
+                              class="transition-all group-hover/item:invert group-hover/item:brightness-0"
+                            />
+
+                            <span
+                              class="transition-colors group-hover/item:text-white"
+                            >
+                              Delete User
+                            </span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Row 2: James Smith (Verified) -->
+                <tr
+                  class="border-b hover:bg-gray-50 text-gray-900 transition-colors duration-150"
+                >
+                  <td class="py-4 px-6 font-medium whitespace-nowrap">
+                    <div class="flex items-center space-x-3">
+                      <div
+                        class="w-10 h-10 bg-gradient-to-b from-[#FF8FA3] to-[#FF6F61] rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-inner"
+                      >
+                        J
+                      </div>
+                      <div>
+                        <div class="font-semibold text-gray-900">
+                          James Smith
+                        </div>
+                        <div class="text-xs text-gray-500">London, UK</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-4 px-6 hidden sm:table-cell">32</td>
+                  <td class="py-4 px-6">james.s@email.com</td>
+                  <td class="py-4 px-6 hidden md:table-cell">
+                    <span
+                      class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 ring-1 ring-blue-500/30"
+                      >Verified</span
+                    >
+                  </td>
+                  <td class="py-4 px-6 hidden lg:table-cell">2024-11-10</td>
+                  <td class="py-4 px-6 text-center">
+                    <div class="group relative inline-block">
+                      <button
+                        type="button"
+                        class="text-gray-500 hover:text-gray-900 p-1 rounded-full hover:bg-gray-200 transition-colors focus:outline-none"
+                        aria-expanded="false"
+                      >
+                        <svg
+                          class="w-5 h-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4z"
+                          ></path>
+                        </svg>
+                      </button>
+                      <div
+                        class="hidden group-hover:block absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+                      >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >View Profile</a
+                        >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >Edit</a
+                        >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors"
+                          >Delete</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Row 3: Sophia Garcia (Pending) -->
+                <tr
+                  class="border-b hover:bg-gray-50 text-gray-900 transition-colors duration-150"
+                >
+                  <td class="py-4 px-6 font-medium whitespace-nowrap">
+                    <div class="flex items-center space-x-3">
+                      <div
+                        class="w-10 h-10 bg-gradient-to-b from-[#FF8FA3] to-[#FF6F61] rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-inner"
+                      >
+                        S
+                      </div>
+                      <div>
+                        <div class="font-semibold text-gray-900">
+                          Sophia Garcia
+                        </div>
+                        <div class="text-xs text-gray-500">Madrid, Spain</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-4 px-6 hidden sm:table-cell">25</td>
+                  <td class="py-4 px-6">sophia.g@email.com</td>
+                  <td class="py-4 px-6 hidden md:table-cell">
+                    <span
+                      class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800 ring-1 ring-yellow-500/30"
+                      >Pending</span
+                    >
+                  </td>
+                  <td class="py-4 px-6 hidden lg:table-cell">2024-11-18</td>
+                  <td class="py-4 px-6 text-center">
+                    <div class="group relative inline-block">
+                      <button
+                        type="button"
+                        class="text-gray-500 hover:text-gray-900 p-1 rounded-full hover:bg-gray-200 transition-colors focus:outline-none"
+                        aria-expanded="false"
+                      >
+                        <svg
+                          class="w-5 h-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4z"
+                          ></path>
+                        </svg>
+                      </button>
+                      <div
+                        class="hidden group-hover:block absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+                      >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >View Profile</a
+                        >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >Edit</a
+                        >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors"
+                          >Delete</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Row 4: Michael Brown (Active) -->
+                <tr
+                  class="border-b hover:bg-gray-50 text-gray-900 transition-colors duration-150"
+                >
+                  <td class="py-4 px-6 font-medium whitespace-nowrap">
+                    <div class="flex items-center space-x-3">
+                      <div
+                        class="w-10 h-10 bg-gradient-to-b from-[#FF8FA3] to-[#FF6F61] rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-inner"
+                      >
+                        M
+                      </div>
+                      <div>
+                        <div class="font-semibold text-gray-900">
+                          Michael Brown
+                        </div>
+                        <div class="text-xs text-gray-500">Toronto, Canada</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-4 px-6 hidden sm:table-cell">35</td>
+                  <td class="py-4 px-6">michael.b@email.com</td>
+                  <td class="py-4 px-6 hidden md:table-cell">
+                    <span
+                      class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 ring-1 ring-green-500/30"
+                      >Active</span
+                    >
+                  </td>
+                  <td class="py-4 px-6 hidden lg:table-cell">2024-11-12</td>
+                  <td class="py-4 px-6 text-center">
+                    <div class="group relative inline-block">
+                      <button
+                        type="button"
+                        class="text-gray-500 hover:text-gray-900 p-1 rounded-full hover:bg-gray-200 transition-colors focus:outline-none"
+                        aria-expanded="false"
+                      >
+                        <svg
+                          class="w-5 h-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4z"
+                          ></path>
+                        </svg>
+                      </button>
+                      <div
+                        class="hidden group-hover:block absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+                      >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >View Profile</a
+                        >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >Edit</a
+                        >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors"
+                          >Delete</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Row 5: Olivia Taylor (Banned) -->
+                <tr
+                  class="border-b hover:bg-gray-50 text-gray-900 transition-colors duration-150"
+                >
+                  <td class="py-4 px-6 font-medium whitespace-nowrap">
+                    <div class="flex items-center space-x-3">
+                      <div
+                        class="w-10 h-10 bg-gradient-to-b from-[#FF8FA3] to-[#FF6F61] rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-inner"
+                      >
+                        O
+                      </div>
+                      <div>
+                        <div class="font-semibold text-gray-900">
+                          Olivia Taylor
+                        </div>
+                        <div class="text-xs text-gray-500">
+                          Sydney, Australia
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-4 px-6 hidden sm:table-cell">29</td>
+                  <td class="py-4 px-6">olivia.t@email.com</td>
+                  <td class="py-4 px-6 hidden md:table-cell">
+                    <span
+                      class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800 ring-1 ring-red-500/30"
+                      >Banned</span
+                    >
+                  </td>
+                  <td class="py-4 px-6 hidden lg:table-cell">2024-10-20</td>
+                  <td class="py-4 px-6 text-center">
+                    <div class="group relative inline-block">
+                      <button
+                        type="button"
+                        class="text-gray-500 hover:text-gray-900 p-1 rounded-full hover:bg-gray-200 transition-colors focus:outline-none"
+                        aria-expanded="false"
+                      >
+                        <svg
+                          class="w-5 h-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4z"
+                          ></path>
+                        </svg>
+                      </button>
+                      <div
+                        class="hidden group-hover:block absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+                      >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >View Profile</a
+                        >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >Edit</a
+                        >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors"
+                          >Delete</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Row 6: Daniel Lee (Verified) -->
+                <tr
+                  class="border-b hover:bg-gray-50 text-gray-900 transition-colors duration-150"
+                >
+                  <td class="py-4 px-6 font-medium whitespace-nowrap">
+                    <div class="flex items-center space-x-3">
+                      <div
+                        class="w-10 h-10 bg-gradient-to-b from-[#FF8FA3] to-[#FF6F61] rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-inner"
+                      >
+                        D
+                      </div>
+                      <div>
+                        <div class="font-semibold text-gray-900">
+                          Daniel Lee
+                        </div>
+                        <div class="text-xs text-gray-500">Singapore</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-4 px-6 hidden sm:table-cell">31</td>
+                  <td class="py-4 px-6">daniel.l@email.com</td>
+                  <td class="py-4 px-6 hidden md:table-cell">
+                    <span
+                      class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 ring-1 ring-blue-500/30"
+                      >Verified</span
+                    >
+                  </td>
+                  <td class="py-4 px-6 hidden lg:table-cell">2024-11-08</td>
+                  <td class="py-4 px-6 text-center">
+                    <div class="group relative inline-block">
+                      <button
+                        type="button"
+                        class="text-gray-500 hover:text-gray-900 p-1 rounded-full hover:bg-gray-200 transition-colors focus:outline-none"
+                        aria-expanded="false"
+                      >
+                        <svg
+                          class="w-5 h-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4z"
+                          ></path>
+                        </svg>
+                      </button>
+                      <div
+                        class="hidden group-hover:block absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none"
+                      >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >View Profile</a
+                        >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          >Edit</a
+                        >
+                        <a
+                          href="#"
+                          class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors"
+                          >Delete</a
+                        >
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Table Container -->
+      </main>
+    </div>
+  </body>
+</html>

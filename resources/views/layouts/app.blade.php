@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>@yield('title', config('app.name', 'JB Fresh Chicken and Frozen Food'))</title>
+    <title>@yield('title', config('app.name', 'connect hub'))</title>
 
     @php
-        $defaultMetaDescription = config('app.meta_description', 'JB Fresh Chicken and Frozen Food');
+        $defaultMetaDescription = config('app.meta_description', 'Connect hub');
     @endphp
 
     <meta name="description" content="@yield('meta_description', $defaultMetaDescription)">
@@ -16,6 +16,20 @@
     {{-- Favicon --}}
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
     <link rel="apple-touch-icon" href="{{ asset('favicon.svg') }}">
+
+    <!-- Remix Icons CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+
+    <!-- Google Font: Arimo -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{{ asset('/style.css') }}">
 
     <script>
         // Initialize theme immediately to prevent flash of wrong theme

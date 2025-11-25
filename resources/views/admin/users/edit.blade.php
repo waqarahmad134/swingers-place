@@ -81,11 +81,11 @@
                     <div>
                         <label for="profile_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Profile Type</label>
                         <select id="profile_type" name="profile_type" class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                            <option value="private" {{ old('profile_type', $user->profile_type ?? 'private') === 'private' ? 'selected' : '' }}>Private</option>
-                            <option value="public" {{ old('profile_type', $user->profile_type ?? 'private') === 'public' ? 'selected' : '' }}>Public</option>
+                            <option value="normal" {{ old('profile_type', $user->profile_type ?? 'normal') === 'normal' ? 'selected' : '' }}>Normal</option>
+                            <option value="business" {{ old('profile_type', $user->profile_type ?? 'normal') === 'business' ? 'selected' : '' }}>Business</option>
                         </select>
                         @error('profile_type')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Public profiles are visible on the homepage</p>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Normal profiles are visible on the homepage</p>
                     </div>
                 </div>
             </div>

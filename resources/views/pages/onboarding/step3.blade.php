@@ -1,0 +1,133 @@
+@extends('layouts.onboarding')
+
+@section('title', 'Location')
+
+@php
+    $step = 3;
+    $showExit = true;
+@endphp
+
+@section('content')
+<div class="min-h-[60vh] flex items-center justify-center">
+    <div class="w-full max-w-2xl">
+        <!-- Step Icon -->
+        <div class="flex justify-center mb-4">
+            <div class="w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                <i class="ri-map-pin-line text-3xl text-[#9810FA]"></i>
+            </div>
+        </div>
+
+        <!-- Step Info -->
+        <div class="text-center mb-6">
+            <p class="text-sm text-gray-600 dark:text-gray-400">Step {{ $step }} of 9</p>
+        </div>
+
+        <!-- Card -->
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
+            <!-- Header -->
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                        Location
+                    </h1>
+                    <button type="button" onclick="skipStep({{ $step }})" 
+                            class="text-sm font-semibold text-[#9810FA] hover:text-[#E60076] transition-colors">
+                        Skip
+                    </button>
+                </div>
+                <p class="text-gray-500 dark:text-gray-400 text-sm">
+                    Where are you based?
+                </p>
+            </div>
+
+            <!-- Form -->
+            <form id="step-form" class="space-y-6">
+                @csrf
+                
+                <!-- Home Location -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Home Location
+                    </label>
+                    <input type="text" name="home_location" 
+                           placeholder="Search for your city..."
+                           class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                </div>
+
+                <!-- Map Placeholder -->
+                <div class="bg-gray-100 dark:bg-gray-700 rounded-xl h-48 flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600">
+                    <div class="text-center">
+                        <i class="ri-map-pin-2-line text-4xl text-gray-400 mb-2"></i>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">Map view would appear here</p>
+                    </div>
+                </div>
+
+                <!-- Travel Location -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Travel Location (Optional)
+                    </label>
+                    <input type="text" name="travel_location" 
+                           placeholder="Where do you travel to?"
+                           class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                </div>
+            </form>
+
+            <!-- Navigation -->
+            <div class="mt-8 flex items-center justify-between">
+                <a href="{{ route('onboarding.step2') }}" 
+                   class="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    <i class="ri-arrow-left-line"></i>
+                    <span>Back</span>
+                </a>
+                <button type="submit" form="step-form"
+                        class="py-3 px-8 bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)] text-white rounded-full font-semibold hover:shadow-lg transition-all duration-200 flex items-center gap-2">
+                    <span>Next</span>
+                    <i class="ri-arrow-right-line"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places" defer></script>
+<script>
+document.getElementById('step-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    
+    try {
+        const response = await fetch('{{ route('onboarding.step3.store') }}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        if(data.success) window.location.href = data.next;
+    } catch(error) {
+        alert('An error occurred. Please try again.');
+    }
+});
+
+function skipStep(step) {
+    if(confirm('Skip this step?')) {
+        fetch(`/onboarding/skip/${step}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        }).then(res => res.json()).then(data => {
+            if(data.success) window.location.href = data.next;
+        });
+    }
+}
+</script>
+@endpush
+@endsection
+

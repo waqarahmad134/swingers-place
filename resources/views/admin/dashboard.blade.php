@@ -1,62 +1,178 @@
 @extends('layouts.admin')
 
 @section('title', 'Dashboard - Admin Panel')
+@section('page-title', 'Admin Dashboard')
 
 @section('content')
-    <h1 class="mb-6 text-3xl font-extrabold text-secondary">Dashboard</h1>
-    
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {{-- Total Users Card --}}
-        <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm text-gray-900 transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Users</p>
-                    <p class="mt-2 text-3xl font-extrabold text-dark dark:text-white">
-                        {{ number_format($stats['total_users']) }}
-                    </p>
-                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Registered users</p>
+    <div class="pt-[14px] pb-8">
+        <h2 class="text-[#0A0A0A] text-[24px] font-medium font-['poppins']">Dashboard Overview</h2>
+        <p class="text-[#717182] font-['poppins']">Welcome back! Here's what's happening today.</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
+        <!-- Total Users -->
+        <div class="md:col-span-1 flex items-center justify-center">
+            <div class="shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] border border-gray-100 w-full max-w-sm rounded-[16px] p-6 bg-white">
+                <div class="flex justify-between items-start">
+                    <div class="space-y-2">
+                        <p class="text-[13px] font-normal text-[#717182] font-sans tracking-normal leading-normal">Total Users</p>
+                        <div class="font-['arial'] text-[28px] font-normal text-black font-sans leading-none">{{ number_format($stats['total_users']) }}</div>
+                    </div>
+
+                    <div class="size-[48px] rounded-full flex items-center justify-center bg-[#FCEBEB] text-[#E60076]">
+                        <i class="ri-group-line text-lg"></i>
+                    </div>
                 </div>
-                <div class="rounded-full bg-purple-100 p-3 dark:bg-purple-900/30">
-                    <svg class="h-8 w-8 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-                    </svg>
+
+                <div class="mt-8">
+                    <p class="text-[13px] font-normal text-[#22C55E] font-sans tracking-normal leading-normal">+12% from last month</p>
                 </div>
             </div>
         </div>
-    </div>
 
-    {{-- Quick Actions --}}
-    <div class="mt-8">
-        <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">Quick Actions</h2>
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <a href="{{ route('admin.users.create') }}" class="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 text-gray-900 transition-all hover:border-primary hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-                <svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                <span class="font-semibold">Add User</span>
-            </a>
-            
-            <a href="{{ route('admin.media.index') }}" class="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 text-gray-900 transition-all hover:border-primary hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-                <svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-                <span class="font-semibold">Media Library</span>
-            </a>
-            
-            <a href="{{ route('admin.database.index') }}" class="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 text-gray-900 transition-all hover:border-primary hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-                <svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
-                </svg>
-                <span class="font-semibold">Database</span>
-            </a>
-            
-            <a href="{{ route('admin.settings.general') }}" class="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-4 text-gray-900 transition-all hover:border-primary hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-                <svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-                <span class="font-semibold">Settings</span>
-            </a>
+        <!-- Active Users -->
+        <div class="md:col-span-1 flex items-center justify-center">
+            <div class="shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] border border-gray-100 w-full max-w-sm rounded-[16px] p-6 bg-white">
+                <div class="flex justify-between items-start">
+                    <div class="space-y-2">
+                        <p class="text-[13px] font-normal text-[#717182] font-sans tracking-normal leading-normal">Active Users</p>
+                        <div class="font-['arial'] text-[28px] font-normal text-black font-sans leading-none">{{ number_format($stats['active_users']) }}</div>
+                    </div>
+
+                    <div class="size-[48px] rounded-full flex items-center justify-center bg-[#FCEBEB] text-[#E60076]">
+                        <i class="ri-group-line text-lg"></i>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <p class="text-[13px] font-normal text-[#22C55E] font-sans tracking-normal leading-normal">+8% from last week</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Verifications -->
+        <div class="md:col-span-1 flex items-center justify-center">
+            <div class="shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] border border-gray-100 w-full max-w-sm rounded-[16px] p-6 bg-white">
+                <div class="flex justify-between items-start">
+                    <div class="space-y-2">
+                        <p class="text-[13px] font-normal text-[#717182] font-sans tracking-normal leading-normal">Pending Verifications</p>
+                        <div class="font-['arial'] text-[28px] font-normal text-black font-sans leading-none">{{ $stats['pending_verifications'] }}</div>
+                    </div>
+
+                    <div class="size-[48px] rounded-full flex items-center justify-center bg-[#FCEBEB] text-[#E60076]">
+                        <i class="ri-group-line text-lg"></i>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <p class="text-[13px] font-normal text-[#22C55E] font-sans tracking-normal leading-normal">+8% from last week</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reported Profiles -->
+        <div class="md:col-span-1 flex items-center justify-center">
+            <div class="shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] border border-gray-100 w-full max-w-sm rounded-[16px] p-6 bg-white">
+                <div class="flex justify-between items-start">
+                    <div class="space-y-2">
+                        <p class="text-[13px] font-normal text-[#717182] font-sans tracking-normal leading-normal">Reported Profiles</p>
+                        <div class="font-['arial'] text-[28px] font-normal text-black font-sans leading-none">{{ $stats['reported_profiles'] }}</div>
+                    </div>
+
+                    <div class="size-[48px] rounded-full flex items-center justify-center bg-[#FCEBEB] text-[#E60076]">
+                        <i class="ri-group-line text-lg"></i>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <p class="text-sm text-[#22C55E] font-sans tracking-normal leading-normal text-[#D4183D]">23 new today</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Registrations Today -->
+        <div class="md:col-span-2 flex items-center justify-center">
+            <div class="shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] border border-gray-100 w-full rounded-[16px] p-6 bg-white">
+                <div class="flex justify-between items-start">
+                    <div class="space-y-2">
+                        <p class="text-[13px] font-normal text-[#717182] font-sans tracking-normal leading-normal">New Registrations Today</p>
+                        <div class="font-['arial'] text-[28px] font-normal text-black font-sans leading-none">{{ $stats['new_registrations_today'] }}</div>
+                    </div>
+
+                    <div class="size-[48px] rounded-full flex items-center justify-center bg-[#FCEBEB] text-[#E60076]">
+                        <i class="ri-group-line text-lg"></i>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <p class="text-[13px] font-normal text-[#22C55E] font-sans tracking-normal leading-normal">+35% from last month</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Growth Rate -->
+        <div class="md:col-span-2 flex items-center justify-center">
+            <div class="shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] border border-gray-100 w-full rounded-[16px] p-6 bg-white">
+                <div class="flex justify-between items-start">
+                    <div class="space-y-2">
+                        <p class="text-[13px] font-normal text-[#717182] font-sans tracking-normal leading-normal">Growth Rate</p>
+                        <div class="font-['arial'] text-[28px] font-normal text-black font-sans leading-none">{{ $stats['growth_rate'] }}%</div>
+                    </div>
+
+                    <div class="size-[48px] rounded-full flex items-center justify-center bg-[#FCEBEB] text-[#E60076]">
+                        <i class="ri-group-line text-lg"></i>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <p class="text-[13px] font-normal text-[#22C55E] font-sans tracking-normal leading-normal">+35% from last month</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Growth -->
+        <div class="md:col-span-2 flex items-center justify-center">
+            <div class="shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] border border-gray-100 w-full rounded-[16px] py-6 bg-white">
+                <h2 class="px-6 text-[#0A0A0A] font-medium font-['poppins'] mb-4">User Growth</h2>
+                <img src="{{ asset('admin-assets/chart.png') }}" width="525" height="213" class="w-full h-auto" alt="User Growth Chart" />
+            </div>
+        </div>
+
+        <!-- Active Sessions -->
+        <div class="md:col-span-2 flex items-center justify-center">
+            <div class="shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] border border-gray-100 w-full rounded-[16px] py-6 bg-white">
+                <h2 class="px-6 text-[#0A0A0A] font-medium font-['poppins'] mb-4">Active Sessions (This Week)</h2>
+                <img src="{{ asset('admin-assets/chartbar.png') }}" width="525" height="213" class="w-full h-auto" alt="Active Sessions Chart" />
+            </div>
+        </div>
+
+        <!-- Quick Action -->
+        <div class="mb-[85px] md:col-span-4 flex items-center justify-center">
+            <div class="shadow-[0px_1px_2px_-1px_#0000001A,0px_1px_3px_0px_#0000001A] border border-gray-100 w-full rounded-[16px] p-6 bg-white">
+                <h2 class="text-[#0A0A0A] font-medium font-['poppins'] mb-4">Quick Action</h2>
+
+                <div class="flex gap-4 md:flex-row flex-col">
+                    <a href="#" class="w-full flex flex-col gap-[6px] justify-between items-center border-t border-solid rounded-[12px] border-[1px] border-[#0000001A] bg-[#FFF2F2] p-4 hover:shadow-md transition-all">
+                        <i class="ri-error-warning-line text-lg text-[#FF8FA3]"></i>
+                        <p class="text-[#0A0A0A] font-['poppins']">Verify Users</p>
+                    </a>
+
+                    <a href="{{ route('admin.users.create') }}" class="border-t border-solid w-full flex flex-col gap-[6px] justify-between items-center rounded-[12px] border-[1px] border-[#0000001A] bg-white p-4 hover:shadow-md transition-all">
+                        <i class="ri-user-add-line text-lg text-[#FF8FA3]"></i>
+                        <p class="text-[#0A0A0A] font-['poppins']">Add New User</p>
+                    </a>
+
+                    <a href="{{ route('admin.users.index') }}" class="border-t border-solid w-full flex flex-col gap-[6px] justify-between items-center rounded-[12px] border-[1px] border-[#0000001A] bg-white p-4 hover:shadow-md transition-all">
+                        <i class="ri-user-shared-line text-lg text-[#FF8FA3]"></i>
+                        <p class="text-[#0A0A0A] font-['poppins']">View Details</p>
+                    </a>
+
+                    <a href="#" class="border-t border-solid w-full flex flex-col gap-[6px] justify-between items-center rounded-[12px] border-[1px] border-[#0000001A] bg-white p-4 hover:shadow-md transition-all">
+                        <i class="ri-bar-chart-box-line text-lg text-[#FF8FA3]"></i>
+                        <p class="text-[#0A0A0A] font-['poppins']">View Reports</p>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

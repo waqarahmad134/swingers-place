@@ -44,8 +44,8 @@ class HomeController extends Controller
             ];
         }
 
-        // Get users with companies (only public profiles)
-        $users = User::where('profile_type', 'public')
+        // Get users with companies (only normal profiles)
+        $users = User::where('profile_type', 'normal')
             ->whereNotNull('company')
             ->where('company', '!=', '')
             ->where('is_active', true)
@@ -91,7 +91,7 @@ class HomeController extends Controller
     public function showProfile($id)
     {
         $user = User::where('id', $id)
-            ->where('profile_type', 'public')
+            ->where('profile_type', 'normal')
             ->where('is_active', true)
             ->firstOrFail();
 

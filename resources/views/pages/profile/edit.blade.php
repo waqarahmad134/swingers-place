@@ -11,60 +11,80 @@
             </div>
         @endif
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            <!-- Left Panel - Profile Picture -->
-            <div class="lg:col-span-1">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                    <div class="relative inline-block">
-                        @if($user->profile_image)
-                            <img src="{{ asset('storage/' . $user->profile_image) }}" alt="{{ $user->name }}" class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
-                        @else
-                            <div class="w-32 h-32 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-3xl font-bold border-4 border-white shadow-lg">
-                                {{ strtoupper(substr($user->first_name ?? $user->name, 0, 1)) }}{{ strtoupper(substr($user->last_name ?? '', 0, 1)) }}
+        <form id="profile-form" action="{{ route('account.profile.update') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <!-- Left Panel - Profile Picture -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 space-y-4">
+                        <!-- Profile Picture -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Profile Picture</label>
+                            <div class="relative inline-block">
+                                @if(($profile && $profile->profile_photo) || $user->profile_image)
+                                    <img id="profile-preview" src="{{ asset('storage/' . (($profile && $profile->profile_photo) ? $profile->profile_photo : $user->profile_image)) }}" alt="{{ $user->name }}" class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
+                                @else
+                                    <div id="profile-preview" class="w-32 h-32 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-3xl font-bold border-4 border-white shadow-lg">
+                                        {{ strtoupper(substr($user->first_name ?? $user->name, 0, 1)) }}{{ strtoupper(substr($user->last_name ?? '', 0, 1)) }}
+                                    </div>
+                                @endif
+                                <!-- Change Profile Picture Button -->
+                                <label for="profile_image" class="absolute bottom-0 right-0 w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-purple-700 transition-colors shadow-lg">
+                                    <i class="ri-camera-line text-white text-lg"></i>
+                                    <input type="file" id="profile_image" name="profile_image" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="hidden">
+                                </label>
                             </div>
-                        @endif
-                        <!-- Change Profile Picture Button -->
-                        <label for="profile_image" class="absolute bottom-0 right-0 w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-purple-700 transition-colors shadow-lg">
-                            <i class="ri-camera-line text-white text-lg"></i>
-                            <input type="file" id="profile_image" name="profile_image" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="hidden">
-                        </label>
-                    </div>
-                    
-                    <!-- Change Cover Photo Button -->
-                    <label for="cover_photo" class="mt-4 w-full bg-purple-600 text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2 cursor-pointer hover:bg-purple-700 transition-colors">
-                        <i class="ri-camera-line"></i>
-                        <span>Change Cover Photo</span>
-                        <input type="file" id="cover_photo" name="cover_photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="hidden">
-                    </label>
-                </div>
-            </div>
-
-            <!-- Right Panel - Main Content -->
-            <div class="lg:col-span-3">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                    <!-- Tabs -->
-                    <div class="border-b border-gray-200 dark:border-gray-700">
-                        <div class="flex space-x-1 p-2">
-                            <button onclick="switchTab('account')" id="tab-account" class="tab-button active px-6 py-3 text-sm font-semibold rounded-lg transition-colors bg-gray-800 dark:bg-gray-700 text-white">
-                                <i class="ri-user-line mr-2"></i>
-                                Account
-                            </button>
-                            <button onclick="switchTab('preferences')" id="tab-preferences" class="tab-button px-6 py-3 text-sm font-semibold rounded-lg transition-colors text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <i class="ri-heart-line mr-2"></i>
-                                Preferences
-                            </button>
-                            <button onclick="switchTab('privacy')" id="tab-privacy" class="tab-button px-6 py-3 text-sm font-semibold rounded-lg transition-colors text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <i class="ri-shield-line mr-2"></i>
-                                Privacy
-                            </button>
+                        </div>
+                        
+                        <!-- Cover Photo -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cover Photo</label>
+                            <div class="relative w-full h-32 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+                                @if($profile && $profile->cover_photo)
+                                    <img id="cover-preview" src="{{ asset('storage/' . $profile->cover_photo) }}" alt="Cover Photo" class="w-full h-full object-cover">
+                                @else
+                                    <div id="cover-preview" class="w-full h-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 flex items-center justify-center">
+                                        <span class="text-white text-sm font-medium">No cover photo</span>
+                                    </div>
+                                @endif
+                                <!-- Change Cover Photo Button -->
+                                <label for="cover_photo" class="absolute inset-0 flex items-center justify-center bg-black/40 hover:bg-black/60 transition-colors cursor-pointer">
+                                    <div class="text-white text-center">
+                                        <i class="ri-camera-line text-2xl mb-1 block"></i>
+                                        <span class="text-xs">Change Cover</span>
+                                    </div>
+                                    <input type="file" id="cover_photo" name="cover_photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="hidden">
+                                </label>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Tab Content -->
-                    <div class="p-6">
-                        <form id="profile-form" action="{{ route('account.profile.update') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
+                <!-- Right Panel - Main Content -->
+                <div class="lg:col-span-3">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                        <!-- Tabs -->
+                        <div class="border-b border-gray-200 dark:border-gray-700">
+                            <div class="flex space-x-1 p-2">
+                                <button type="button" onclick="switchTab('account')" id="tab-account" class="tab-button active px-6 py-3 text-sm font-semibold rounded-lg transition-colors bg-gray-800 dark:bg-gray-700 text-white">
+                                    <i class="ri-user-line mr-2"></i>
+                                    Account
+                                </button>
+                                <button type="button" onclick="switchTab('preferences')" id="tab-preferences" class="tab-button px-6 py-3 text-sm font-semibold rounded-lg transition-colors text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <i class="ri-heart-line mr-2"></i>
+                                    Preferences
+                                </button>
+                                <button type="button" onclick="switchTab('privacy')" id="tab-privacy" class="tab-button px-6 py-3 text-sm font-semibold rounded-lg transition-colors text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <i class="ri-shield-line mr-2"></i>
+                                    Privacy
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tab Content -->
+                        <div class="p-6">
 
                             <!-- Account Tab -->
                             <div id="content-account" class="tab-content">
@@ -86,35 +106,303 @@
                                 <!-- Basic Information -->
                                 <div class="mb-8">
                                     <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Basic Information</h3>
-                                    <div class="space-y-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Display Name</label>
-                                            <input type="text" name="name" value="{{ old('name', $user->name) }}" required class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                    @php
+                                        $isCouple = ($profile && $profile->category === 'couple');
+                                        // Use coupleData passed from controller or decode if needed
+                                        $coupleData = $coupleData ?? ($profile && $profile->couple_data ? (is_array($profile->couple_data) ? $profile->couple_data : json_decode($profile->couple_data, true) ?? []) : []);
+                                    @endphp
+
+                                    @if($isCouple)
+                                        <!-- Couple Mode: Show Her and Him sections -->
+                                        
+                                        <!-- Account Level Fields (shown for both single and couple) -->
+                                        <div class="mb-6 space-y-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Display Name</label>
+                                                <input type="text" name="name" value="{{ old('name', $user->name) }}" required class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                                                <input type="email" name="email" value="{{ old('email', $user->email) }}" required class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
-                                            <input type="email" name="email" value="{{ old('email', $user->email) }}" required class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                        
+                                        <!-- Her Section -->
+                                        <div class="border-2 border-pink-200 dark:border-pink-800 rounded-2xl p-6 mb-6">
+                                            <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                                <span class="text-pink-500">👩</span> Her Information
+                                            </h4>
+                                            
+                                            <div class="space-y-4">
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date of Birth</label>
+                                                        <input type="date" name="date_of_birth_her" value="{{ old('date_of_birth_her', $coupleData['date_of_birth_her'] ?? '') }}" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sexuality</label>
+                                                        <select name="sexuality_her" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                            <option value="">Select...</option>
+                                                            <option value="heterosexual" {{ old('sexuality_her', $coupleData['sexuality_her'] ?? '') === 'heterosexual' ? 'selected' : '' }}>Heterosexual</option>
+                                                            <option value="bisexual" {{ old('sexuality_her', $coupleData['sexuality_her'] ?? '') === 'bisexual' ? 'selected' : '' }}>Bisexual</option>
+                                                            <option value="homosexual" {{ old('sexuality_her', $coupleData['sexuality_her'] ?? '') === 'homosexual' ? 'selected' : '' }}>Homosexual</option>
+                                                            <option value="pansexual" {{ old('sexuality_her', $coupleData['sexuality_her'] ?? '') === 'pansexual' ? 'selected' : '' }}>Pansexual</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Relationship Status</label>
+                                                        <select name="relationship_status_her" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                            <option value="">Select...</option>
+                                                            <option value="single" {{ old('relationship_status_her', $coupleData['relationship_status_her'] ?? '') === 'single' ? 'selected' : '' }}>Single</option>
+                                                            <option value="relationship" {{ old('relationship_status_her', $coupleData['relationship_status_her'] ?? '') === 'relationship' ? 'selected' : '' }}>In a Relationship</option>
+                                                            <option value="married" {{ old('relationship_status_her', $coupleData['relationship_status_her'] ?? '') === 'married' ? 'selected' : '' }}>Married</option>
+                                                            <option value="open" {{ old('relationship_status_her', $coupleData['relationship_status_her'] ?? '') === 'open' ? 'selected' : '' }}>Open Relationship</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Smoking</label>
+                                                        <select name="smoking_her" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                            <option value="">Select...</option>
+                                                            <option value="never" {{ old('smoking_her', $coupleData['smoking_her'] ?? '') === 'never' ? 'selected' : '' }}>Never</option>
+                                                            <option value="occasionally" {{ old('smoking_her', $coupleData['smoking_her'] ?? '') === 'occasionally' ? 'selected' : '' }}>Occasionally</option>
+                                                            <option value="regularly" {{ old('smoking_her', $coupleData['smoking_her'] ?? '') === 'regularly' ? 'selected' : '' }}>Regularly</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Experience</label>
+                                                        <select name="experience_her" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                            <option value="">Select...</option>
+                                                            <option value="beginner" {{ old('experience_her', $coupleData['experience_her'] ?? '') === 'beginner' ? 'selected' : '' }}>Beginner</option>
+                                                            <option value="intermediate" {{ old('experience_her', $coupleData['experience_her'] ?? '') === 'intermediate' ? 'selected' : '' }}>Intermediate</option>
+                                                            <option value="experienced" {{ old('experience_her', $coupleData['experience_her'] ?? '') === 'experienced' ? 'selected' : '' }}>Experienced</option>
+                                                            <option value="expert" {{ old('experience_her', $coupleData['experience_her'] ?? '') === 'expert' ? 'selected' : '' }}>Expert</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Travel Options</label>
+                                                        <select name="travel_options_her" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                            <option value="">Select...</option>
+                                                            <option value="can_host" {{ old('travel_options_her', $coupleData['travel_options_her'] ?? '') === 'can_host' ? 'selected' : '' }}>Can Host</option>
+                                                            <option value="can_travel" {{ old('travel_options_her', $coupleData['travel_options_her'] ?? '') === 'can_travel' ? 'selected' : '' }}>Can Travel</option>
+                                                            <option value="both" {{ old('travel_options_her', $coupleData['travel_options_her'] ?? '') === 'both' ? 'selected' : '' }}>Both</option>
+                                                            <option value="neither" {{ old('travel_options_her', $coupleData['travel_options_her'] ?? '') === 'neither' ? 'selected' : '' }}>Neither</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bio - Her</label>
+                                                    <textarea name="bio_her" rows="4" placeholder="Tell us about her..." class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">{{ old('bio_her', $coupleData['bio_her'] ?? '') }}</textarea>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date of Birth</label>
-                                            <input type="date" name="date_of_birth" value="{{ old('date_of_birth', $profile && $profile->date_of_birth ? $profile->date_of_birth->format('Y-m-d') : '') }}" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+
+                                        <!-- Him Section -->
+                                        <div class="border-2 border-blue-200 dark:border-blue-800 rounded-2xl p-6">
+                                            <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                                <span class="text-blue-500">👨</span> Him Information
+                                            </h4>
+                                            
+                                            <div class="space-y-4">
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date of Birth</label>
+                                                        <input type="date" name="date_of_birth_him" value="{{ old('date_of_birth_him', $coupleData['date_of_birth_him'] ?? '') }}" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sexuality</label>
+                                                        <select name="sexuality_him" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                            <option value="">Select...</option>
+                                                            <option value="heterosexual" {{ old('sexuality_him', $coupleData['sexuality_him'] ?? '') === 'heterosexual' ? 'selected' : '' }}>Heterosexual</option>
+                                                            <option value="bisexual" {{ old('sexuality_him', $coupleData['sexuality_him'] ?? '') === 'bisexual' ? 'selected' : '' }}>Bisexual</option>
+                                                            <option value="homosexual" {{ old('sexuality_him', $coupleData['sexuality_him'] ?? '') === 'homosexual' ? 'selected' : '' }}>Homosexual</option>
+                                                            <option value="pansexual" {{ old('sexuality_him', $coupleData['sexuality_him'] ?? '') === 'pansexual' ? 'selected' : '' }}>Pansexual</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Relationship Status</label>
+                                                        <select name="relationship_status_him" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                            <option value="">Select...</option>
+                                                            <option value="single" {{ old('relationship_status_him', $coupleData['relationship_status_him'] ?? '') === 'single' ? 'selected' : '' }}>Single</option>
+                                                            <option value="relationship" {{ old('relationship_status_him', $coupleData['relationship_status_him'] ?? '') === 'relationship' ? 'selected' : '' }}>In a Relationship</option>
+                                                            <option value="married" {{ old('relationship_status_him', $coupleData['relationship_status_him'] ?? '') === 'married' ? 'selected' : '' }}>Married</option>
+                                                            <option value="open" {{ old('relationship_status_him', $coupleData['relationship_status_him'] ?? '') === 'open' ? 'selected' : '' }}>Open Relationship</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Smoking</label>
+                                                        <select name="smoking_him" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                            <option value="">Select...</option>
+                                                            <option value="never" {{ old('smoking_him', $coupleData['smoking_him'] ?? '') === 'never' ? 'selected' : '' }}>Never</option>
+                                                            <option value="occasionally" {{ old('smoking_him', $coupleData['smoking_him'] ?? '') === 'occasionally' ? 'selected' : '' }}>Occasionally</option>
+                                                            <option value="regularly" {{ old('smoking_him', $coupleData['smoking_him'] ?? '') === 'regularly' ? 'selected' : '' }}>Regularly</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="grid grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Experience</label>
+                                                        <select name="experience_him" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                            <option value="">Select...</option>
+                                                            <option value="beginner" {{ old('experience_him', $coupleData['experience_him'] ?? '') === 'beginner' ? 'selected' : '' }}>Beginner</option>
+                                                            <option value="intermediate" {{ old('experience_him', $coupleData['experience_him'] ?? '') === 'intermediate' ? 'selected' : '' }}>Intermediate</option>
+                                                            <option value="experienced" {{ old('experience_him', $coupleData['experience_him'] ?? '') === 'experienced' ? 'selected' : '' }}>Experienced</option>
+                                                            <option value="expert" {{ old('experience_him', $coupleData['experience_him'] ?? '') === 'expert' ? 'selected' : '' }}>Expert</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Travel Options</label>
+                                                        <select name="travel_options_him" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                            <option value="">Select...</option>
+                                                            <option value="can_host" {{ old('travel_options_him', $coupleData['travel_options_him'] ?? '') === 'can_host' ? 'selected' : '' }}>Can Host</option>
+                                                            <option value="can_travel" {{ old('travel_options_him', $coupleData['travel_options_him'] ?? '') === 'can_travel' ? 'selected' : '' }}>Can Travel</option>
+                                                            <option value="both" {{ old('travel_options_him', $coupleData['travel_options_him'] ?? '') === 'both' ? 'selected' : '' }}>Both</option>
+                                                            <option value="neither" {{ old('travel_options_him', $coupleData['travel_options_him'] ?? '') === 'neither' ? 'selected' : '' }}>Neither</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bio - Him</label>
+                                                    <textarea name="bio_him" rows="4" placeholder="Tell us about him..." class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">{{ old('bio_him', $coupleData['bio_him'] ?? '') }}</textarea>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Gender</label>
-                                            <select name="gender" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
-                                                <option value="">Select Gender</option>
-                                                <option value="male" {{ old('gender', $user->gender) === 'male' ? 'selected' : '' }}>Male</option>
-                                                <option value="female" {{ old('gender', $user->gender) === 'female' ? 'selected' : '' }}>Female</option>
-                                                <option value="other" {{ old('gender', $user->gender) === 'other' ? 'selected' : '' }}>Other</option>
-                                                <option value="prefer_not_to_say" {{ old('gender', $user->gender) === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
-                                            </select>
+                                    @else
+                                        <!-- Single Mode: Show regular fields -->
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Display Name</label>
+                                                <input type="text" name="name" value="{{ old('name', $user->name) }}" required class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                                                <input type="email" name="email" value="{{ old('email', $user->email) }}" required class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date of Birth</label>
+                                                <input type="date" name="date_of_birth" value="{{ old('date_of_birth', $profile && $profile->date_of_birth ? $profile->date_of_birth->format('Y-m-d') : '') }}" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Gender</label>
+                                                <select name="gender" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <option value="">Select Gender</option>
+                                                    <option value="male" {{ old('gender', $user->gender) === 'male' ? 'selected' : '' }}>Male</option>
+                                                    <option value="female" {{ old('gender', $user->gender) === 'female' ? 'selected' : '' }}>Female</option>
+                                                    <option value="other" {{ old('gender', $user->gender) === 'other' ? 'selected' : '' }}>Other</option>
+                                                    <option value="prefer_not_to_say" {{ old('gender', $user->gender) === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bio</label>
+                                                <textarea name="bio" rows="4" placeholder="Tell us about yourself..." class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">{{ old('bio', $profile && $profile->bio ? $profile->bio : '') }}</textarea>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bio</label>
-                                            <textarea name="bio" rows="4" placeholder="Tell us about yourself..." class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">{{ old('bio', $profile && $profile->bio ? $profile->bio : '') }}</textarea>
+                                    @endif
+                                </div>
+
+                                @if($isCouple)
+                                    <!-- Personal Details for Couple -->
+                                    <div class="mb-8">
+                                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Personal Details</h3>
+                                        
+                                        <!-- Her Personal Details -->
+                                        <div class="border-2 border-pink-200 dark:border-pink-800 rounded-2xl p-6 mb-6">
+                                            <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                                <span class="text-pink-500">👩</span> Her Details
+                                            </h4>
+                                            
+                                            <div class="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Weight (kg)</label>
+                                                    <input type="number" name="weight_her" value="{{ old('weight_her', $coupleData['weight_her'] ?? '') }}" placeholder="kg" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Height (cm)</label>
+                                                    <input type="number" name="height_her" value="{{ old('height_her', $coupleData['height_her'] ?? '') }}" placeholder="cm" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Body Type</label>
+                                                    <input type="text" name="body_type_her" value="{{ old('body_type_her', $coupleData['body_type_her'] ?? '') }}" placeholder="Ectomorph, Mesomorph, Endomorph" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Eye Color</label>
+                                                    <input type="text" name="eye_color_her" value="{{ old('eye_color_her', $coupleData['eye_color_her'] ?? '') }}" placeholder="brown, blue, green, gray" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Hair Color</label>
+                                                    <input type="text" name="hair_color_her" value="{{ old('hair_color_her', $coupleData['hair_color_her'] ?? '') }}" placeholder="black, brown, blond, red" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tattoos</label>
+                                                    <select name="tattoos_her" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                        <option value="">Select...</option>
+                                                        <option value="yes" {{ old('tattoos_her', $coupleData['tattoos_her'] ?? '') === 'yes' ? 'selected' : '' }}>Yes</option>
+                                                        <option value="no" {{ old('tattoos_her', $coupleData['tattoos_her'] ?? '') === 'no' ? 'selected' : '' }}>No</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Piercings</label>
+                                                    <input type="text" name="piercings_her" value="{{ old('piercings_her', $coupleData['piercings_her'] ?? '') }}" placeholder="Type Here" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Race</label>
+                                                    <input type="text" name="race_her" value="{{ old('race_her', $coupleData['race_her'] ?? '') }}" placeholder="Type Here" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Him Personal Details -->
+                                        <div class="border-2 border-blue-200 dark:border-blue-800 rounded-2xl p-6">
+                                            <h4 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                                <span class="text-blue-500">👨</span> Him Details
+                                            </h4>
+                                            
+                                            <div class="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Weight (kg)</label>
+                                                    <input type="number" name="weight_him" value="{{ old('weight_him', $coupleData['weight_him'] ?? '') }}" placeholder="kg" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Height (cm)</label>
+                                                    <input type="number" name="height_him" value="{{ old('height_him', $coupleData['height_him'] ?? '') }}" placeholder="cm" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Body Type</label>
+                                                    <input type="text" name="body_type_him" value="{{ old('body_type_him', $coupleData['body_type_him'] ?? '') }}" placeholder="Ectomorph, Mesomorph, Endomorph" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Eye Color</label>
+                                                    <input type="text" name="eye_color_him" value="{{ old('eye_color_him', $coupleData['eye_color_him'] ?? '') }}" placeholder="brown, blue, green, gray" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Hair Color</label>
+                                                    <input type="text" name="hair_color_him" value="{{ old('hair_color_him', $coupleData['hair_color_him'] ?? '') }}" placeholder="black, brown, blond, red" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tattoos</label>
+                                                    <select name="tattoos_him" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                        <option value="">Select...</option>
+                                                        <option value="yes" {{ old('tattoos_him', $coupleData['tattoos_him'] ?? '') === 'yes' ? 'selected' : '' }}>Yes</option>
+                                                        <option value="no" {{ old('tattoos_him', $coupleData['tattoos_him'] ?? '') === 'no' ? 'selected' : '' }}>No</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Piercings</label>
+                                                    <input type="text" name="piercings_him" value="{{ old('piercings_him', $coupleData['piercings_him'] ?? '') }}" placeholder="Type Here" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Race</label>
+                                                    <input type="text" name="race_him" value="{{ old('race_him', $coupleData['race_him'] ?? '') }}" placeholder="Type Here" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
 
                                 <!-- Location -->
                                 <div class="mb-8">
@@ -371,11 +659,11 @@
                                     Save Changes
                                 </button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -408,15 +696,44 @@
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                const img = document.querySelector('.relative.inline-block img, .relative.inline-block div');
-                if (img && img.tagName === 'IMG') {
-                    img.src = e.target.result;
-                } else if (img) {
-                    const newImg = document.createElement('img');
-                    newImg.src = e.target.result;
-                    newImg.className = 'w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg';
-                    newImg.alt = '{{ $user->name }}';
-                    img.parentNode.replaceChild(newImg, img);
+                const preview = document.getElementById('profile-preview');
+                if (preview) {
+                    if (preview.tagName === 'IMG') {
+                        preview.src = e.target.result;
+                    } else {
+                        // Replace div with img
+                        const newImg = document.createElement('img');
+                        newImg.id = 'profile-preview';
+                        newImg.src = e.target.result;
+                        newImg.className = 'w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg';
+                        newImg.alt = '{{ $user->name }}';
+                        preview.parentNode.replaceChild(newImg, preview);
+                    }
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Cover photo preview
+    document.getElementById('cover_photo')?.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('cover-preview');
+                if (preview) {
+                    if (preview.tagName === 'IMG') {
+                        preview.src = e.target.result;
+                    } else {
+                        // Replace div with img
+                        const newImg = document.createElement('img');
+                        newImg.id = 'cover-preview';
+                        newImg.src = e.target.result;
+                        newImg.className = 'w-full h-full object-cover';
+                        newImg.alt = 'Cover Photo';
+                        preview.parentNode.replaceChild(newImg, preview);
+                    }
                 }
             };
             reader.readAsDataURL(file);

@@ -59,6 +59,9 @@ return new class extends Migration
             $table->text('looking_for')->nullable();
             $table->text('additional_notes')->nullable();
             
+            // Couple Data (for couple category)
+            $table->json('couple_data')->nullable();
+            
             // Privacy Settings (Step 9)
             $table->boolean('profile_visible')->default(true);
             $table->boolean('allow_wall_posts')->default(true);

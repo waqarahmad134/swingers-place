@@ -19,83 +19,60 @@
                     @csrf
 
                     <div class="grid grid-cols-2 gap-4">
-                        <!-- First Name -->
+                        <!-- Name / Nickname -->
                         <div>
-                            <label for="first_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                First Name
+                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Name / Nickname
                             </label>
                             <input
                                 type="text"
-                                id="first_name"
-                                name="first_name"
-                                value="{{ old('first_name') }}"
-                                required
+                                id="name"
+                                name="name"
+                                value="{{ old('name') }}"
                                 autofocus
                                 class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
-                                placeholder="First Name"
+                                placeholder="Name or Nickname"
                             >
-                            @error('first_name')
+                            @error('name')
                                 <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <!-- Last Name -->
+                        <!-- Username -->
                         <div>
-                            <label for="last_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Last Name
+                            <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Username
                             </label>
                             <input
                                 type="text"
-                                id="last_name"
-                                name="last_name"
-                                value="{{ old('last_name') }}"
-                                required
+                                id="username"
+                                name="username"
+                                value="{{ old('username') }}"
                                 class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
-                                placeholder="Last Name"
+                                placeholder="Username"
                             >
-                            @error('last_name')
+                            @error('username')
                                 <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <!-- Email -->
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Email
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value="{{ old('email') }}"
-                                required
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
-                                placeholder="you@example.com"
-                            >
-                            @error('email')
-                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <!-- Phone -->
-                        <div>
-                            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Phone
-                            </label>
-                            <input
-                                type="tel"
-                                id="phone"
-                                name="phone"
-                                value="{{ old('phone') }}"
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
-                                placeholder="+880 |"
-                            >
-                            @error('phone')
-                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                            @enderror
-                        </div>
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value="{{ old('email') }}"
+                            class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
+                            placeholder="you@example.com"
+                        >
+                        @error('email')
+                            <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
@@ -109,7 +86,6 @@
                                     type="password"
                                     id="password"
                                     name="password"
-                                    required
                                     class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
                                     placeholder="••••••••"
                                 >
@@ -136,7 +112,6 @@
                                     type="password"
                                     id="password_confirmation"
                                     name="password_confirmation"
-                                    required
                                     class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
                                     placeholder="••••••••"
                                 >

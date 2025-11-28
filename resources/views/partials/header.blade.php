@@ -113,33 +113,35 @@
             </button>
             
             <!-- Dropdown Menu -->
-            <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl ring-1 ring-black/10 dark:ring-white/10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-              <div class="py-1">
-                <!-- User Info -->
-                <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-                  <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ Auth::user()->name ?? 'User' }}</p>
-                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ Auth::user()->email }}</p>
-                </div>
-                
-                <!-- Profile Link -->
-                <a href="{{ route('account.profile') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                  <i class="ri-user-line mr-2"></i>Profile
-                </a>
-                
-                <!-- Admin Panel Link (if admin) -->
-                @if (Auth::user()?->is_admin)
-                  <a href="{{ url('/admin') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                    <i class="ri-admin-line mr-2"></i>Admin Panel
+            <div id="user-dropdown-menu" class="absolute right-0 top-full pt-1 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl ring-1 ring-black/10 dark:ring-white/10">
+                <div class="py-1">
+                  <!-- User Info -->
+                  <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                    <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ Auth::user()->name ?? 'User' }}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ Auth::user()->email }}</p>
+                  </div>
+                  
+                  <!-- Profile Link -->
+                  <a href="{{ route('account.profile') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <i class="ri-user-line mr-2"></i>Profile
                   </a>
-                @endif
-                
-                <!-- Logout -->
-                <form method="POST" action="{{ Route::has('logout') ? route('logout') : url('/logout') }}">
-                  @csrf
-                  <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                    <i class="ri-logout-box-line mr-2"></i>Logout
-                  </button>
-                </form>
+                  
+                  <!-- Admin Panel Link (if admin) -->
+                  @if (Auth::user()?->is_admin)
+                    <a href="{{ url('/admin') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                      <i class="ri-admin-line mr-2"></i>Admin Panel
+                    </a>
+                  @endif
+                  
+                  <!-- Logout -->
+                  <form method="POST" action="{{ Route::has('logout') ? route('logout') : url('/logout') }}">
+                    @csrf
+                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                      <i class="ri-logout-box-line mr-2"></i>Logout
+                    </button>
+                  </form>
+                </div>
               </div>
             </div>
           </div>

@@ -3,70 +3,185 @@
 @section('title', 'Create User - Admin Panel')
 
 @section('content')
+<div class="p-6">
     <div class="mb-6">
         <a href="{{ route('admin.users.index') }}" class="text-sm text-gray-600 hover:text-primary dark:text-gray-400">
             ← Back to Users
         </a>
     </div>
 
-    <h1 class="mb-6 text-3xl font-extrabold text-secondary">Create New User</h1>
+    <div class="min-h-[calc(100vh-200px)] flex items-center justify-center">
+        <div class="w-full max-w-2xl">
+            <!-- Register Card -->
+            <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 md:p-10 border border-gray-100 dark:border-gray-700">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                        Create New User
+                    </h1>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">
+                        Profile Type: <strong class="capitalize">{{ $profileType ?? 'normal' }}</strong>
+                    </p>
+                </div>
 
-    <div class="max-w-2xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-        <form action="{{ route('admin.users.store') }}" method="POST" class="space-y-6">
-            @csrf
+                <!-- Register Form -->
+                <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-5">
+                    @csrf
 
-            <div>
-                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name <span class="text-red-600">*</span></label>
-                <input type="text" id="name" name="name" value="{{ old('name') }}" required class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                @error('name')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                    <!-- Hidden profile type -->
+                    <input type="hidden" name="profile_type" value="{{ $profileType ?? 'normal' }}">
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Name / Nickname -->
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Name / Nickname
+                            </label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value="{{ old('name') }}"
+                                autofocus
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
+                                placeholder="Name or Nickname"
+                            >
+                            @error('name')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Username -->
+                        <div>
+                            <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Username
+                            </label>
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                value="{{ old('username') }}"
+                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
+                                placeholder="Username"
+                            >
+                            @error('username')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value="{{ old('email') }}"
+                            class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
+                            placeholder="you@example.com"
+                        >
+                        @error('email')
+                            <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Password -->
+                        <div>
+                            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Password
+                            </label>
+                            <div class="relative">
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
+                                    placeholder="••••••••"
+                                >
+                                <button 
+                                    type="button" 
+                                    onclick="togglePasswordRegister('password')"
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                >
+                                    <i id="eye-icon-password" class="ri-eye-off-line text-xl"></i>
+                                </button>
+                            </div>
+                            @error('password')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div>
+                            <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Confirm Password
+                            </label>
+                            <div class="relative">
+                                <input
+                                    type="password"
+                                    id="password_confirmation"
+                                    name="password_confirmation"
+                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
+                                    placeholder="••••••••"
+                                >
+                                <button 
+                                    type="button" 
+                                    onclick="togglePasswordRegister('password_confirmation')"
+                                    class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                                >
+                                    <i id="eye-icon-password_confirmation" class="ri-eye-off-line text-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <fieldset class="space-y-3 border-t pt-4 dark:border-gray-700">
+                        <legend class="text-sm font-medium text-gray-700 dark:text-gray-300">User Role</legend>
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" name="is_admin" value="1" {{ old('is_admin') ? 'checked' : '' }} class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Admin (can access admin panel)</span>
+                        </label>
+                    </fieldset>
+
+                    <!-- Create Button -->
+                    <button
+                        type="submit"
+                        class="w-full py-3.5 px-4 bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)] text-white text-base font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:ring-offset-2 mt-6"
+                    >
+                        Create User
+                    </button>
+
+                    <!-- Cancel Link -->
+                    <div class="mt-4 text-center">
+                        <a href="{{ route('admin.users.index') }}" class="text-sm font-semibold text-[#9810FA] hover:text-[#E60076] transition-colors">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
             </div>
-
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email <span class="text-red-600">*</span></label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                @error('email')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label for="gender" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Gender</label>
-                <select id="gender" name="gender" class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                    <option value="">Select Gender</option>
-                    <option value="male" {{ old('gender') === 'male' ? 'selected' : '' }}>Male</option>
-                    <option value="female" {{ old('gender') === 'female' ? 'selected' : '' }}>Female</option>
-                    <option value="other" {{ old('gender') === 'other' ? 'selected' : '' }}>Other</option>
-                    <option value="prefer_not_to_say" {{ old('gender') === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
-                </select>
-                @error('gender')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password <span class="text-red-600">*</span></label>
-                <input type="password" id="password" name="password" required class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                @error('password')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-            </div>
-
-            <div>
-                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm Password <span class="text-red-600">*</span></label>
-                <input type="password" id="password_confirmation" name="password_confirmation" required class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-            </div>
-
-            <fieldset class="space-y-3 border-t pt-4 dark:border-gray-700">
-                <legend class="text-sm font-medium text-gray-700 dark:text-gray-300">User Role</legend>
-                <label class="flex items-center gap-2">
-                    <input type="checkbox" name="is_admin" value="1" {{ old('is_admin') ? 'checked' : '' }} class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
-                    <span class="text-sm text-gray-700 dark:text-gray-300">Admin (can access admin panel)</span>
-                </label>
-            </fieldset>
-
-            <div class="flex gap-3 border-t pt-4 dark:border-gray-700">
-                <button type="submit" class="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-secondary">
-                    Create User
-                </button>
-                <a href="{{ route('admin.users.index') }}" class="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
-                    Cancel
-                </a>
-            </div>
-        </form>
+        </div>
     </div>
-@endsection
+</div>
 
+<!-- Password Toggle Script -->
+<script>
+    function togglePasswordRegister(fieldId) {
+        const passwordInput = document.getElementById(fieldId);
+        const eyeIcon = document.getElementById('eye-icon-' + fieldId);
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.remove('ri-eye-off-line');
+            eyeIcon.classList.add('ri-eye-line');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.remove('ri-eye-line');
+            eyeIcon.classList.add('ri-eye-off-line');
+        }
+    }
+</script>
+@endsection

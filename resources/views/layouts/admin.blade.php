@@ -10,6 +10,20 @@
     
     <!-- Remix Icons CDN -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet" />
+    <style>
+        /* Ensure RemixIcon icons display correctly */
+        [class^="ri-"], [class*=" ri-"] {
+            font-family: 'remixicon' !important;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: inline-block;
+        }
+    </style>
     
     <!-- Google Font: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
@@ -59,15 +73,15 @@
                     </div>
                 </a>
 
-                <!-- Verification Center -->
-                <a href="{{ route('admin.verification.index') }}">
+                <!-- Verification Center - Hidden for now -->
+                {{-- <a href="{{ route('admin.verification.index') }}">
                     <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.verification.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
                         <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
                             <img src="{{ asset('admin-assets/verification.png') }}" width="20" alt="Verification" />
                             <h2 class="text-[17px] md:block hidden font-normal">Verification Center</h2>
                         </div>
                     </div>
-                </a>
+                </a> --}}
 
                 <!-- Reported Users -->
                 <a href="{{ route('admin.reported-users.index') }}">
@@ -179,5 +193,30 @@
     @stack('modals')
     
     @stack('scripts')
+    
+    <!-- Verify RemixIcon is loaded -->
+    <script>
+        // Check if RemixIcon font is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const testIcon = document.createElement('i');
+            testIcon.className = 'ri-check-line';
+            testIcon.style.position = 'absolute';
+            testIcon.style.visibility = 'hidden';
+            document.body.appendChild(testIcon);
+            
+            const computedStyle = window.getComputedStyle(testIcon);
+            const fontFamily = computedStyle.fontFamily;
+            
+            // If RemixIcon didn't load, try alternative CDN
+            if (!fontFamily.includes('remixicon') && !fontFamily.includes('RemixIcon')) {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://unpkg.com/remixicon@4.7.0/fonts/remixicon.css';
+                document.head.appendChild(link);
+            }
+            
+            document.body.removeChild(testIcon);
+        });
+    </script>
 </body>
 </html>

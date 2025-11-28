@@ -44,97 +44,304 @@
             <form id="step-form" class="space-y-5">
                 @csrf
                 
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- Date of Birth -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Date of Birth
-                        </label>
-                        <div class="relative">
-                            <input type="date" name="date_of_birth" 
-                                   class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
-                            <i class="ri-calendar-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                @php
+                    $isCouple = isset($profile) && $profile->category === 'couple';
+                @endphp
+
+                @if($isCouple)
+                    <!-- Couple Mode: Show Her and Him sections -->
+                    
+                    <!-- Her Section -->
+                    <div class="border-2 border-pink-200 dark:border-pink-800 rounded-2xl p-6 mb-6">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                            <span class="text-pink-500">👩</span> Her Information
+                        </h3>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Date of Birth - Her -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Date of Birth
+                                </label>
+                                <div class="relative">
+                                    <input type="date" name="date_of_birth_her" 
+                                           class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <i class="ri-calendar-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                                </div>
+                            </div>
+
+                            <!-- Sexuality - Her -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Sexuality
+                                </label>
+                                <select name="sexuality_her" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select...</option>
+                                    <option value="heterosexual">Heterosexual</option>
+                                    <option value="bisexual">Bisexual</option>
+                                    <option value="homosexual">Homosexual</option>
+                                    <option value="pansexual">Pansexual</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mt-4">
+                            <!-- Relationship Status - Her -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Relationship Status
+                                </label>
+                                <select name="relationship_status_her" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select...</option>
+                                    <option value="single">Single</option>
+                                    <option value="relationship">In a Relationship</option>
+                                    <option value="married">Married</option>
+                                    <option value="open">Open Relationship</option>
+                                </select>
+                            </div>
+
+                            <!-- Smoking - Her -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Smoking
+                                </label>
+                                <select name="smoking_her" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select...</option>
+                                    <option value="never">Never</option>
+                                    <option value="occasionally">Occasionally</option>
+                                    <option value="regularly">Regularly</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mt-4">
+                            <!-- Experience - Her -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Experience
+                                </label>
+                                <select name="experience_her" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select...</option>
+                                    <option value="beginner">Beginner</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="experienced">Experienced</option>
+                                    <option value="expert">Expert</option>
+                                </select>
+                            </div>
+
+                            <!-- Travel Options - Her -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Travel Options
+                                </label>
+                                <select name="travel_options_her" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select...</option>
+                                    <option value="can_host">Can Host</option>
+                                    <option value="can_travel">Can Travel</option>
+                                    <option value="both">Both</option>
+                                    <option value="neither">Neither</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Sexuality -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Sexuality
-                        </label>
-                        <select name="sexuality" 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
-                            <option value="">Select...</option>
-                            <option value="heterosexual">Heterosexual</option>
-                            <option value="bisexual">Bisexual</option>
-                            <option value="homosexual">Homosexual</option>
-                            <option value="pansexual">Pansexual</option>
-                        </select>
-                    </div>
-                </div>
+                    <!-- Him Section -->
+                    <div class="border-2 border-blue-200 dark:border-blue-800 rounded-2xl p-6">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                            <span class="text-blue-500">👨</span> Him Information
+                        </h3>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Date of Birth - Him -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Date of Birth
+                                </label>
+                                <div class="relative">
+                                    <input type="date" name="date_of_birth_him" 
+                                           class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <i class="ri-calendar-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                                </div>
+                            </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- Relationship Status -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Relationship Status
-                        </label>
-                        <select name="relationship_status" 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
-                            <option value="">Select...</option>
-                            <option value="single">Single</option>
-                            <option value="relationship">In a Relationship</option>
-                            <option value="married">Married</option>
-                            <option value="open">Open Relationship</option>
-                        </select>
+                            <!-- Sexuality - Him -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Sexuality
+                                </label>
+                                <select name="sexuality_him" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select...</option>
+                                    <option value="heterosexual">Heterosexual</option>
+                                    <option value="bisexual">Bisexual</option>
+                                    <option value="homosexual">Homosexual</option>
+                                    <option value="pansexual">Pansexual</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mt-4">
+                            <!-- Relationship Status - Him -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Relationship Status
+                                </label>
+                                <select name="relationship_status_him" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select...</option>
+                                    <option value="single">Single</option>
+                                    <option value="relationship">In a Relationship</option>
+                                    <option value="married">Married</option>
+                                    <option value="open">Open Relationship</option>
+                                </select>
+                            </div>
+
+                            <!-- Smoking - Him -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Smoking
+                                </label>
+                                <select name="smoking_him" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select...</option>
+                                    <option value="never">Never</option>
+                                    <option value="occasionally">Occasionally</option>
+                                    <option value="regularly">Regularly</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mt-4">
+                            <!-- Experience - Him -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Experience
+                                </label>
+                                <select name="experience_him" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select...</option>
+                                    <option value="beginner">Beginner</option>
+                                    <option value="intermediate">Intermediate</option>
+                                    <option value="experienced">Experienced</option>
+                                    <option value="expert">Expert</option>
+                                </select>
+                            </div>
+
+                            <!-- Travel Options - Him -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Travel Options
+                                </label>
+                                <select name="travel_options_him" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select...</option>
+                                    <option value="can_host">Can Host</option>
+                                    <option value="can_travel">Can Travel</option>
+                                    <option value="both">Both</option>
+                                    <option value="neither">Neither</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <!-- Single Mode: Original fields -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Date of Birth -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Date of Birth
+                            </label>
+                            <div class="relative">
+                                <input type="date" name="date_of_birth" 
+                                       class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <i class="ri-calendar-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                            </div>
+                        </div>
+
+                        <!-- Sexuality -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Sexuality
+                            </label>
+                            <select name="sexuality" 
+                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <option value="">Select...</option>
+                                <option value="heterosexual">Heterosexual</option>
+                                <option value="bisexual">Bisexual</option>
+                                <option value="homosexual">Homosexual</option>
+                                <option value="pansexual">Pansexual</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <!-- Smoking -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Smoking
-                        </label>
-                        <select name="smoking" 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
-                            <option value="">Select...</option>
-                            <option value="never">Never</option>
-                            <option value="occasionally">Occasionally</option>
-                            <option value="regularly">Regularly</option>
-                        </select>
-                    </div>
-                </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Relationship Status -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Relationship Status
+                            </label>
+                            <select name="relationship_status" 
+                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <option value="">Select...</option>
+                                <option value="single">Single</option>
+                                <option value="relationship">In a Relationship</option>
+                                <option value="married">Married</option>
+                                <option value="open">Open Relationship</option>
+                            </select>
+                        </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- Experience -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Experience
-                        </label>
-                        <select name="experience" 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
-                            <option value="">Select...</option>
-                            <option value="beginner">Beginner</option>
-                            <option value="intermediate">Intermediate</option>
-                            <option value="experienced">Experienced</option>
-                            <option value="expert">Expert</option>
-                        </select>
+                        <!-- Smoking -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Smoking
+                            </label>
+                            <select name="smoking" 
+                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <option value="">Select...</option>
+                                <option value="never">Never</option>
+                                <option value="occasionally">Occasionally</option>
+                                <option value="regularly">Regularly</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <!-- Travel Options -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Travel Options
-                        </label>
-                        <select name="travel_options" 
-                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
-                            <option value="">Select...</option>
-                            <option value="can_host">Can Host</option>
-                            <option value="can_travel">Can Travel</option>
-                            <option value="both">Both</option>
-                            <option value="neither">Neither</option>
-                        </select>
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Experience -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Experience
+                            </label>
+                            <select name="experience" 
+                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <option value="">Select...</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="experienced">Experienced</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                        </div>
+
+                        <!-- Travel Options -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Travel Options
+                            </label>
+                            <select name="travel_options" 
+                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <option value="">Select...</option>
+                                <option value="can_host">Can Host</option>
+                                <option value="can_travel">Can Travel</option>
+                                <option value="both">Both</option>
+                                <option value="neither">Neither</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
+                @endif
             </form>
 
             <!-- Navigation -->

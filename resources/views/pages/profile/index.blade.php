@@ -180,7 +180,7 @@
                 @endif
 
                 <!-- Photos Section -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="hidden bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-lg font-bold text-gray-900 dark:text-white">Photos</h2>
                         <a href="#" class="text-sm text-purple-600 dark:text-purple-400 hover:underline font-medium">View All</a>

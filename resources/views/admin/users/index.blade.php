@@ -5,9 +5,15 @@
 
 @section('content')
     <!-- Heading -->
-    <div class="pt-[14px] pb-4 md:pb-8">
-        <h2 class="text-[#0A0A0A] text-[24px] font-medium font-['poppins']">User Management</h2>
-        <p class="text-[#717182] text-xs md:text-base font-['poppins']">Manage and moderate all user accounts</p>
+    <div class="pt-[14px] pb-4 md:pb-8 flex justify-between items-center">
+        <div>
+            <h2 class="text-[#0A0A0A] text-[24px] font-medium font-['poppins']">User Management</h2>
+            <p class="text-[#717182] text-xs md:text-base font-['poppins']">Manage and moderate all user accounts</p>
+        </div>
+        <a href="{{ route('admin.users.select-profile-type') }}" class="bg-[#FF8FA3] hover:bg-[#FF7A91] text-white px-6 py-2.5 rounded-xl font-semibold transition-colors flex items-center gap-2">
+            <i class="ri-user-add-line"></i>
+            <span>Create User</span>
+        </a>
     </div>
 
     <!-- Search and Filter Bar -->

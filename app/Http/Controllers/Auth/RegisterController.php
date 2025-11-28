@@ -33,24 +33,57 @@ class RegisterController extends Controller
      */
     public function register(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        $rules = [
+            'name' => ['nullable', 'string', 'max:255'],
+            'first_name' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+            'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+        ];
+
+        // Only validate username uniqueness if username is provided
+        if ($request->has('username') && !empty($request->username)) {
+            $rules['username'] = ['nullable', 'string', 'max:255', 'unique:users,username'];
+        } else {
+            $rules['username'] = ['nullable', 'string', 'max:255'];
+        }
+
+        // Only validate email uniqueness if email is provided
+        if ($request->has('email') && !empty($request->email)) {
+            $rules['email'] = ['nullable', 'string', 'email', 'max:255', 'unique:users,email'];
+        } else {
+            $rules['email'] = ['nullable', 'string', 'email', 'max:255'];
+        }
+
+        $validated = $request->validate($rules);
 
         // Get profile type from session
         $profileType = session('selected_profile_type', 'normal');
 
+        // Handle name - use 'name' field if provided, otherwise construct from first_name/last_name, or use username
+        if (!empty($validated['name'])) {
+            $fullName = $validated['name'];
+        } elseif (!empty($validated['first_name']) || !empty($validated['last_name'])) {
+            $fullName = trim(($validated['first_name'] ?? '') . ' ' . ($validated['last_name'] ?? ''));
+        } elseif (!empty($validated['username'])) {
+            $fullName = $validated['username'];
+        } else {
+            $fullName = 'User';
+        }
+
+        // Generate a password if not provided (required for authentication)
+        $password = isset($validated['password']) && !empty($validated['password']) 
+            ? Hash::make($validated['password']) 
+            : Hash::make(uniqid('user_', true));
+
         $user = User::create([
-            'name' => $validated['first_name'] . ' ' . $validated['last_name'],
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
-            'email' => $validated['email'],
+            'name' => trim($fullName) ?: 'User',
+            'username' => $validated['username'] ?? null,
+            'first_name' => $validated['first_name'] ?? null,
+            'last_name' => $validated['last_name'] ?? null,
+            'email' => $validated['email'] ?? null,
             'phone' => $validated['phone'] ?? null,
-            'password' => Hash::make($validated['password']),
+            'password' => $password,
             'profile_type' => $profileType,
             'is_admin' => false,
             'is_active' => true,

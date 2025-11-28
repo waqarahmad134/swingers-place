@@ -44,38 +44,127 @@
             <form id="step-form" class="space-y-6" enctype="multipart/form-data">
                 @csrf
                 
-                <!-- Profile Photo -->
-                <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer" 
-                     onclick="document.getElementById('profile_photo').click()">
-                    <input type="file" id="profile_photo" name="profile_photo" accept="image/*" class="hidden" onchange="previewImage(this, 'profile-preview')">
-                    <div id="profile-preview">
-                        <i class="ri-camera-line text-5xl text-gray-400 mb-3"></i>
-                        <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Profile Photo</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
-                    </div>
-                </div>
+                @php
+                    $isCouple = isset($profile) && $profile->category === 'couple';
+                @endphp
 
-                <!-- Cover Photo -->
-                <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer" 
-                     onclick="document.getElementById('cover_photo').click()">
-                    <input type="file" id="cover_photo" name="cover_photo" accept="image/*" class="hidden" onchange="previewImage(this, 'cover-preview')">
-                    <div id="cover-preview">
-                        <i class="ri-image-line text-5xl text-gray-400 mb-3"></i>
-                        <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Cover Photo</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
-                    </div>
-                </div>
+                @if($isCouple)
+                    <!-- Couple Mode: Show Her and Him sections -->
+                    
+                    <!-- Her Section -->
+                    <div class="border-2 border-pink-200 dark:border-pink-800 rounded-2xl p-6 mb-6">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                            <span class="text-pink-500">👩</span> Her Photos
+                        </h3>
+                        
+                        <!-- Profile Photo - Her -->
+                        <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer mb-4" 
+                             onclick="document.getElementById('profile_photo_her').click()">
+                            <input type="file" id="profile_photo_her" name="profile_photo_her" accept="image/*" class="hidden" onchange="previewImage(this, 'profile-preview-her')">
+                            <div id="profile-preview-her">
+                                <i class="ri-camera-line text-5xl text-gray-400 mb-3"></i>
+                                <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Profile Photo</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
+                            </div>
+                        </div>
 
-                <!-- Album Photos -->
-                <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer" 
-                     onclick="document.getElementById('album_photos').click()">
-                    <input type="file" id="album_photos" name="album_photos[]" accept="image/*" multiple class="hidden" onchange="previewMultipleImages(this)">
-                    <div id="album-preview">
-                        <i class="ri-gallery-line text-5xl text-gray-400 mb-3"></i>
-                        <p class="font-semibold text-gray-900 dark:text-white mb-1">Add to Album</p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Upload multiple photos</p>
+                        <!-- Cover Photo - Her -->
+                        <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer mb-4" 
+                             onclick="document.getElementById('cover_photo_her').click()">
+                            <input type="file" id="cover_photo_her" name="cover_photo_her" accept="image/*" class="hidden" onchange="previewImage(this, 'cover-preview-her')">
+                            <div id="cover-preview-her">
+                                <i class="ri-image-line text-5xl text-gray-400 mb-3"></i>
+                                <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Cover Photo</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
+                            </div>
+                        </div>
+
+                        <!-- Album Photos - Her -->
+                        <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer" 
+                             onclick="document.getElementById('album_photos_her').click()">
+                            <input type="file" id="album_photos_her" name="album_photos_her[]" accept="image/*" multiple class="hidden" onchange="previewMultipleImages(this, 'album-preview-her')">
+                            <div id="album-preview-her">
+                                <i class="ri-gallery-line text-5xl text-gray-400 mb-3"></i>
+                                <p class="font-semibold text-gray-900 dark:text-white mb-1">Add to Album</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Upload multiple photos</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
+
+                    <!-- Him Section -->
+                    <div class="border-2 border-blue-200 dark:border-blue-800 rounded-2xl p-6">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                            <span class="text-blue-500">👨</span> Him Photos
+                        </h3>
+                        
+                        <!-- Profile Photo - Him -->
+                        <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer mb-4" 
+                             onclick="document.getElementById('profile_photo_him').click()">
+                            <input type="file" id="profile_photo_him" name="profile_photo_him" accept="image/*" class="hidden" onchange="previewImage(this, 'profile-preview-him')">
+                            <div id="profile-preview-him">
+                                <i class="ri-camera-line text-5xl text-gray-400 mb-3"></i>
+                                <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Profile Photo</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
+                            </div>
+                        </div>
+
+                        <!-- Cover Photo - Him -->
+                        <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer mb-4" 
+                             onclick="document.getElementById('cover_photo_him').click()">
+                            <input type="file" id="cover_photo_him" name="cover_photo_him" accept="image/*" class="hidden" onchange="previewImage(this, 'cover-preview-him')">
+                            <div id="cover-preview-him">
+                                <i class="ri-image-line text-5xl text-gray-400 mb-3"></i>
+                                <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Cover Photo</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
+                            </div>
+                        </div>
+
+                        <!-- Album Photos - Him -->
+                        <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer" 
+                             onclick="document.getElementById('album_photos_him').click()">
+                            <input type="file" id="album_photos_him" name="album_photos_him[]" accept="image/*" multiple class="hidden" onchange="previewMultipleImages(this, 'album-preview-him')">
+                            <div id="album-preview-him">
+                                <i class="ri-gallery-line text-5xl text-gray-400 mb-3"></i>
+                                <p class="font-semibold text-gray-900 dark:text-white mb-1">Add to Album</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Upload multiple photos</p>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <!-- Single Mode: Original fields -->
+                    <!-- Profile Photo -->
+                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer" 
+                         onclick="document.getElementById('profile_photo').click()">
+                        <input type="file" id="profile_photo" name="profile_photo" accept="image/*" class="hidden" onchange="previewImage(this, 'profile-preview')">
+                        <div id="profile-preview">
+                            <i class="ri-camera-line text-5xl text-gray-400 mb-3"></i>
+                            <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Profile Photo</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
+                        </div>
+                    </div>
+
+                    <!-- Cover Photo -->
+                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer" 
+                         onclick="document.getElementById('cover_photo').click()">
+                        <input type="file" id="cover_photo" name="cover_photo" accept="image/*" class="hidden" onchange="previewImage(this, 'cover-preview')">
+                        <div id="cover-preview">
+                            <i class="ri-image-line text-5xl text-gray-400 mb-3"></i>
+                            <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Cover Photo</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
+                        </div>
+                    </div>
+
+                    <!-- Album Photos -->
+                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer" 
+                         onclick="document.getElementById('album_photos').click()">
+                        <input type="file" id="album_photos" name="album_photos[]" accept="image/*" multiple class="hidden" onchange="previewMultipleImages(this)">
+                        <div id="album-preview">
+                            <i class="ri-gallery-line text-5xl text-gray-400 mb-3"></i>
+                            <p class="font-semibold text-gray-900 dark:text-white mb-1">Add to Album</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Upload multiple photos</p>
+                        </div>
+                    </div>
+                @endif
             </form>
 
             <!-- Navigation -->
@@ -110,9 +199,9 @@ function previewImage(input, previewId) {
     }
 }
 
-function previewMultipleImages(input) {
+function previewMultipleImages(input, previewId = 'album-preview') {
     if (input.files && input.files.length > 0) {
-        document.getElementById('album-preview').innerHTML = `
+        document.getElementById(previewId).innerHTML = `
             <i class="ri-check-line text-5xl text-green-500 mb-3"></i>
             <p class="font-semibold text-gray-900 dark:text-white mb-1">${input.files.length} photo(s) selected</p>
             <p class="text-sm text-gray-500 dark:text-gray-400">Click to change</p>

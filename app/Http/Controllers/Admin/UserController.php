@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -77,38 +78,112 @@ class UserController extends Controller
         return view('admin.users.index', compact('users', 'search', 'status', 'counts'));
     }
 
-    public function create(): View
+    public function create(): View|RedirectResponse
     {
-        return view('admin.users.create');
+        // Check if profile type is selected, if not redirect to profile type selection
+        if (!session('admin_creating_profile_type')) {
+            return redirect()->route('admin.users.select-profile-type');
+        }
+        
+        $profileType = session('admin_creating_profile_type');
+        return view('admin.users.create', compact('profileType'));
+    }
+    
+    // Profile type selection (before user creation)
+    public function selectProfileType(): View
+    {
+        return view('admin.users.select-profile-type');
+    }
+    
+    public function storeProfileType(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'profile_type' => 'required|in:normal,business',
+        ]);
+        
+        // Store profile type in session
+        session(['admin_creating_profile_type' => $request->profile_type]);
+        
+        return redirect()->route('admin.users.create');
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'phone' => ['nullable', 'string', 'max:255'],
-            'gender' => ['nullable', 'in:male,female,other,prefer_not_to_say'],
-            'profile_type' => ['nullable', 'in:public,private'],
-            'company' => ['nullable', 'string', 'max:255'],
-            'website_url' => ['nullable', 'url', 'max:255'],
-            'address' => ['nullable', 'string'],
-            'business_address' => ['nullable', 'string'],
-            'ssn' => ['nullable', 'string', 'max:255'],
+        $rules = [
+            'name' => ['nullable', 'string', 'max:255'],
+            'first_name' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'password' => ['nullable', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+            'profile_type' => ['nullable', 'in:normal,business'],
             'is_admin' => ['nullable', 'boolean'],
             'is_active' => ['nullable', 'boolean'],
+        ];
+
+        // Only validate username uniqueness if username is provided
+        if ($request->has('username') && !empty($request->username)) {
+            $rules['username'] = ['nullable', 'string', 'max:255', 'unique:users,username'];
+        } else {
+            $rules['username'] = ['nullable', 'string', 'max:255'];
+        }
+
+        // Only validate email uniqueness if email is provided
+        if ($request->has('email') && !empty($request->email)) {
+            $rules['email'] = ['nullable', 'string', 'email', 'max:255', 'unique:users,email'];
+        } else {
+            $rules['email'] = ['nullable', 'string', 'email', 'max:255'];
+        }
+
+        $validated = $request->validate($rules);
+
+        // Get profile type from session or request
+        $profileType = $validated['profile_type'] ?? session('admin_creating_profile_type', 'normal');
+
+        // Handle name - use 'name' field if provided, otherwise construct from first_name/last_name, or use username
+        if (!empty($validated['name'])) {
+            $fullName = $validated['name'];
+        } elseif (!empty($validated['first_name']) || !empty($validated['last_name'])) {
+            $fullName = trim(($validated['first_name'] ?? '') . ' ' . ($validated['last_name'] ?? ''));
+        } elseif (!empty($validated['username'])) {
+            $fullName = $validated['username'];
+        } else {
+            $fullName = 'User';
+        }
+
+        // Generate a password if not provided (required for authentication)
+        $password = isset($validated['password']) && !empty($validated['password']) 
+            ? \Illuminate\Support\Facades\Hash::make($validated['password']) 
+            : \Illuminate\Support\Facades\Hash::make(uniqid('user_', true));
+
+        $user = User::create([
+            'name' => trim($fullName) ?: 'User',
+            'username' => $validated['username'] ?? null,
+            'first_name' => $validated['first_name'] ?? null,
+            'last_name' => $validated['last_name'] ?? null,
+            'email' => $validated['email'] ?? null,
+            'phone' => $validated['phone'] ?? null,
+            'password' => $password,
+            'profile_type' => $profileType,
+            'is_admin' => $request->boolean('is_admin', false),
+            'is_active' => $request->boolean('is_active', true),
         ]);
 
-        $validated['password'] = bcrypt($validated['password']);
-        $validated['is_admin'] = $request->boolean('is_admin', false);
-        $validated['is_active'] = $request->boolean('is_active', true);
-        $validated['profile_type'] = $validated['profile_type'] ?? 'normal';
+        // Store user_id in session for onboarding
+        session(['admin_creating_user_id' => $user->id]);
+        
+        // Clear profile type from session
+        session()->forget('admin_creating_profile_type');
+        
+        // Create basic profile (not completed) - same as registration
+        \App\Models\UserProfile::create([
+            'user_id' => $user->id,
+            'profile_type' => $profileType,
+            'onboarding_completed' => false,
+            'onboarding_step' => 1, // Will start at step 1 (category selection)
+        ]);
 
-        User::create($validated);
-
-        return redirect()->route('admin.users.index')
-            ->with('success', 'User created successfully!');
+        // Redirect to admin onboarding - start with step 1 (category selection)
+        return redirect()->route('admin.users.onboarding.step1');
     }
 
     public function edit(User $user): View

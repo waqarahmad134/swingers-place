@@ -31,6 +31,15 @@
 
     <link rel="stylesheet" href="{{ asset('/style.css') }}">
 
+    <style>
+        /* Ensure user dropdown hover works */
+        .group:hover #user-dropdown-menu,
+        #user-dropdown-menu:hover {
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+    </style>
+
     <script>
         // Initialize theme immediately to prevent flash of wrong theme
         (function() {

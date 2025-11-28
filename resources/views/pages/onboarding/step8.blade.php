@@ -44,35 +44,118 @@
             <form id="step-form" class="space-y-6">
                 @csrf
                 
-                <!-- Describe Yourself -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Describe Yourself
-                    </label>
-                    <textarea name="bio" rows="4" 
-                              placeholder="Tell us about yourself, your interests, and what makes you unique..."
-                              class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all resize-none"></textarea>
-                </div>
+                @php
+                    $isCouple = isset($profile) && $profile->category === 'couple';
+                @endphp
 
-                <!-- What Are You Hoping to Find -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        What Are You Hoping to Find?
-                    </label>
-                    <textarea name="looking_for" rows="4" 
-                              placeholder="Describe what kind of connections or experiences you're looking for..."
-                              class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all resize-none"></textarea>
-                </div>
+                @if($isCouple)
+                    <!-- Couple Mode: Show Her and Him sections -->
+                    
+                    <!-- Her Section -->
+                    <div class="border-2 border-pink-200 dark:border-pink-800 rounded-2xl p-6 mb-6">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                            <span class="text-pink-500">👩</span> Her Story
+                        </h3>
+                        
+                        <!-- Describe Yourself - Her -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Describe Yourself
+                            </label>
+                            <textarea name="bio_her" rows="4" 
+                                      placeholder="Tell us about yourself, your interests, and what makes you unique..."
+                                      class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all resize-none"></textarea>
+                        </div>
 
-                <!-- Additional Notes -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Additional Notes (Optional)
-                    </label>
-                    <textarea name="additional_notes" rows="3" 
-                              placeholder="Any other information you'd like to share..."
-                              class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all resize-none"></textarea>
-                </div>
+                        <!-- What Are You Hoping to Find - Her -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                What Are You Hoping to Find?
+                            </label>
+                            <textarea name="looking_for_her" rows="4" 
+                                      placeholder="Describe what kind of connections or experiences you're looking for..."
+                                      class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all resize-none"></textarea>
+                        </div>
+
+                        <!-- Additional Notes - Her -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Additional Notes (Optional)
+                            </label>
+                            <textarea name="additional_notes_her" rows="3" 
+                                      placeholder="Any other information you'd like to share..."
+                                      class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all resize-none"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Him Section -->
+                    <div class="border-2 border-blue-200 dark:border-blue-800 rounded-2xl p-6">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                            <span class="text-blue-500">👨</span> Him Story
+                        </h3>
+                        
+                        <!-- Describe Yourself - Him -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Describe Yourself
+                            </label>
+                            <textarea name="bio_him" rows="4" 
+                                      placeholder="Tell us about yourself, your interests, and what makes you unique..."
+                                      class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all resize-none"></textarea>
+                        </div>
+
+                        <!-- What Are You Hoping to Find - Him -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                What Are You Hoping to Find?
+                            </label>
+                            <textarea name="looking_for_him" rows="4" 
+                                      placeholder="Describe what kind of connections or experiences you're looking for..."
+                                      class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all resize-none"></textarea>
+                        </div>
+
+                        <!-- Additional Notes - Him -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Additional Notes (Optional)
+                            </label>
+                            <textarea name="additional_notes_him" rows="3" 
+                                      placeholder="Any other information you'd like to share..."
+                                      class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all resize-none"></textarea>
+                        </div>
+                    </div>
+                @else
+                    <!-- Single Mode: Original fields -->
+                    <!-- Describe Yourself -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Describe Yourself
+                        </label>
+                        <textarea name="bio" rows="4" 
+                                  placeholder="Tell us about yourself, your interests, and what makes you unique..."
+                                  class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all resize-none"></textarea>
+                    </div>
+
+                    <!-- What Are You Hoping to Find -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            What Are You Hoping to Find?
+                        </label>
+                        <textarea name="looking_for" rows="4" 
+                                  placeholder="Describe what kind of connections or experiences you're looking for..."
+                                  class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all resize-none"></textarea>
+                    </div>
+
+                    <!-- Additional Notes -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Additional Notes (Optional)
+                        </label>
+                        <textarea name="additional_notes" rows="3" 
+                                  placeholder="Any other information you'd like to share..."
+                                  class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all resize-none"></textarea>
+                    </div>
+                @endif
             </form>
 
             <!-- Navigation -->

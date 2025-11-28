@@ -18,7 +18,7 @@
     <div class="py-6 px-4 md:px-7">
         <a href="{{ route('home') }}" class="inline-flex items-center gap-2">
             <i class="ri-hearts-fill text-2xl" style="color: #9810FA;"></i>
-            <span class="text-xl font-bold text-gray-900 dark:text-white">ConnectHub</span>
+            <span class="text-xl font-bold text-gray-900 dark:text-white">swingers place</span>
         </a>
         @if(isset($showExit) && $showExit)
             <a href="{{ route('home') }}" class="float-right text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">Exit</a>
@@ -46,7 +46,7 @@
                 <div>
                     <div class="flex items-center gap-2 mb-4">
                         <i class="ri-hearts-fill text-2xl"></i>
-                        <span class="text-xl font-bold">ConnectHub</span>
+                        <span class="text-xl font-bold">swingers place</span>
                     </div>
                     <p class="text-sm opacity-90">Find your perfect match today.</p>
                 </div>
@@ -84,7 +84,7 @@
 
             <!-- Social Links & Copyright -->
             <div class="mt-12 pt-8 border-t border-white/20 flex flex-col md:flex-row justify-between items-center gap-4 text-white text-sm">
-                <p class="opacity-90">© 2025 ConnectHub. All rights reserved.</p>
+                <p class="opacity-90">© 2025 swingers place. All rights reserved.</p>
                 <div class="flex gap-4">
                     <a href="#" class="hover:opacity-100 opacity-90"><i class="ri-facebook-fill text-xl"></i></a>
                     <a href="#" class="hover:opacity-100 opacity-90"><i class="ri-twitter-fill text-xl"></i></a>

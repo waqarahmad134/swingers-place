@@ -13,8 +13,8 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'CRM System'),
-    'meta_description' => env('APP_META_DESCRIPTION', 'CRM System'),
+    'name' => env('APP_NAME', 'swingers place'),
+    'meta_description' => env('APP_META_DESCRIPTION', 'swingers place'),
     'logo_url' => env('APP_LOGO_URL', null),
 
     /*
@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://swingers.place'),
 
     /*
     |--------------------------------------------------------------------------

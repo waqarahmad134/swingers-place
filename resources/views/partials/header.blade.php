@@ -1,5 +1,5 @@
 @php
-    $siteName = config('app.name', 'Connect Hub');
+    $siteName = config('app.name', 'swingers place');
     $logoUrl = config('app.logo_url', null);
     $hasLogo = !empty($logoUrl);
 

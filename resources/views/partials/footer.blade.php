@@ -38,6 +38,6 @@
 
       <!-- COPY  RIGHT -->
       <div class="text-white md:mt-1 mt-5 mx-auto">
-        © 2025 ConnectHub. All rights reserved.
+        © 2025 swingers place. All rights reserved.
       </div>
     </footer>

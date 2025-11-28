@@ -397,7 +397,7 @@
         >
           <img src="assets/quote.png" class="size-[40px]" alt="heart" />
           <p class="text-[#4A5565] leading-[24px]">
-            We've met amazing people through ConnectHub! The verification system
+            We've met amazing people through swingers place! The verification system
             makes us feel safe, and the events are fantastic. Best platform
             we've tried!
           </p>
@@ -444,7 +444,7 @@
         >
           <img src="assets/quote.png" class="size-[40px]" alt="heart" />
           <p class="text-[#4A5565] leading-[24px]">
-            ConnectHub has been incredible for our business. We host monthly
+            swingers place has been incredible for our business. We host monthly
             events and the platform makes it easy to reach engaged members.
           </p>
           <img
@@ -653,7 +653,7 @@
         <p
           class="font-arimo font-normal text-xl leading-7 tracking-normal text-center text-[rgba(74,85,101,1)]"
         >
-          Everything you need to know about ConnectHub
+          Everything you need to know about swingers place
         </p>
       </div>
 
@@ -664,7 +664,7 @@
         >
           <div>
             <h1 class="md:text-2xl text-[#101828] text-[18px]">
-              Is ConnectHub safe and secure?
+              Is swingers place safe and secure?
             </h1>
           </div>
           <p
@@ -683,7 +683,7 @@
         >
           <div>
             <h1 class="md:text-2xl text-[#101828] text-[18px]">
-              Is ConnectHub safe and secure?
+              Is swingers place safe and secure?
             </h1>
           </div>
           <p
@@ -702,7 +702,7 @@
         >
           <div>
             <h1 class="md:text-2xl text-[#101828] text-[18px]">
-              Is ConnectHub safe and secure?
+              Is swingers place safe and secure?
             </h1>
           </div>
           <p
@@ -721,7 +721,7 @@
         >
           <div>
             <h1 class="md:text-2xl text-[#101828] text-[18px]">
-              Is ConnectHub safe and secure?
+              Is swingers place safe and secure?
             </h1>
           </div>
           <p
@@ -740,7 +740,7 @@
         >
           <div>
             <h1 class="md:text-2xl text-[#101828] text-[18px]">
-              Is ConnectHub safe and secure?
+              Is swingers place safe and secure?
             </h1>
           </div>
           <p
@@ -759,7 +759,7 @@
         >
           <div>
             <h1 class="md:text-2xl text-[#101828] text-[18px]">
-              Is ConnectHub safe and secure?
+              Is swingers place safe and secure?
             </h1>
           </div>
           <p
@@ -782,7 +782,7 @@
       <p
         class="max-w-[637px] text-center text-[#F3E8FF] text-[11px] md:text-[20px] text-white font-normal"
       >
-        Join thousands of members who have found meaningful connections on ConnectHub
+        Join thousands of members who have found meaningful connections on swingers place
       </p>
       <div class="flex gap-5">
         <button class="bg-[#FFFFFF] text-xs md:text-base text-[#9810FA] px-3 py-3 rounded-full md:py-4 md:px-3">

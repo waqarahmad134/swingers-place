@@ -110,7 +110,7 @@
                 $category = $profile && $profile->category ? $profile->category : 'single_male';
                 $displayName = $member->name ?: ($member->first_name . ' ' . $member->last_name) ?: 'User #' . $member->id;
             @endphp
-            <div class="bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg hover:shadow-purple-500/20">
+            <a href="{{ route('user.profile', $member->id) }}" class="block bg-gray-800 rounded-2xl overflow-hidden border border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg hover:shadow-purple-500/20">
                 <!-- Profile Image -->
                 <div class="relative">
                     <img 
@@ -173,18 +173,18 @@
                             <span class="text-white text-sm font-medium">{{ rand(200, 2000) }}</span>
                         </div>
                         @if(rand(0, 4) === 0)
-                            <button class="bg-[#9810FA] text-white text-xs font-semibold px-4 py-1.5 rounded-lg">
+                            <button class="bg-[#9810FA] text-white text-xs font-semibold px-4 py-1.5 rounded-lg" onclick="event.stopPropagation();">
                                 Connected
                             </button>
                         @else
-                            <a href="{{ route('user.profile', $member->id) }}" class="bg-[#9810FA] hover:bg-purple-700 text-white text-xs font-semibold px-4 py-1.5 rounded-full flex items-center gap-1 transition-colors">
+                            <button onclick="event.stopPropagation(); window.location.href='{{ route('user.profile', $member->id) }}'" class="bg-[#9810FA] hover:bg-purple-700 text-white text-xs font-semibold px-4 py-1.5 rounded-full flex items-center gap-1 transition-colors">
                                 <i class="ri-user-add-line"></i>
                                 <span>Connect</span>
-                            </a>
+                            </button>
                         @endif
                     </div>
                 </div>
-            </div>
+            </a>
         @empty
             <div class="col-span-full text-center py-12">
                 <p class="text-gray-400 text-lg">No members found matching your criteria.</p>

@@ -95,7 +95,21 @@ class HomeController extends Controller
             ->where('is_active', true)
             ->firstOrFail();
 
-        return view('pages.user.profile', compact('user'));
+        $profile = $user->profile;
+        
+        // Calculate age from date_of_birth if available
+        $age = null;
+        if ($profile && $profile->date_of_birth) {
+            $age = \Carbon\Carbon::parse($profile->date_of_birth)->age;
+        }
+        
+        // Get join date
+        $joinDate = $user->created_at->format('F Y');
+        
+        // Check if viewing own profile
+        $isOwnProfile = auth()->check() && auth()->id() == $user->id;
+        
+        return view('pages.profile.index', compact('user', 'profile', 'age', 'joinDate', 'isOwnProfile'));
     }
 }
 

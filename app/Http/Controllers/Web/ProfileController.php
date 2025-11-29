@@ -29,7 +29,10 @@ class ProfileController extends Controller
         // Get join date
         $joinDate = $user->created_at->format('F Y');
         
-        return view('pages.profile.index', compact('user', 'profile', 'age', 'joinDate'));
+        // Always own profile when viewing account profile
+        $isOwnProfile = true;
+        
+        return view('pages.profile.index', compact('user', 'profile', 'age', 'joinDate', 'isOwnProfile'));
     }
 
     /**

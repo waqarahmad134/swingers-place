@@ -30,16 +30,18 @@
                 </a>
                 
                 <!-- Message Button -->
-                <a href="#" class="inline-flex items-center gap-2 bg-white/90 hover:bg-white px-4 py-2 rounded-full text-sm font-semibold text-gray-800 shadow-lg transition-all">
+                <a href="{{ auth()->check() ? route('messages.show', $user->id) : route('login') }}" class="inline-flex items-center gap-2 bg-white/90 hover:bg-white px-4 py-2 rounded-full text-sm font-semibold text-gray-800 shadow-lg transition-all">
                   <i class="ri-chat-1-line"></i>
                    Message
                 </a>
 
-                 <!-- EDIT Button -->
-                <a href="{{ route('account.profile.edit') }}" class="inline-flex items-center gap-2 bg-white/90 hover:bg-white px-4 py-2 rounded-full text-sm font-semibold text-gray-800 shadow-lg transition-all">
-                    <i class="ri-pencil-line"></i>
-                    Edit Profile
-                </a>
+                 <!-- EDIT Button - Only show on own profile -->
+                @if(isset($isOwnProfile) && $isOwnProfile)
+                    <a href="{{ route('account.profile.edit') }}" class="inline-flex items-center gap-2 bg-white/90 hover:bg-white px-4 py-2 rounded-full text-sm font-semibold text-gray-800 shadow-lg transition-all">
+                        <i class="ri-pencil-line"></i>
+                        Edit Profile
+                    </a>
+                @endif
             </div>
         </div>
 

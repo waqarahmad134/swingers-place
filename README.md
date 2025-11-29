@@ -130,3 +130,34 @@ SSH
 ===
 ssh -p 65002 u756937133@82.29.80.213
 AAaa11@@AAopen2code.com 
+
+------------------------------------------------------------
+DEPLOYMENT ROUTES (No SSH Required)
+------------------------------------------------------------
+
+You can now deploy without SSH access using web routes:
+
+1. Admin Panel Deployment (Requires Admin Login)
+   URL: https://swingers.place/admin/deployment
+   - Access via admin panel sidebar
+   - Click individual commands or "Run Full Deployment"
+   - Full deployment runs: composer install → migrate → seed → optimize
+
+2. Public Deployment Route (For CI/CD)
+   URL: POST https://swingers.place/deploy/{token}?action=all
+   
+   Setup:
+   - Add to .env: DEPLOYMENT_TOKEN=your-secret-token-here
+   - Use the token in the URL: /deploy/your-secret-token-here
+   
+   Actions:
+   - action=all (runs all commands)
+   - action=composer (only composer install)
+   - action=migrate (only migrations)
+   - action=seed (only database seed)
+   - action=optimize (only optimize)
+   
+   Example:
+   curl -X POST "https://swingers.place/deploy/your-secret-token-here?action=all"
+   
+   Note: Change the default token in .env for security!

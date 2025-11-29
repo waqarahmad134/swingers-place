@@ -200,7 +200,14 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/robots', [\App\Http\Controllers\Admin\SettingsController::class, 'robots'])->name('robots');
         Route::post('/robots', [\App\Http\Controllers\Admin\SettingsController::class, 'updateRobots'])->name('robots.update');
     });
+
+    // Deployment
+    Route::get('/deployment', [\App\Http\Controllers\Admin\DeploymentController::class, 'index'])->name('deployment.index');
+    Route::post('/deployment', [\App\Http\Controllers\Admin\DeploymentController::class, 'deploy'])->name('deployment.deploy');
 });
+
+// Public Deployment Route (with token authentication)
+Route::post('/deploy/{token}', [\App\Http\Controllers\Admin\DeploymentController::class, 'deployPublic'])->name('deployment.public');
 
 // API Routes
 Route::get('/api/health', function () {

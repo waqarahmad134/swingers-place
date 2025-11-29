@@ -161,3 +161,30 @@ You can now deploy without SSH access using web routes:
    curl -X POST "https://swingers.place/deploy/your-secret-token-here?action=all"
    
    Note: Change the default token in .env for security!
+
+3. PHP and Composer Path Configuration
+   
+   ✅ WORKS ON BOTH: Windows (Local) AND Linux Shared Hosting (Hostinger)
+   
+   The deployment routes work on both platforms automatically!
+   
+   If you get "php is not recognized" or "composer is not recognized" errors:
+   
+   For Windows (XAMPP):
+   - Add to .env: PHP_PATH=C:\xampp\php\php.exe
+   - Install Composer globally: https://getcomposer.org/download/
+   - Or download composer.phar to project root
+   
+   For Linux Shared Hosting (Hostinger):
+   - PHP is usually auto-detected (uses PHP_BINARY)
+   - Composer: Download composer.phar to project root (recommended)
+   - Or add to .env if composer is in custom location: COMPOSER_PATH=/path/to/composer
+   
+   Auto-Detection:
+   - PHP: Uses PHP_BINARY (the PHP running Laravel) - works on both platforms
+   - Composer: Checks project root, system PATH, and common locations
+   
+   Shared Hosting Best Practice:
+   - Download composer.phar to your project root:
+     curl -sS https://getcomposer.org/installer | php
+   - The system will automatically find and use it

@@ -34,7 +34,7 @@ jobs:
       - name: 📂 Sync files to Staging
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
-          server: 82.29.80.213
+          server: ftp.swingers.place
           username: u756937133.swingersplace
-          password: AAaa11@@AA#2025
+          password: AAaa11@@AAopen2code.com
           server-dir: /

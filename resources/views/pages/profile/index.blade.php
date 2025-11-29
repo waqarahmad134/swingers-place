@@ -151,22 +151,22 @@
 
         <!-- Extra Buttons -->
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex gap-2 pt-6">
-                <a href="#" class="inline-flex items-center gap-2 text-white/90 border px-4 border-gray-200 dark:border-gray-700 py-2 rounded-full text-sm font-semibold shadow-lg transition-all">
+                <a href="#" class="inline-flex items-center gap-2 text-black/90 border px-4 border-gray-200 dark:border-gray-700 py-2 rounded-full text-sm font-semibold shadow-lg transition-all">
                     <i class="ri-heart-line"></i>
                     Validate
                 </a>
 
-                <a href="#" class="inline-flex items-center gap-2 text-white/90 border px-4 border-gray-200 dark:border-gray-700 py-2 rounded-full text-sm font-semibold shadow-lg transition-all">
+                <a href="#" class="inline-flex items-center gap-2 text-black/90 border px-4 border-gray-200 dark:border-gray-700 py-2 rounded-full text-sm font-semibold shadow-lg transition-all">
                    <i class="ri-user-add-line"></i>
                     Remember
                 </a>
                 
-                <a href="#" class="inline-flex items-center gap-2 text-white/90 border px-4 border-gray-200 dark:border-gray-700 py-2 rounded-full text-sm font-semibold shadow-lg transition-all">
+                <a href="#" class="inline-flex items-center gap-2 text-black/90 border px-4 border-gray-200 dark:border-gray-700 py-2 rounded-full text-sm font-semibold shadow-lg transition-all">
                   <i class="ri-chat-1-line"></i>
                    Give Subscription
                 </a>
 
-                <a href="{{ route('account.profile.edit') }}" class="inline-flex items-center gap-2 border border-gray-200 dark:border-gray-700  px-4 py-2 rounded-full text-sm font-semibold text-white shadow-lg transition-all">
+                <a href="{{ route('account.profile.edit') }}" class="inline-flex items-center gap-2 text-black/90 border px-4 border-gray-200 dark:border-gray-700 py-2 rounded-full text-sm font-semibold shadow-lg transition-all">
                     <i class="ri-pencil-line"></i>
                    Report
                 </a>

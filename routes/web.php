@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Route;
 // Home (Landing Page)
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+// Dashboard Routes (authenticated users) - MUST be at the top before any catch-all routes
+Route::middleware('auth')->get('/dashboard/members', [\App\Http\Controllers\Web\DashboardController::class, 'members'])->name('dashboard.members');
+
 // User Profile (Public)
 Route::get('/user/{id}', [HomeController::class, 'showProfile'])->name('user.profile');
 
@@ -86,11 +89,6 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     Route::get('/profile', [\App\Http\Controllers\Web\ProfileController::class, 'index'])->name('profile');
     Route::get('/profile/edit', [\App\Http\Controllers\Web\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [\App\Http\Controllers\Web\ProfileController::class, 'update'])->name('profile.update');
-});
-
-// Dashboard Routes (authenticated users)
-Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(function () {
-    Route::get('/members', [\App\Http\Controllers\Web\DashboardController::class, 'members'])->name('members');
 });
 
 // Admin Routes (restricted to admins)

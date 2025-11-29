@@ -127,6 +127,11 @@
                     <i class="ri-user-line mr-2"></i>Profile
                   </a>
                   
+                  <!-- Members Link -->
+                  <a href="{{ route('dashboard.members') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <i class="ri-group-line mr-2"></i>Members
+                  </a>
+                  
                   <!-- Admin Panel Link (if admin) -->
                   @if (Auth::user()?->is_admin)
                     <a href="{{ url('/admin') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">

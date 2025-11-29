@@ -29,7 +29,7 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="{{ asset('/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/style.css') }}">
 
     <style>
         /* Ensure user dropdown hover works */

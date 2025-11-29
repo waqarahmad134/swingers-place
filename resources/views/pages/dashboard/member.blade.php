@@ -98,7 +98,15 @@
                     $age = \Carbon\Carbon::parse($profile->date_of_birth)->age;
                 }
                 $location = $profile && $profile->home_location ? $profile->home_location : 'Location not set';
-                $profilePhoto = $profile && $profile->profile_photo ? asset('storage/' . $profile->profile_photo) : ($member->profile_image ? asset('storage/' . $member->profile_image) : asset('assets/profileUser.png'));
+                // Get profile photo with proper fallback
+                $profilePhoto = null;
+                if ($profile && $profile->profile_photo && file_exists(public_path('storage/' . $profile->profile_photo))) {
+                    $profilePhoto = asset('storage/' . $profile->profile_photo);
+                } elseif ($member->profile_image && file_exists(public_path('storage/' . $member->profile_image))) {
+                    $profilePhoto = asset('storage/' . $member->profile_image);
+                } else {
+                    $profilePhoto = asset('assets/profileUser.png');
+                }
                 $category = $profile && $profile->category ? $profile->category : 'single_male';
                 $displayName = $member->name ?: ($member->first_name . ' ' . $member->last_name) ?: 'User #' . $member->id;
             @endphp
@@ -109,7 +117,7 @@
                         src="{{ $profilePhoto }}" 
                         alt="{{ $displayName }}"
                         class="w-full h-64 object-cover"
-                        onerror="this.src='https://via.placeholder.com/400x400/6366f1/ffffff?text={{ urlencode(substr($displayName, 0, 1)) }}'"
+                        onerror="this.onerror=null; this.src='https://via.placeholder.com/400x400/6366f1/ffffff?text={{ urlencode(strtoupper(substr($displayName, 0, 1))) }}';"
                     />
                     
                     <div class="absolute top-2 left-2 flex flex-col items-start gap-2">

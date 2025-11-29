@@ -118,21 +118,10 @@ class UserController extends Controller
             'profile_type' => ['nullable', 'in:normal,business'],
             'is_admin' => ['nullable', 'boolean'],
             'is_active' => ['nullable', 'boolean'],
+            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'terms_accepted' => ['required', 'accepted'],
         ];
-
-        // Only validate username uniqueness if username is provided
-        if ($request->has('username') && !empty($request->username)) {
-            $rules['username'] = ['nullable', 'string', 'max:255', 'unique:users,username'];
-        } else {
-            $rules['username'] = ['nullable', 'string', 'max:255'];
-        }
-
-        // Only validate email uniqueness if email is provided
-        if ($request->has('email') && !empty($request->email)) {
-            $rules['email'] = ['nullable', 'string', 'email', 'max:255', 'unique:users,email'];
-        } else {
-            $rules['email'] = ['nullable', 'string', 'email', 'max:255'];
-        }
 
         $validated = $request->validate($rules);
 
@@ -328,6 +317,25 @@ class UserController extends Controller
         }
         
         $user->save();
+
+        return redirect()->route('admin.users.index')
+            ->with('success', $message);
+    }
+
+    public function toggleStatus(User $user): RedirectResponse
+    {
+        // Prevent admin from banning themselves
+        if ($user->id === auth()->id()) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'You cannot change your own status!');
+        }
+
+        // Toggle active status
+        $user->is_active = !$user->is_active;
+        $user->save();
+
+        $status = $user->is_active ? 'activated' : 'banned';
+        $message = "User account {$status} successfully!";
 
         return redirect()->route('admin.users.index')
             ->with('success', $message);

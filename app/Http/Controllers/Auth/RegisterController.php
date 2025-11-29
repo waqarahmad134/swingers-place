@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\RegistrationSetting;
 use App\Models\User;
 use App\Models\UserProfile;
 use Illuminate\Auth\Events\Registered;
@@ -20,6 +21,14 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm(): View|RedirectResponse
     {
+        // Check if registration is open
+        $settings = RegistrationSetting::getSettings();
+        
+        if (!$settings->isRegistrationOpen()) {
+            return redirect()->route('home')
+                ->with('error', 'Registration is currently closed. Please contact support for more information.');
+        }
+        
         // If no profile type selected, redirect to profile type selection
         if (!session()->has('selected_profile_type')) {
             return redirect()->route('onboarding.profile-type');
@@ -33,27 +42,24 @@ class RegisterController extends Controller
      */
     public function register(Request $request): RedirectResponse
     {
+        // Check if registration is open
+        $settings = RegistrationSetting::getSettings();
+        
+        if (!$settings->isRegistrationOpen()) {
+            return redirect()->route('home')
+                ->with('error', 'Registration is currently closed. Please contact support for more information.');
+        }
+        
         $rules = [
             'name' => ['nullable', 'string', 'max:255'],
             'first_name' => ['nullable', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+            'username' => ['required', 'string', 'max:255', 'unique:users,username'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'terms_accepted' => ['required', 'accepted'],
         ];
-
-        // Only validate username uniqueness if username is provided
-        if ($request->has('username') && !empty($request->username)) {
-            $rules['username'] = ['nullable', 'string', 'max:255', 'unique:users,username'];
-        } else {
-            $rules['username'] = ['nullable', 'string', 'max:255'];
-        }
-
-        // Only validate email uniqueness if email is provided
-        if ($request->has('email') && !empty($request->email)) {
-            $rules['email'] = ['nullable', 'string', 'email', 'max:255', 'unique:users,email'];
-        } else {
-            $rules['email'] = ['nullable', 'string', 'email', 'max:255'];
-        }
 
         $validated = $request->validate($rules);
 
@@ -76,6 +82,9 @@ class RegisterController extends Controller
             ? Hash::make($validated['password']) 
             : Hash::make(uniqid('user_', true));
 
+        // Determine if user should be active based on admin approval setting
+        $isActive = !$settings->requiresAdminApproval();
+        
         $user = User::create([
             'name' => trim($fullName) ?: 'User',
             'username' => $validated['username'] ?? null,
@@ -86,7 +95,8 @@ class RegisterController extends Controller
             'password' => $password,
             'profile_type' => $profileType,
             'is_admin' => false,
-            'is_active' => true,
+            'is_active' => $isActive, // Set based on admin approval requirement
+            'email_verified_at' => $settings->requiresEmailVerification() ? null : now(), // Auto-verify if email verification not required
         ]);
 
         event(new Registered($user));

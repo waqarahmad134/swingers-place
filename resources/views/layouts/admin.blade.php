@@ -42,6 +42,20 @@
     @stack('head')
 </head>
 <body>
+    {{-- Profile Pending Approval Bar (only for non-admin users) --}}
+    @auth
+        @if(!Auth::user()->is_active && !Auth::user()->is_admin)
+            <div class="w-full bg-red-600 text-white py-3 px-4 shadow-md">
+                <div class="flex items-center justify-center gap-3">
+                    <i class="ri-alert-line text-xl"></i>
+                    <p class="font-semibold">
+                        Your profile is pending admin approval. You will be able to access all features once your profile is approved.
+                    </p>
+                </div>
+            </div>
+        @endif
+    @endauth
+    
     <div class="flex gap-4 w-full">
         <!-- Sidebar -->
         <aside class="min-h-screen md:min-w-[290px] min-w-[70px] items-center gap-5 flex flex-col py-14 bg-[#FFF5F7]">

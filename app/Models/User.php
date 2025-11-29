@@ -37,6 +37,7 @@ class User extends Authenticatable
         'address',
         'business_address',
         'ssn',
+        'email_verified_at',
     ];
 
     /**

@@ -152,6 +152,19 @@
                                         </form>
                                     </div>
 
+                                    <!-- Activate/Ban User -->
+                                    @if ($user->id !== auth()->id())
+                                        <div class="group/item">
+                                            <form action="{{ route('admin.users.toggle-status', $user) }}" method="POST" class="inline">
+                                                @csrf
+                                                <button type="submit" class="w-full text-left flex gap-2 items-center px-4 py-3 border-b border-[#A1A1A1] md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors">
+                                                    <img src="{{ asset('admin-assets/edit.png') }}" width="24" alt="" class="transition-all group-hover/item:invert group-hover/item:brightness-0" />
+                                                    <span class="transition-colors group-hover/item:text-white">{{ $user->is_active ? 'Ban User' : 'Activate User' }}</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @endif
+
                                     <!-- Delete User -->
                                     @if ($user->id !== auth()->id())
                                         <div class="group/item">

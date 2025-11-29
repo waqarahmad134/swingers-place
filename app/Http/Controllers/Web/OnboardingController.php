@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\RegistrationSetting;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,14 @@ class OnboardingController extends Controller
     // Step 0: Profile Type Selection (BEFORE registration - no auth required)
     public function profileType()
     {
+        // Check if registration is open
+        $settings = RegistrationSetting::getSettings();
+        
+        if (!$settings->isRegistrationOpen()) {
+            return redirect()->route('home')
+                ->with('error', 'Registration is currently closed. Please contact support for more information.');
+        }
+        
         // If already logged in and has profile, redirect to home
         if (Auth::check() && Auth::user()->profile && Auth::user()->profile->onboarding_completed) {
             return redirect()->route('home');

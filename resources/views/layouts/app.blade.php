@@ -67,6 +67,22 @@
     <div class="flex min-h-screen flex-col">
         @include('partials.header')
 
+        {{-- Profile Pending Approval Bar --}}
+        @auth
+            @if(!Auth::user()->is_active && !Auth::user()->is_admin)
+                <div class="w-full bg-red-600 text-white py-3 px-4 shadow-md">
+                    <div class="container mx-auto flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i class="ri-alert-line text-xl"></i>
+                            <p class="font-semibold">
+                                Your profile is pending admin approval. You will be able to access all features once your profile is approved.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+        @endauth
+
         <main class="flex-1">
             @if (session('success'))
                 <div class="container mx-auto px-4 py-4 sm:px-6 lg:px-8">

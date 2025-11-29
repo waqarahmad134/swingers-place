@@ -1,0 +1,40 @@
+name: 🚀 1. Deploy to Master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy to Master
+    runs-on: ubuntu-latest
+    environment: master
+
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v2.3.2
+
+      - name: 🧩 Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: 🧰 Install Composer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y composer
+
+      - name: ✅ Validate Composer configuration
+        run: composer validate
+
+      - name: 📦 Install Dependencies
+        run: composer install --no-ansi --no-interaction --prefer-dist --verbose
+
+      - name: 📂 Sync files to Staging
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          server: ftp.swingers.place
+          username: u756937133.swingersplace
+          password: AAaa11@@AA#2025
+          server-dir: /

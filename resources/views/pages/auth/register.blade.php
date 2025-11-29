@@ -15,7 +15,7 @@
                 </div>
 
                 <!-- Register Form -->
-                <form method="POST" action="{{ route('register') }}" class="space-y-5">
+                <form method="POST" action="{{ route('register') }}" class="space-y-5" id="register-form" novalidate>
                     @csrf
 
                     <div class="grid grid-cols-2 gap-4">
@@ -41,13 +41,14 @@
                         <!-- Username -->
                         <div>
                             <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Username
+                                Username <span class="text-red-500">*</span>
                             </label>
                             <input
                                 type="text"
                                 id="username"
                                 name="username"
                                 value="{{ old('username') }}"
+                                required
                                 class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
                                 placeholder="Username"
                             >
@@ -60,13 +61,14 @@
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Email
+                            Email <span class="text-red-500">*</span>
                         </label>
                         <input
                             type="email"
                             id="email"
                             name="email"
                             value="{{ old('email') }}"
+                            required
                             class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
                             placeholder="you@example.com"
                         >
@@ -125,6 +127,24 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Terms and Conditions Checkbox -->
+                    <div class="flex items-start gap-2">
+                        <input
+                            type="checkbox"
+                            id="terms_accepted"
+                            name="terms_accepted"
+                            value="1"
+                            required
+                            class="mt-1 h-4 w-4 rounded border-gray-300 text-[#9810FA] focus:ring-[#9810FA]"
+                        >
+                        <label for="terms_accepted" class="text-sm text-gray-700 dark:text-gray-300">
+                            I agree to the <a href="{{ route('terms') }}" target="_blank" class="text-[#9810FA] hover:text-[#E60076] underline">Terms of Service</a> and <a href="{{ route('privacy') }}" target="_blank" class="text-[#9810FA] hover:text-[#E60076] underline">Privacy Policy</a> <span class="text-red-500">*</span>
+                        </label>
+                    </div>
+                    @error('terms_accepted')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
 
                     <!-- Sign Up Button -->
                     <button
@@ -185,6 +205,43 @@
                 eyeIcon.classList.add('ri-eye-off-line');
             }
         }
+
+        // Form validation to ensure email and username are required
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            const email = document.getElementById('email').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const termsAccepted = document.getElementById('terms_accepted').checked;
+            
+            if (!email) {
+                e.preventDefault();
+                alert('Email is required. Please enter your email address.');
+                document.getElementById('email').focus();
+                return false;
+            }
+            
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                alert('Please enter a valid email address.');
+                document.getElementById('email').focus();
+                return false;
+            }
+            
+            if (!username) {
+                e.preventDefault();
+                alert('Username is required. Please enter a username.');
+                document.getElementById('username').focus();
+                return false;
+            }
+            
+            if (!termsAccepted) {
+                e.preventDefault();
+                alert('You must accept the Terms of Service and Privacy Policy to continue.');
+                document.getElementById('terms_accepted').focus();
+                return false;
+            }
+        });
     </script>
 @endsection
 

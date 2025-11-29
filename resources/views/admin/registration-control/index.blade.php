@@ -9,6 +9,18 @@
         <p class="text-[#717182] font-['poppins']">Manage new user registrations and settings</p>
     </div>
 
+    @if(session('success'))
+        <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <p class="text-green-800 font-medium">{{ session('success') }}</p>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p class="text-red-800 font-medium">{{ session('error') }}</p>
+        </div>
+    @endif
+
     <form action="{{ route('admin.registration-control.update') }}" method="POST">
         @csrf
         @method('PUT')
@@ -74,9 +86,20 @@
                     <h3 class="text-lg font-semibold text-[#0A0A0A] mb-2">Current Status</h3>
                     <p class="text-sm text-[#717182]">New registrations are currently {{ $settings['current_status'] === 'open' ? 'enabled' : 'disabled' }}</p>
                 </div>
-                <button type="button" class="px-6 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors">
-                    {{ ucfirst($settings['current_status']) }}
-                </button>
+                <div class="flex gap-2">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="current_status" value="open" {{ $settings['current_status'] === 'open' ? 'checked' : '' }} class="hidden peer">
+                        <span class="px-6 py-2 {{ $settings['current_status'] === 'open' ? 'bg-green-600' : 'bg-gray-300' }} text-white rounded-lg font-medium hover:bg-green-700 transition-colors inline-block">
+                            Open
+                        </span>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="current_status" value="closed" {{ $settings['current_status'] === 'closed' ? 'checked' : '' }} class="hidden peer">
+                        <span class="px-6 py-2 {{ $settings['current_status'] === 'closed' ? 'bg-red-600' : 'bg-gray-300' }} text-white rounded-lg font-medium hover:bg-red-700 transition-colors inline-block">
+                            Closed
+                        </span>
+                    </label>
+                </div>
             </div>
         </div>
 

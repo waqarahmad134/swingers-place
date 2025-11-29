@@ -54,13 +54,14 @@
                         <!-- Username -->
                         <div>
                             <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Username
+                                Username <span class="text-red-500">*</span>
                             </label>
                             <input
                                 type="text"
                                 id="username"
                                 name="username"
                                 value="{{ old('username') }}"
+                                required
                                 class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
                                 placeholder="Username"
                             >
@@ -73,13 +74,14 @@
                     <!-- Email -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Email
+                            Email <span class="text-red-500">*</span>
                         </label>
                         <input
                             type="email"
                             id="email"
                             name="email"
                             value="{{ old('email') }}"
+                            required
                             class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
                             placeholder="you@example.com"
                         >
@@ -138,6 +140,24 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Terms and Conditions Checkbox -->
+                    <div class="flex items-start gap-2 border-t pt-4 dark:border-gray-700">
+                        <input
+                            type="checkbox"
+                            id="terms_accepted"
+                            name="terms_accepted"
+                            value="1"
+                            required
+                            class="mt-1 h-4 w-4 rounded border-gray-300 text-[#9810FA] focus:ring-[#9810FA]"
+                        >
+                        <label for="terms_accepted" class="text-sm text-gray-700 dark:text-gray-300">
+                            I confirm that this user agrees to the <a href="{{ route('terms') }}" target="_blank" class="text-[#9810FA] hover:text-[#E60076] underline">Terms of Service</a> and <a href="{{ route('privacy') }}" target="_blank" class="text-[#9810FA] hover:text-[#E60076] underline">Privacy Policy</a> <span class="text-red-500">*</span>
+                        </label>
+                    </div>
+                    @error('terms_accepted')
+                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                    @enderror
 
                     <fieldset class="space-y-3 border-t pt-4 dark:border-gray-700">
                         <legend class="text-sm font-medium text-gray-700 dark:text-gray-300">User Role</legend>

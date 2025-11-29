@@ -29,9 +29,9 @@ class RegisterController extends Controller
                 ->with('error', 'Registration is currently closed. Please contact support for more information.');
         }
         
-        // If no profile type selected, redirect to profile type selection
+        // Always default to normal profile type
         if (!session()->has('selected_profile_type')) {
-            return redirect()->route('onboarding.profile-type');
+            session(['selected_profile_type' => 'normal']);
         }
         
         return view('pages.auth.register');

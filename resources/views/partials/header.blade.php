@@ -156,7 +156,7 @@
              class="border-2 border-[#9810FA] md:py-2 py-1 md:text-base text-sm px-3 md:px-6 rounded-3xl text-[#9810FA] hover:bg-[#9810FA] hover:text-white transition-all">
             Login
           </a>
-          <a href="{{ route('onboarding.profile-type') }}" 
+          <a href="{{ route('register') }}" 
              class="text-white bg-[#9810FA] md:text-base text-xs py-2 px-4 md:py-3 md:px-5 rounded-3xl hover:bg-[#E60076] transition-all">
             Sign up
           </a>

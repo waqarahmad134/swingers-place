@@ -80,12 +80,12 @@ class UserController extends Controller
 
     public function create(): View|RedirectResponse
     {
-        // Check if profile type is selected, if not redirect to profile type selection
+        // Always default to normal profile type
         if (!session('admin_creating_profile_type')) {
-            return redirect()->route('admin.users.select-profile-type');
+            session(['admin_creating_profile_type' => 'normal']);
         }
         
-        $profileType = session('admin_creating_profile_type');
+        $profileType = session('admin_creating_profile_type', 'normal');
         return view('admin.users.create', compact('profileType'));
     }
     

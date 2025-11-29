@@ -88,6 +88,11 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     Route::put('/profile', [\App\Http\Controllers\Web\ProfileController::class, 'update'])->name('profile.update');
 });
 
+// Dashboard Routes (authenticated users)
+Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(function () {
+    Route::get('/members', [\App\Http\Controllers\Web\DashboardController::class, 'members'])->name('members');
+});
+
 // Admin Routes (restricted to admins)
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');

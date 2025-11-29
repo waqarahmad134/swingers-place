@@ -16,7 +16,8 @@ class DashboardController extends Controller
     {
         $query = User::with('profile')
             ->where('is_active', true)
-            ->where('is_admin', false);
+            ->where('is_admin', false)
+            ->where('id', '!=', auth()->id());
 
         // Search filter
         if ($request->filled('search')) {

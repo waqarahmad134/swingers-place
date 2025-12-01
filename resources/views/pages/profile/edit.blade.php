@@ -137,7 +137,7 @@
                                                 <div class="grid grid-cols-2 gap-4">
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date of Birth</label>
-                                                        <input type="date" name="date_of_birth_her" value="{{ old('date_of_birth_her', $coupleData['date_of_birth_her'] ?? '') }}" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                        <input type="date" name="date_of_birth_her" value="{{ old('date_of_birth_her', $coupleData['date_of_birth_her'] ?? '') }}" max="{{ date('Y-m-d', strtotime('-18 years')) }}" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
                                                     </div>
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sexuality</label>
@@ -210,7 +210,7 @@
                                                 <div class="grid grid-cols-2 gap-4">
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date of Birth</label>
-                                                        <input type="date" name="date_of_birth_him" value="{{ old('date_of_birth_him', $coupleData['date_of_birth_him'] ?? '') }}" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                        <input type="date" name="date_of_birth_him" value="{{ old('date_of_birth_him', $coupleData['date_of_birth_him'] ?? '') }}" max="{{ date('Y-m-d', strtotime('-18 years')) }}" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
                                                     </div>
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sexuality</label>
@@ -285,7 +285,7 @@
                                             </div>
                                             <div>
                                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Date of Birth</label>
-                                                <input type="date" name="date_of_birth" value="{{ old('date_of_birth', $profile && $profile->date_of_birth ? $profile->date_of_birth->format('Y-m-d') : '') }}" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                <input type="date" name="date_of_birth" value="{{ old('date_of_birth', $profile && $profile->date_of_birth ? $profile->date_of_birth->format('Y-m-d') : '') }}" max="{{ date('Y-m-d', strtotime('-18 years')) }}" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
                                             </div>
                                             <div>
                                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Gender</label>

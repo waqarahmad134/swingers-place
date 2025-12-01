@@ -1,79 +1,61 @@
 @extends('layouts.app')
 @section('full-width')
-      
     
     <!-- hero section -->
-    <section class="hero">
+    <section class="hero relative overflow-hidden">
       <div
-        class="flex flex-col justify-center h-[500px] md:h-[700px] md:px-20 px-5 bg-[#00000021]"
+        class="flex flex-col md:flex-row items-center justify-between md:px-20 px-5 py-12 md:py-0 bg-gradient-to-br from-[#8B1538] via-[#A41F4D] to-[#8B1538] relative"
+        style="height: 650px; background-image: url('{{ asset('assets/banner.png') }}'); background-size: cover; background-position: right center; background-repeat: no-repeat;"
       >
-        <div
-          class="w-[204px] gap-2 py-1 h-[20px] px-2 text-[#9810FA] bg-white rounded-md flex items-center"
-        >
-          <i class="ri-sparkling-line"></i>
-          <h2 class="text-xs font-thin">#1 Social Community Platform</h2>
-        </div>
-
-        <!-- heading -->
-        <div>
-          <h1 class="md:text-[5.6vw] text-[11vw] text-[#101828]">Connect,</h1>
-          <h1
-            class="gradient-text md:w-[22%] w-[50%] text-[11vw] -mt-4 md:-mt-8 md:text-[5.6vw]"
-          >
-            Explore,
-          </h1>
-          <h1 class="md:text-[5.6vw] text-[11vw] -mt-4 md:-mt-8 text-[#101828]">
-            Belong
-          </h1>
-        </div>
-
-        <!-- paragraph -->
-        <p class="text-white text-[13px] md:text-base w-[80%] px-1 md:w-[33%]">
-          Join 50,000+ members in the most advanced social community platform
-          designed for meaningful connections and authentic experiences.
-        </p>
-
-        <!-- buttons -->
-        <div class="flex items-center mt-6 gap-3 flex-wrap">
-          <button
-            class="px-4 py-3 bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)] rounded-3xl text-white"
-          >
-            Start Free Today <i class="ri-arrow-right-line"></i>
-          </button>
-          <button class="bg-white px-3 md:px-4 py-3 rounded-3xl flex gap-3">
-            <i class="ri-play-large-line"></i> Watch Demo
-          </button>
-        </div>
-
-        <!-- numbers <i class="ri-star-fill"></i>-->
-        <div class="flex gap-4 md:gap-24 mt-6 flex-wrap">
-          <div class="text-white">
-            <h1 class="md:text-4xl text-xl">50K<i class="ri-add-line"></i></h1>
-            <h2 class="text-xs md:text-sm md:mt-1">Active Members</h2>
-          </div>
-
-          <div class="text-white">
-            <h1 class="md:text-4xl text-xl">1M<i class="ri-add-line"></i></h1>
-            <h2 class="text-xs md:text-sm md:mt-1">Connection Made</h2>
-          </div>
-
-          <div class="text-white">
-            <h1 class="md:text-4xl text-xl">500<i class="ri-add-line"></i></h1>
-            <h2 class="text-xs md:text-sm md:mt-1">Events Monthly</h2>
-          </div>
-
-          <div class="text-white">
-            <h1 class="md:text-4xl text-xl">
-              4.8 <i class="ri-star-fill"></i>
+        
+        <!-- Left Content -->
+        <div class="w-full md:w-1/2 z-10 relative">
+          <!-- heading -->
+          <div class="text-center md:text-left">
+            <h1 class="text-5xl md:text-7xl font-bold text-white mb-4" style="font-weight: 700; line-height: 1.2;">
+              Dating for Naughty<br>Adults
             </h1>
-            <h2 class="text-xs md:text-sm md:mt-1">User Rating</h2>
+          </div>
+
+          <!-- paragraph -->
+          <p class="text-white text-base md:text-lg text-center md:text-left mb-6">
+            Meet real people nearby who are ready for genuine connections
+          </p>
+
+          <!-- Free Sign Up Label -->
+          <h3 class="text-white text-center md:text-left text-lg font-semibold mb-4">
+            Free Sign Up
+          </h3>
+
+          <!-- Sign Up Buttons Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+            <button
+              class="px-6 py-4 bg-white rounded-lg text-[#8B1538] font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
+            >
+              <i class="ri-team-line text-xl"></i> We are a Couple
+            </button>
+            <button
+              class="px-6 py-4 bg-white rounded-lg text-[#E60076] font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
+            >
+              <i class="ri-women-line text-xl"></i> I'm a Single Female
+            </button>
+            <button
+              class="px-6 py-4 bg-white rounded-lg text-[#8B1538] font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
+            >
+              <i class="ri-user-3-line text-xl"></i> I'm a Single Male
+            </button>
+            <button
+              class="px-6 py-4 bg-white rounded-lg text-[#E60076] font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
+            >
+              <i class="ri-genderless-line text-xl"></i> Non-binary
+            </button>
           </div>
         </div>
       </div>
     </section>
 
     <!-- SECTION: Choose Your Path -->
-    <section class="py-20 sm:px-0 px-5">
+    {{--<section class="py-20 sm:px-0 px-5">
       <div class="pb-[64px] mx-auto sm:max-w-[730px] max-w-full">
         <h2
           class="pb-6 text-[rgba(16,24,40,1)] font-arimo font-normal text-4xl leading-none tracking-normal text-center"
@@ -90,9 +72,7 @@
       </div>
 
       <!-- CARDS -->
-      <div
-        class="flex sm:flex-row flex-col gap-[34px] sm:max-w-[1024px] max-w-full mx-auto"
-      >
+      <div class="flex sm:flex-row flex-col gap-[34px] sm:max-w-[1024px] max-w-full mx-auto">
         <div class="border-2 border-gray-200 rounded-3xl p-8">
           <img class="size-[64px] mb-6" src="assets/person.png" alt="person" />
           <h3 class="font-arimo font-normal text-3xl leading-9 tracking-normal">
@@ -183,7 +163,7 @@
           </button>
         </div>
       </div>
-    </section>
+    </section>--}}
 
     <!-- SECTION: Everything You Need to Connect -->
     <section class="py-[32px] sm:px-0 px-5 bg-[#F9FAFB]">
@@ -367,9 +347,7 @@
     </section>
 
     <!-- SECTION: Everything You Need to Connect -->
-    <section
-      class="bg-[linear-gradient(135deg,#FAF5FF_0%,#FDF2F8_100%)] py-[32px] sm:px-0 px-5 bg-[#F9FAFB]"
-    >
+    {{--<section class="bg-[linear-gradient(135deg,#FAF5FF_0%,#FDF2F8_100%)] py-[32px] sm:px-0 px-5 bg-[#F9FAFB]">
       <div class="pb-[64px] mx-auto sm:max-w-[700px] max-w-full">
         <div
           class="bg-[rgba(243,232,255,1)] py-[2px] max-w-[62px] mx-auto mb-6 px-[7px] text-[rgba(130,0,219,1)] rounded-xl"
@@ -464,9 +442,9 @@
           </div>
         </div>
       </div>
-    </section>
+    </section>--}}
 
-    <section class="py-20 sm:px-0 px-5">
+    {{--<section class="py-20 sm:px-0 px-5">
       <div class="pb-[64px] mx-auto sm:max-w-[700px] max-w-full">
         <div class="bg-[rgba(243,232,255,1)] py-[2px] max-w-[62px] mx-auto mb-6 px-[7px] text-[rgba(130,0,219,1)] rounded-xl">
           <h2 class="text-xs font-thin leading-[16px] text-center">Pricing</h2>
@@ -634,7 +612,7 @@
           </button>
         </div>
       </div>
-    </section>
+    </section>--}}
 
     <!-- Section: FAQ -->
     <section class="py-[32px] bg-[#F9FAFB]">
@@ -775,9 +753,7 @@
     </section>
 
     <!-- SECTION: CTA -->
-    <section
-      class="px-5 sm:px-0 md:py-[80px] py-10 flex flex-col md:gap-8 gap-4 items-center bg-gradient-to-r from-[#9810FA] to-[#E60076]"
-    >
+    <section class="px-5 sm:px-0 md:py-[80px] py-10 flex flex-col md:gap-8 gap-4 items-center bg-gradient-to-r from-[#9810FA] to-[#E60076]">
       <h1 class="text-white text-2xl md:text-[48px]">Ready to Start Your Journey?</h1>
       <p
         class="max-w-[637px] text-center text-[#F3E8FF] text-[11px] md:text-[20px] text-white font-normal"
@@ -792,8 +768,5 @@
       </div>
     </section>
 
-      
-
-       
 @endsection
 

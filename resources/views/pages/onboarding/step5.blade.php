@@ -65,6 +65,7 @@
                                 </label>
                                 <div class="relative">
                                     <input type="date" name="date_of_birth_her" 
+                                           max="{{ date('Y-m-d', strtotime('-18 years')) }}"
                                            class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
                                     <i class="ri-calendar-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
                                 </div>
@@ -164,6 +165,7 @@
                                 </label>
                                 <div class="relative">
                                     <input type="date" name="date_of_birth_him" 
+                                           max="{{ date('Y-m-d', strtotime('-18 years')) }}"
                                            class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
                                     <i class="ri-calendar-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
                                 </div>
@@ -258,6 +260,7 @@
                             </label>
                             <div class="relative">
                                 <input type="date" name="date_of_birth" 
+                                       max="{{ date('Y-m-d', strtotime('-18 years')) }}"
                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
                                 <i class="ri-calendar-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
                             </div>

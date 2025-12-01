@@ -29,26 +29,30 @@
 
           <!-- Sign Up Buttons Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-            <button
+            <a
+              href="{{ route('register') }}?type=couple"
               class="px-6 py-4 bg-white rounded-lg text-[#8B1538] font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
             >
               <i class="ri-team-line text-xl"></i> We are a Couple
-            </button>
-            <button
+            </a>
+            <a
+              href="{{ route('register') }}?type=single_female"
               class="px-6 py-4 bg-white rounded-lg text-[#E60076] font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
             >
               <i class="ri-women-line text-xl"></i> I'm a Single Female
-            </button>
-            <button
+            </a>
+            <a
+              href="{{ route('register') }}?type=single_male"
               class="px-6 py-4 bg-white rounded-lg text-[#8B1538] font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
             >
               <i class="ri-user-3-line text-xl"></i> I'm a Single Male
-            </button>
-            <button
+            </a>
+            <a
+              href="{{ route('register') }}?type=non_binary"
               class="px-6 py-4 bg-white rounded-lg text-[#E60076] font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
             >
               <i class="ri-genderless-line text-xl"></i> Non-binary
-            </button>
+            </a>
           </div>
         </div>
       </div>

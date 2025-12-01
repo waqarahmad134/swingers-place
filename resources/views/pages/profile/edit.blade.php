@@ -327,7 +327,14 @@
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Body Type</label>
-                                                    <input type="text" name="body_type_her" value="{{ old('body_type_her', $coupleData['body_type_her'] ?? '') }}" placeholder="Ectomorph, Mesomorph, Endomorph" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <select name="body_type_her" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                        <option value="">Select Body Type</option>
+                                                        <option value="Slim" {{ old('body_type_her', $coupleData['body_type_her'] ?? '') == 'Slim' ? 'selected' : '' }}>💪 Slim</option>
+                                                        <option value="Athletic" {{ old('body_type_her', $coupleData['body_type_her'] ?? '') == 'Athletic' ? 'selected' : '' }}>🏃 Athletic</option>
+                                                        <option value="Curvy" {{ old('body_type_her', $coupleData['body_type_her'] ?? '') == 'Curvy' ? 'selected' : '' }}>❤️ Curvy</option>
+                                                        <option value="Average" {{ old('body_type_her', $coupleData['body_type_her'] ?? '') == 'Average' ? 'selected' : '' }}>👤 Average</option>
+                                                        <option value="Plus Size" {{ old('body_type_her', $coupleData['body_type_her'] ?? '') == 'Plus Size' ? 'selected' : '' }}>👥 Plus Size</option>
+                                                    </select>
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Eye Color</label>
@@ -373,7 +380,14 @@
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Body Type</label>
-                                                    <input type="text" name="body_type_him" value="{{ old('body_type_him', $coupleData['body_type_him'] ?? '') }}" placeholder="Ectomorph, Mesomorph, Endomorph" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <select name="body_type_him" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                        <option value="">Select Body Type</option>
+                                                        <option value="Slim" {{ old('body_type_him', $coupleData['body_type_him'] ?? '') == 'Slim' ? 'selected' : '' }}>💪 Slim</option>
+                                                        <option value="Athletic" {{ old('body_type_him', $coupleData['body_type_him'] ?? '') == 'Athletic' ? 'selected' : '' }}>🏃 Athletic</option>
+                                                        <option value="Curvy" {{ old('body_type_him', $coupleData['body_type_him'] ?? '') == 'Curvy' ? 'selected' : '' }}>❤️ Curvy</option>
+                                                        <option value="Average" {{ old('body_type_him', $coupleData['body_type_him'] ?? '') == 'Average' ? 'selected' : '' }}>👤 Average</option>
+                                                        <option value="Plus Size" {{ old('body_type_him', $coupleData['body_type_him'] ?? '') == 'Plus Size' ? 'selected' : '' }}>👥 Plus Size</option>
+                                                    </select>
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Eye Color</label>

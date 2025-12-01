@@ -87,8 +87,14 @@
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Body Type
                                 </label>
-                                <input type="text" name="body_type_her" placeholder="EXP: Ectomorph, Mesomorph, and Endomorph" 
-                                       class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <select name="body_type_her" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select Body Type</option>
+                                    <option value="Slim">💪 Slim</option>
+                                    <option value="Athletic">🏃 Athletic</option>
+                                    <option value="Curvy">❤️ Curvy</option>
+                                    <option value="Average">👤 Average</option>
+                                    <option value="Plus Size">👥 Plus Size</option>
+                                </select>
                             </div>
 
                             <!-- Eye Color - Her -->
@@ -182,8 +188,14 @@
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Body Type
                                 </label>
-                                <input type="text" name="body_type_him" placeholder="EXP: Ectomorph, Mesomorph, and Endomorph" 
-                                       class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <select name="body_type_him" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select Body Type</option>
+                                    <option value="Slim">💪 Slim</option>
+                                    <option value="Athletic">🏃 Athletic</option>
+                                    <option value="Curvy">❤️ Curvy</option>
+                                    <option value="Average">👤 Average</option>
+                                    <option value="Plus Size">👥 Plus Size</option>
+                                </select>
                             </div>
 
                             <!-- Eye Color - Him -->
@@ -272,8 +284,14 @@
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Body Type
                             </label>
-                            <input type="text" name="body_type" placeholder="EXP: Ectomorph, Mesomorph, and Endomorph" 
-                                   class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                            <select name="body_type" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <option value="">Select Body Type</option>
+                                <option value="Slim">💪 Slim</option>
+                                <option value="Athletic">🏃 Athletic</option>
+                                <option value="Curvy">❤️ Curvy</option>
+                                <option value="Average">👤 Average</option>
+                                <option value="Plus Size">👥 Plus Size</option>
+                            </select>
                         </div>
 
                         <!-- Eye Color -->

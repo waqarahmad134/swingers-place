@@ -214,7 +214,7 @@ class AdminOnboardingController extends Controller
                 'hair_color_him' => $request->hair_color_him ?? null,
                 'tattoos_him' => $request->tattoos_him ?? null,
                 'piercings_him' => $request->piercings_him ?? null,
-                'race_him' => $request->race_him ?? null,
+                'dick_size_him' => $request->dick_size_him ?? null,
             ]);
             $profile->update([
                 'couple_data' => $coupleData,
@@ -230,7 +230,8 @@ class AdminOnboardingController extends Controller
                 'hair_color' => $request->hair_color,
                 'tattoos' => $request->tattoos,
                 'piercings' => $request->piercings,
-                'race' => $request->race,
+                'boob_size' => $request->boob_size ?? null,
+                'dick_size' => $request->dick_size ?? null,
                 'onboarding_step' => 7,
             ]);
         }

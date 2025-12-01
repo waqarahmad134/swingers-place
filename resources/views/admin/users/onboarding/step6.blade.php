@@ -141,12 +141,12 @@
                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
                             </div>
 
-                            <!-- Race - Her -->
+                            <!-- Boob Size - Her -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Race
+                                    Boob Size
                                 </label>
-                                <input type="text" name="race_her" placeholder="Type Here" 
+                                <input type="text" name="boob_size_her" placeholder="e.g., A, B, C, D, DD, etc." 
                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
                             </div>
                         </div>
@@ -242,12 +242,12 @@
                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
                             </div>
 
-                            <!-- Race - Him -->
+                            <!-- Dick Size - Him -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                    Race
+                                    Dick Size
                                 </label>
-                                <input type="text" name="race_him" placeholder="Type Here" 
+                                <input type="text" name="dick_size_him" placeholder="e.g., inches or cm" 
                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
                             </div>
                         </div>
@@ -338,14 +338,32 @@
                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
                         </div>
 
-                        <!-- Race -->
+                        <!-- Boob Size / Dick Size (based on category) -->
+                        @if(isset($user->profile) && $user->profile->category == 'single_female')
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Race
+                                Boob Size
                             </label>
-                            <input type="text" name="race" placeholder="Type Here" 
+                            <input type="text" name="boob_size" placeholder="e.g., A, B, C, D, DD, etc." 
                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
                         </div>
+                        @elseif(isset($user->profile) && $user->profile->category == 'single_male')
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Dick Size
+                            </label>
+                            <input type="text" name="dick_size" placeholder="e.g., inches or cm" 
+                                   class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                        </div>
+                        @else
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Boob Size / Dick Size
+                            </label>
+                            <input type="text" name="boob_size_dick_size" placeholder="Enter size" 
+                                   class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                        </div>
+                        @endif
                     </div>
                 @endif
             </form>

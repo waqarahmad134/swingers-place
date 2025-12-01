@@ -357,8 +357,8 @@
                                                     <input type="text" name="piercings_her" value="{{ old('piercings_her', $coupleData['piercings_her'] ?? '') }}" placeholder="Type Here" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
                                                 </div>
                                                 <div>
-                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Race</label>
-                                                    <input type="text" name="race_her" value="{{ old('race_her', $coupleData['race_her'] ?? '') }}" placeholder="Type Here" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Boob Size</label>
+                                                    <input type="text" name="boob_size_her" value="{{ old('boob_size_her', $coupleData['boob_size_her'] ?? '') }}" placeholder="e.g., A, B, C, D, DD, etc." class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
                                                 </div>
                                             </div>
                                         </div>
@@ -410,8 +410,8 @@
                                                     <input type="text" name="piercings_him" value="{{ old('piercings_him', $coupleData['piercings_him'] ?? '') }}" placeholder="Type Here" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
                                                 </div>
                                                 <div>
-                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Race</label>
-                                                    <input type="text" name="race_him" value="{{ old('race_him', $coupleData['race_him'] ?? '') }}" placeholder="Type Here" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Dick Size</label>
+                                                    <input type="text" name="dick_size_him" value="{{ old('dick_size_him', $coupleData['dick_size_him'] ?? '') }}" placeholder="e.g., inches or cm" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
                                                 </div>
                                             </div>
                                         </div>

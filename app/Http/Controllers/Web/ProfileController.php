@@ -118,8 +118,8 @@ class ProfileController extends Controller
             $rules['tattoos_him'] = ['nullable', 'string'];
             $rules['piercings_her'] = ['nullable', 'string', 'max:255'];
             $rules['piercings_him'] = ['nullable', 'string', 'max:255'];
-            $rules['race_her'] = ['nullable', 'string', 'max:255'];
-            $rules['race_him'] = ['nullable', 'string', 'max:255'];
+            $rules['boob_size_her'] = ['nullable', 'string', 'max:255'];
+            $rules['dick_size_him'] = ['nullable', 'string', 'max:255'];
         } else {
             // Single fields
             $rules['date_of_birth'] = ['nullable', 'date'];
@@ -213,8 +213,8 @@ class ProfileController extends Controller
                 'tattoos_him' => $validated['tattoos_him'] ?? null,
                 'piercings_her' => $validated['piercings_her'] ?? null,
                 'piercings_him' => $validated['piercings_him'] ?? null,
-                'race_her' => $validated['race_her'] ?? null,
-                'race_him' => $validated['race_him'] ?? null,
+                'boob_size_her' => $validated['boob_size_her'] ?? null,
+                'dick_size_him' => $validated['dick_size_him'] ?? null,
             ];
             // Store couple data in JSON format
             $profile->couple_data = $coupleData;

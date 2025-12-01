@@ -169,7 +169,8 @@ class OnboardingController extends Controller
             'hair_color' => $request->hair_color,
             'tattoos' => $request->tattoos,
             'piercings' => $request->piercings,
-            'race' => $request->race,
+            'boob_size' => $request->boob_size ?? null,
+            'dick_size' => $request->dick_size ?? null,
             'onboarding_step' => 7,
         ]);
 

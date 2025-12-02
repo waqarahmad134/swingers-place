@@ -56,6 +56,29 @@
                     <input type="hidden" id="home_location_lng" name="home_location_lng">
                 </div>
 
+                <!-- Country and City Fields -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Country -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Country
+                        </label>
+                        <input type="text" id="country" name="country" 
+                               placeholder="Country will auto-fill from location..."
+                               class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                    </div>
+
+                    <!-- City -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            City
+                        </label>
+                        <input type="text" id="city" name="city" 
+                               placeholder="City will auto-fill from location..."
+                               class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                    </div>
+                </div>
+
                 <!-- Map Display -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -110,6 +133,39 @@ let marker;
 let homeLocationAutocomplete;
 let travelLocationAutocomplete;
 
+function extractCountryAndCity(addressComponents) {
+    let country = '';
+    let city = '';
+    
+    if (addressComponents) {
+        for (let component of addressComponents) {
+            const types = component.types;
+            
+            // Extract country
+            if (types.includes('country')) {
+                country = component.long_name;
+            }
+            
+            // Extract city - try multiple types in order of preference
+            if (!city && types.includes('locality')) {
+                city = component.long_name;
+            } else if (!city && types.includes('administrative_area_level_2')) {
+                city = component.long_name;
+            } else if (!city && types.includes('administrative_area_level_1')) {
+                city = component.long_name;
+            } else if (!city && types.includes('sublocality')) {
+                city = component.long_name;
+            }
+        }
+    }
+    
+    // Update country and city fields
+    const countryInput = document.getElementById('country');
+    const cityInput = document.getElementById('city');
+    if (countryInput) countryInput.value = country;
+    if (cityInput) cityInput.value = city;
+}
+
 function initGoogleMaps() {
     // Initialize Home Location Autocomplete
     const homeLocationInput = document.getElementById('home_location');
@@ -117,7 +173,7 @@ function initGoogleMaps() {
         try {
             homeLocationAutocomplete = new google.maps.places.Autocomplete(homeLocationInput, {
                 types: ['(cities)'],
-                fields: ['formatted_address', 'geometry', 'name']
+                fields: ['formatted_address', 'geometry', 'name', 'address_components']
             });
 
             homeLocationAutocomplete.addListener('place_changed', function() {
@@ -129,6 +185,9 @@ function initGoogleMaps() {
                 document.getElementById('home_location_lat').value = place.geometry.location.lat();
                 document.getElementById('home_location_lng').value = place.geometry.location.lng();
                 homeLocationInput.value = place.formatted_address || place.name;
+
+                // Extract country and city from address components
+                extractCountryAndCity(place.address_components);
 
                 if (!map) {
                     initMap(place.geometry.location);
@@ -202,6 +261,8 @@ function initMap(location) {
         geocoder.geocode({ location: position }, (results, status) => {
             if (status === 'OK' && results[0]) {
                 document.getElementById('home_location').value = results[0].formatted_address;
+                // Extract country and city from geocoded results
+                extractCountryAndCity(results[0].address_components);
             }
         });
     });

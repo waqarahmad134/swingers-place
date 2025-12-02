@@ -13,6 +13,8 @@ class UserProfile extends Model
         'category',
         'preferences',
         'home_location',
+        'country',
+        'city',
         'travel_location',
         'latitude',
         'longitude',

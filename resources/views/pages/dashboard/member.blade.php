@@ -22,6 +22,8 @@
                             <option value="gender" {{ request('filter_type') == 'gender' ? 'selected' : '' }}>Gender</option>
                             <option value="company" {{ request('filter_type') == 'company' ? 'selected' : '' }}>Company</option>
                             <option value="location" {{ request('filter_type') == 'location' ? 'selected' : '' }}>Location</option>
+                            <option value="country" {{ request('filter_type') == 'country' ? 'selected' : '' }}>Country</option>
+                            <option value="city" {{ request('filter_type') == 'city' ? 'selected' : '' }}>City</option>
                             <option value="profile_type" {{ request('filter_type') == 'profile_type' ? 'selected' : '' }}>Profile Type</option>
                             <option value="category" {{ request('filter_type') == 'category' ? 'selected' : '' }}>Category</option>
                             <option value="eye_color" {{ request('filter_type') == 'eye_color' ? 'selected' : '' }}>Eye Color</option>
@@ -79,6 +81,28 @@
                             placeholder="Enter location..." 
                             class="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl pl-10 pr-32 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                             style="display: {{ request('filter_type') == 'location' ? 'block' : 'none' }};"
+                        />
+
+                        <!-- Country Input -->
+                        <input 
+                            type="text" 
+                            name="filter_country"
+                            id="filterCountry"
+                            value="{{ request('filter_country') }}"
+                            placeholder="Enter country..." 
+                            class="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl pl-10 pr-32 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            style="display: {{ request('filter_type') == 'country' ? 'block' : 'none' }};"
+                        />
+
+                        <!-- City Input -->
+                        <input 
+                            type="text" 
+                            name="filter_city"
+                            id="filterCity"
+                            value="{{ request('filter_city') }}"
+                            placeholder="Enter city..." 
+                            class="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl pl-10 pr-32 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                            style="display: {{ request('filter_type') == 'city' ? 'block' : 'none' }};"
                         />
 
                         <!-- Profile Type Dropdown -->
@@ -343,6 +367,8 @@
         const filterGender = document.getElementById('filterGender');
         const filterCompany = document.getElementById('filterCompany');
         const filterLocation = document.getElementById('filterLocation');
+        const filterCountry = document.getElementById('filterCountry');
+        const filterCity = document.getElementById('filterCity');
         const filterProfileType = document.getElementById('filterProfileType');
         const filterCategory = document.getElementById('filterCategory');
         const filterEyeColor = document.getElementById('filterEyeColor');
@@ -353,6 +379,8 @@
         filterGender.style.display = 'none';
         filterCompany.style.display = 'none';
         filterLocation.style.display = 'none';
+        filterCountry.style.display = 'none';
+        filterCity.style.display = 'none';
         filterProfileType.style.display = 'none';
         filterCategory.style.display = 'none';
         filterEyeColor.style.display = 'none';
@@ -368,6 +396,10 @@
             filterCompany.style.display = 'block';
         } else if (filterType === 'location') {
             filterLocation.style.display = 'block';
+        } else if (filterType === 'country') {
+            filterCountry.style.display = 'block';
+        } else if (filterType === 'city') {
+            filterCity.style.display = 'block';
         } else if (filterType === 'profile_type') {
             filterProfileType.style.display = 'block';
         } else if (filterType === 'category') {
@@ -386,6 +418,8 @@
             document.getElementById('filterGender').value = '';
             document.getElementById('filterCompany').value = '';
             document.getElementById('filterLocation').value = '';
+            document.getElementById('filterCountry').value = '';
+            document.getElementById('filterCity').value = '';
             document.getElementById('filterProfileType').value = '';
             document.getElementById('filterCategory').value = '';
             document.getElementById('filterEyeColor').value = '';

@@ -421,11 +421,25 @@
                                 <!-- Location -->
                                 <div class="mb-8">
                                     <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Location</h3>
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location</label>
-                                        <input type="text" id="home_location" name="home_location" value="{{ old('home_location', $profile && $profile->home_location ? $profile->home_location : '') }}" placeholder="Search for your city..." class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
-                                        <input type="hidden" id="home_location_lat" name="home_location_lat">
-                                        <input type="hidden" id="home_location_lng" name="home_location_lng">
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location</label>
+                                            <input type="text" id="home_location" name="home_location" value="{{ old('home_location', $profile && $profile->home_location ? $profile->home_location : '') }}" placeholder="Search for your city..." class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                            <input type="hidden" id="home_location_lat" name="home_location_lat">
+                                            <input type="hidden" id="home_location_lng" name="home_location_lng">
+                                        </div>
+                                        
+                                        <!-- Country and City Fields -->
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Country</label>
+                                                <input type="text" id="country" name="country" value="{{ old('country', $profile && $profile->country ? $profile->country : '') }}" placeholder="Country will auto-fill from location..." class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">City</label>
+                                                <input type="text" id="city" name="city" value="{{ old('city', $profile && $profile->city ? $profile->city : '') }}" placeholder="City will auto-fill from location..." class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -770,6 +784,40 @@
         document.head.appendChild(script);
     })();
 
+    // Function to extract country and city from address components
+    function extractCountryAndCity(addressComponents) {
+        let country = '';
+        let city = '';
+        
+        if (addressComponents) {
+            for (let component of addressComponents) {
+                const types = component.types;
+                
+                // Extract country
+                if (types.includes('country')) {
+                    country = component.long_name;
+                }
+                
+                // Extract city - try multiple types in order of preference
+                if (!city && types.includes('locality')) {
+                    city = component.long_name;
+                } else if (!city && types.includes('administrative_area_level_2')) {
+                    city = component.long_name;
+                } else if (!city && types.includes('administrative_area_level_1')) {
+                    city = component.long_name;
+                } else if (!city && types.includes('sublocality')) {
+                    city = component.long_name;
+                }
+            }
+        }
+        
+        // Update country and city fields
+        const countryInput = document.getElementById('country');
+        const cityInput = document.getElementById('city');
+        if (countryInput) countryInput.value = country;
+        if (cityInput) cityInput.value = city;
+    }
+
     // Callback function for when Google Maps loads
     window.initLocationAutocompleteCallback = function() {
         if (typeof google !== 'undefined' && google.maps && google.maps.places) {
@@ -778,7 +826,7 @@
                 try {
                     const autocomplete = new google.maps.places.Autocomplete(locationInput, {
                         types: ['(cities)'],
-                        fields: ['formatted_address', 'geometry', 'name']
+                        fields: ['formatted_address', 'geometry', 'name', 'address_components']
                     });
 
                     autocomplete.addListener('place_changed', function() {
@@ -795,6 +843,9 @@
 
                         // Update input value
                         locationInput.value = place.formatted_address || place.name;
+
+                        // Extract country and city from address components
+                        extractCountryAndCity(place.address_components);
                     });
                 } catch (error) {
                     console.error('Error initializing location autocomplete:', error);

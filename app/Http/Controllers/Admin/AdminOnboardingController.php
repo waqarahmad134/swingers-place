@@ -108,6 +108,10 @@ class AdminOnboardingController extends Controller
     {
         $this->getOrCreateProfile()->update([
             'home_location' => $request->home_location,
+            'country' => $request->country,
+            'city' => $request->city,
+            'latitude' => $request->home_location_lat,
+            'longitude' => $request->home_location_lng,
             'travel_location' => $request->travel_location,
             'onboarding_step' => 4,
         ]);

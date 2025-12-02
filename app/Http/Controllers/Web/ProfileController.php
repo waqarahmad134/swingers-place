@@ -77,6 +77,8 @@ class ProfileController extends Controller
             'cover_photo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'],
             'category' => ['nullable', 'string'],
             'home_location' => ['nullable', 'string', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
             'preferences' => ['nullable', 'array'],
             'languages' => ['nullable', 'array'],
             'profile_visible' => ['nullable', 'boolean'],
@@ -167,6 +169,8 @@ class ProfileController extends Controller
         // Update profile data
         $profile->category = $validated['category'] ?? null;
         $profile->home_location = $validated['home_location'] ?? null;
+        $profile->country = $validated['country'] ?? null;
+        $profile->city = $validated['city'] ?? null;
         
         // Handle preferences array - use null coalescing to avoid undefined key error
         $preferences = $validated['preferences'] ?? [];

@@ -55,6 +55,22 @@ class DashboardController extends Controller
             });
         }
 
+        // Country filter
+        if ($filterType === 'country' && $request->filled('filter_country')) {
+            $country = $request->get('filter_country');
+            $query->whereHas('profile', function ($q) use ($country) {
+                $q->where('country', 'like', "%{$country}%");
+            });
+        }
+
+        // City filter
+        if ($filterType === 'city' && $request->filled('filter_city')) {
+            $city = $request->get('filter_city');
+            $query->whereHas('profile', function ($q) use ($city) {
+                $q->where('city', 'like', "%{$city}%");
+            });
+        }
+
         // Profile Type filter
         if ($filterType === 'profile_type' && $request->filled('filter_profile_type')) {
             $profileType = $request->get('filter_profile_type');

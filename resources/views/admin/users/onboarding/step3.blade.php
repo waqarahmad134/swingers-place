@@ -49,16 +49,24 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Home Location
                     </label>
-                    <input type="text" name="home_location" 
+                    <input type="text" id="home_location" name="home_location" 
                            placeholder="Search for your city..."
                            class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                    <input type="hidden" id="home_location_lat" name="home_location_lat">
+                    <input type="hidden" id="home_location_lng" name="home_location_lng">
                 </div>
 
-                <!-- Map Placeholder -->
-                <div class="bg-gray-100 dark:bg-gray-700 rounded-xl h-48 flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600">
-                    <div class="text-center">
-                        <i class="ri-map-pin-2-line text-4xl text-gray-400 mb-2"></i>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm">Map view would appear here</p>
+                <!-- Map Display -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Location Map
+                    </label>
+                    <div id="map" class="rounded-xl h-64 w-full border border-gray-200 dark:border-gray-600" style="display: none;"></div>
+                    <div id="map-placeholder" class="bg-gray-100 dark:bg-gray-700 rounded-xl h-64 flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600">
+                        <div class="text-center">
+                            <i class="ri-map-pin-2-line text-4xl text-gray-400 mb-2"></i>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">Map will appear when you select a location</p>
+                        </div>
                     </div>
                 </div>
 
@@ -67,7 +75,7 @@
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Travel Location (Optional)
                     </label>
-                    <input type="text" name="travel_location" 
+                    <input type="text" id="travel_location" name="travel_location" 
                            placeholder="Where do you travel to?"
                            class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
                 </div>
@@ -92,8 +100,129 @@
 </div>
 
 @push('scripts')
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places" defer></script>
+@php
+    $googleMapsApiKey = config('services.google_maps.api_key');
+@endphp
+@if($googleMapsApiKey)
 <script>
+let map;
+let marker;
+let homeLocationAutocomplete;
+let travelLocationAutocomplete;
+
+function initGoogleMaps() {
+    // Initialize Home Location Autocomplete
+    const homeLocationInput = document.getElementById('home_location');
+    if (homeLocationInput && typeof google !== 'undefined' && google.maps && google.maps.places) {
+        try {
+            homeLocationAutocomplete = new google.maps.places.Autocomplete(homeLocationInput, {
+                types: ['(cities)'],
+                fields: ['formatted_address', 'geometry', 'name']
+            });
+
+            homeLocationAutocomplete.addListener('place_changed', function() {
+                const place = homeLocationAutocomplete.getPlace();
+                if (!place.geometry) {
+                    return;
+                }
+
+                document.getElementById('home_location_lat').value = place.geometry.location.lat();
+                document.getElementById('home_location_lng').value = place.geometry.location.lng();
+                homeLocationInput.value = place.formatted_address || place.name;
+
+                if (!map) {
+                    initMap(place.geometry.location);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    marker.setPosition(place.geometry.location);
+                }
+
+                document.getElementById('map-placeholder').style.display = 'none';
+                document.getElementById('map').style.display = 'block';
+            });
+        } catch (error) {
+            console.error('Error initializing autocomplete:', error);
+            if (error.message && error.message.includes('legacy')) {
+                console.error('⚠️ PLACES API NOT ENABLED:');
+                console.error('Please enable "Places API" (legacy) in Google Cloud Console:');
+                console.error('1. Go to: https://console.cloud.google.com/apis/library');
+                console.error('2. Search for "Places API" (without "New")');
+                console.error('3. Click ENABLE');
+                console.error('4. Wait 1-5 minutes and refresh this page');
+            }
+        }
+    }
+
+    // Initialize Travel Location Autocomplete
+    const travelLocationInput = document.getElementById('travel_location');
+    if (travelLocationInput && typeof google !== 'undefined' && google.maps && google.maps.places) {
+        try {
+            travelLocationAutocomplete = new google.maps.places.Autocomplete(travelLocationInput, {
+                types: ['(cities)'],
+                fields: ['formatted_address', 'name']
+            });
+
+            travelLocationAutocomplete.addListener('place_changed', function() {
+                const place = travelLocationAutocomplete.getPlace();
+                if (place.formatted_address) {
+                    travelLocationInput.value = place.formatted_address || place.name;
+                }
+            });
+        } catch (error) {
+            console.error('Error initializing travel autocomplete:', error);
+        }
+    }
+}
+
+function initMap(location) {
+    const mapElement = document.getElementById('map');
+    if (!mapElement) return;
+
+    map = new google.maps.Map(mapElement, {
+        center: location || { lat: 0, lng: 0 },
+        zoom: 12,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false
+    });
+
+    marker = new google.maps.Marker({
+        map: map,
+        position: location || { lat: 0, lng: 0 },
+        draggable: true,
+        animation: google.maps.Animation.DROP
+    });
+
+    marker.addListener('dragend', function() {
+        const position = marker.getPosition();
+        document.getElementById('home_location_lat').value = position.lat();
+        document.getElementById('home_location_lng').value = position.lng();
+        
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ location: position }, (results, status) => {
+            if (status === 'OK' && results[0]) {
+                document.getElementById('home_location').value = results[0].formatted_address;
+            }
+        });
+    });
+}
+
+// Load Google Maps API with proper async loading and callback
+(function() {
+    const script = document.createElement('script');
+    script.src = 'https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&loading=async&libraries=places&callback=initMapCallback';
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+})();
+
+// Callback function for when Google Maps loads
+window.initMapCallback = function() {
+    if (typeof google !== 'undefined' && google.maps) {
+        initGoogleMaps();
+    }
+};
+
 document.getElementById('step-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const formData = new FormData(this);
@@ -129,6 +258,11 @@ function skipStep(step) {
     }
 }
 </script>
+@else
+<script>
+console.warn('Google Maps API key is not configured. Please add GOOGLE_MAPS_API_KEY to your .env file.');
+</script>
+@endif
 @endpush
 @endsection
 

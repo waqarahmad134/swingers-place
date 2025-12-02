@@ -423,7 +423,9 @@
                                     <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Location</h3>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location</label>
-                                        <input type="text" name="home_location" value="{{ old('home_location', $profile && $profile->home_location ? $profile->home_location : '') }}" placeholder="Los Angeles, CA" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                        <input type="text" id="home_location" name="home_location" value="{{ old('home_location', $profile && $profile->home_location ? $profile->home_location : '') }}" placeholder="Search for your city..." class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                        <input type="hidden" id="home_location_lat" name="home_location_lat">
+                                        <input type="hidden" id="home_location_lng" name="home_location_lng">
                                     </div>
                                 </div>
 
@@ -753,6 +755,64 @@
             reader.readAsDataURL(file);
         }
     });
+
+    // Google Maps Autocomplete for Location
+    @php
+        $googleMapsApiKey = config('services.google_maps.api_key');
+    @endphp
+    @if($googleMapsApiKey)
+    // Load Google Maps API with proper async loading
+    (function() {
+        const script = document.createElement('script');
+        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&loading=async&libraries=places&callback=initLocationAutocompleteCallback';
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    })();
+
+    // Callback function for when Google Maps loads
+    window.initLocationAutocompleteCallback = function() {
+        if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+            const locationInput = document.getElementById('home_location');
+            if (locationInput) {
+                try {
+                    const autocomplete = new google.maps.places.Autocomplete(locationInput, {
+                        types: ['(cities)'],
+                        fields: ['formatted_address', 'geometry', 'name']
+                    });
+
+                    autocomplete.addListener('place_changed', function() {
+                        const place = autocomplete.getPlace();
+                        if (!place.geometry) {
+                            return;
+                        }
+
+                        // Update hidden fields with coordinates
+                        const latInput = document.getElementById('home_location_lat');
+                        const lngInput = document.getElementById('home_location_lng');
+                        if (latInput) latInput.value = place.geometry.location.lat();
+                        if (lngInput) lngInput.value = place.geometry.location.lng();
+
+                        // Update input value
+                        locationInput.value = place.formatted_address || place.name;
+                    });
+                } catch (error) {
+                    console.error('Error initializing location autocomplete:', error);
+                    if (error.message && error.message.includes('legacy')) {
+                        console.error('⚠️ PLACES API NOT ENABLED:');
+                        console.error('Please enable "Places API" (legacy) in Google Cloud Console:');
+                        console.error('1. Go to: https://console.cloud.google.com/apis/library');
+                        console.error('2. Search for "Places API" (without "New")');
+                        console.error('3. Click ENABLE');
+                        console.error('4. Wait 1-5 minutes and refresh this page');
+                    }
+                }
+            }
+        }
+    };
+    @else
+    console.warn('Google Maps API key is not configured. Please add GOOGLE_MAPS_API_KEY to your .env file.');
+    @endif
 </script>
 @endpush
 @endsection

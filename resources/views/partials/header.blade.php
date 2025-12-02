@@ -95,9 +95,9 @@
           </a>
           
           <!-- Theme Toggle -->
-          <button id="theme-toggle" class="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
-            <i class="ri-moon-line text-2xl theme-icon-light"></i>
-            <i class="ri-sun-line text-2xl theme-icon-dark hidden"></i>
+          <button id="theme-toggle" data-theme-toggle aria-label="Toggle theme" class="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+            <i class="ri-moon-line text-2xl" data-theme-icon="light"></i>
+            <i class="ri-sun-line text-2xl hidden" data-theme-icon="dark"></i>
           </button>
           
           <!-- User Avatar Dropdown -->
@@ -151,7 +151,13 @@
             </div>
           </div>
         @else
-          <!-- Guest: Show Login & Sign Up -->
+          <!-- Guest: Show Theme Toggle, Login & Sign Up -->
+          <!-- Theme Toggle -->
+          <button id="theme-toggle" data-theme-toggle aria-label="Toggle theme" class="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+            <i class="ri-moon-line text-2xl" data-theme-icon="light"></i>
+            <i class="ri-sun-line text-2xl hidden" data-theme-icon="dark"></i>
+          </button>
+          
           <a href="{{ route('login') }}" 
              class="border-2 border-[#9810FA] md:py-2 py-1 md:text-base text-sm px-3 md:px-6 rounded-3xl text-[#9810FA] hover:bg-[#9810FA] hover:text-white transition-all">
             Login

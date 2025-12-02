@@ -27,10 +27,23 @@ const applyTheme = (theme) => {
 };
 
 const updateThemeIcons = (theme) => {
+    // Update icons using data-theme-icon attribute (new approach)
     document.querySelectorAll('[data-theme-icon]').forEach((icon) => {
         const targetTheme = icon.getAttribute('data-theme-icon');
         icon.classList.toggle('hidden', targetTheme !== theme);
     });
+    
+    // Also support old class-based approach for backward compatibility
+    const lightIcons = document.querySelectorAll('.theme-icon-light');
+    const darkIcons = document.querySelectorAll('.theme-icon-dark');
+    
+    if (theme === 'dark') {
+        lightIcons.forEach(icon => icon.classList.add('hidden'));
+        darkIcons.forEach(icon => icon.classList.remove('hidden'));
+    } else {
+        lightIcons.forEach(icon => icon.classList.remove('hidden'));
+        darkIcons.forEach(icon => icon.classList.add('hidden'));
+    }
 };
 
 const updateThemeToggleLabels = (currentTheme) => {
@@ -52,7 +65,9 @@ const persistTheme = (theme) => {
 
 const initializeTheme = () => {
     const stored = getStoredTheme();
-    const initialTheme = stored ?? getSystemTheme();
+    // Default to 'light' mode for new visitors instead of using system preference
+    // This prevents unwanted dark mode for users who haven't explicitly chosen it
+    const initialTheme = stored ?? 'light';
     applyTheme(initialTheme);
     updateThemeIcons(initialTheme);
     updateThemeToggleLabels(initialTheme);
@@ -61,9 +76,12 @@ const initializeTheme = () => {
 
 const setupThemeToggle = () => {
     // Initialize theme and get current state
-    let currentTheme = initializeTheme();
+    initializeTheme();
 
-    document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+    // Support both data-theme-toggle attribute and id="theme-toggle"
+    const toggleButtons = document.querySelectorAll('[data-theme-toggle], #theme-toggle');
+    
+    toggleButtons.forEach((button) => {
         button.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -72,38 +90,21 @@ const setupThemeToggle = () => {
             const root = document.documentElement;
             const isCurrentlyDark = root.classList.contains('dark');
             const nextTheme = isCurrentlyDark ? 'light' : 'dark';
-            console.log("🚀 ~ setupThemeToggle ~ nextTheme:", nextTheme)
 
             // Apply the new theme
             applyTheme(nextTheme);
             updateThemeIcons(nextTheme);
             updateThemeToggleLabels(nextTheme);
             persistTheme(nextTheme);
-            
-            // Update currentTheme for next click
-            currentTheme = nextTheme;
-            console.log("🚀 ~ setupThemeToggle ~ currentTheme:", currentTheme)
         });
     });
 };
 
 const observeSystemTheme = () => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    if (typeof mediaQuery.addEventListener !== 'function') {
-        return;
-    }
-
-    mediaQuery.addEventListener('change', (event) => {
-        const storedTheme = getStoredTheme();
-        if (storedTheme) {
-            return;
-        }
-
-        const theme = event.matches ? 'dark' : 'light';
-        applyTheme(theme);
-        updateThemeIcons(theme);
-        updateThemeToggleLabels(theme);
-    });
+    // Disabled: We no longer auto-switch based on system theme
+    // Users must explicitly choose their theme preference via the toggle
+    // This prevents unwanted theme changes when system preferences change
+    return;
 };
 
 const setupMobileMenus = () => {

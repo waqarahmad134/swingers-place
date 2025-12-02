@@ -10,6 +10,20 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.7.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
     
+    <script>
+        // Initialize theme immediately to prevent flash of wrong theme
+        // Default to 'light' mode for new visitors instead of system preference
+        (function() {
+            const storedTheme = localStorage.getItem('theme');
+            const theme = storedTheme || 'light'; // Default to light mode, not system preference
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>

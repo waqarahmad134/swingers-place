@@ -19,8 +19,11 @@ class DashboardController extends Controller
             ->where('is_admin', false)
             ->where('id', '!=', auth()->id());
 
-        // Search filter
-        if ($request->filled('search')) {
+        // Get filter type
+        $filterType = $request->get('filter_type', 'all');
+
+        // Search filter (only when filter_type is 'all' or not set)
+        if ($filterType === 'all' && $request->filled('search')) {
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -33,11 +36,62 @@ class DashboardController extends Controller
             });
         }
 
-        // Category filter
+        // Gender filter
+        if ($filterType === 'gender' && $request->filled('filter_gender')) {
+            $query->where('gender', $request->get('filter_gender'));
+        }
+
+        // Company filter
+        if ($filterType === 'company' && $request->filled('filter_company')) {
+            $company = $request->get('filter_company');
+            $query->where('company', 'like', "%{$company}%");
+        }
+
+        // Location filter
+        if ($filterType === 'location' && $request->filled('filter_location')) {
+            $location = $request->get('filter_location');
+            $query->whereHas('profile', function ($q) use ($location) {
+                $q->where('home_location', 'like', "%{$location}%");
+            });
+        }
+
+        // Profile Type filter
+        if ($filterType === 'profile_type' && $request->filled('filter_profile_type')) {
+            $profileType = $request->get('filter_profile_type');
+            $query->whereHas('profile', function ($q) use ($profileType) {
+                $q->where('profile_type', $profileType);
+            });
+        }
+
+        // Category filter (new filter method)
+        if ($filterType === 'category' && $request->filled('filter_category')) {
+            $category = $request->get('filter_category');
+            $query->whereHas('profile', function ($q) use ($category) {
+                $q->where('category', $category);
+            });
+        }
+
+        // Legacy category filter (from old filter bar)
         if ($request->filled('category') && $request->get('category') !== 'All Categories') {
             $category = $request->get('category');
             $query->whereHas('profile', function ($q) use ($category) {
                 $q->where('category', $category);
+            });
+        }
+
+        // Eye Color filter
+        if ($filterType === 'eye_color' && $request->filled('filter_eye_color')) {
+            $eyeColor = $request->get('filter_eye_color');
+            $query->whereHas('profile', function ($q) use ($eyeColor) {
+                $q->where('eye_color', $eyeColor);
+            });
+        }
+
+        // Preferences (Things They Like) filter
+        if ($filterType === 'preferences' && $request->filled('filter_preferences')) {
+            $preference = $request->get('filter_preferences');
+            $query->whereHas('profile', function ($q) use ($preference) {
+                $q->whereJsonContains('preferences', $preference);
             });
         }
 

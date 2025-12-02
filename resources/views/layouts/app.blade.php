@@ -42,8 +42,10 @@
 
     <script>
         // Initialize theme immediately to prevent flash of wrong theme
+        // Default to 'light' mode for new visitors instead of system preference
         (function() {
-            const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            const storedTheme = localStorage.getItem('theme');
+            const theme = storedTheme || 'light'; // Default to light mode, not system preference
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
             } else {

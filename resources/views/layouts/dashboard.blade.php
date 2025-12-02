@@ -36,7 +36,6 @@
         }
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background-color: #111827;
         }
     </style>
     <!-- Tailwind CSS CDN -->
@@ -53,8 +52,10 @@
     
     <script>
         // Initialize theme immediately to prevent flash of wrong theme
+        // Default to 'light' mode for new visitors instead of system preference
         (function() {
-            const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            const storedTheme = localStorage.getItem('theme');
+            const theme = storedTheme || 'light'; // Default to light mode, not system preference
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
             } else {
@@ -65,11 +66,18 @@
         // Global auth flag
         window.isAuthenticated = @json(auth()->check());
         
-        // Theme toggle functionality and icon initialization
+        // Theme toggle functionality
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize theme icons on page load
+            // Update theme icons based on current theme
             const root = document.documentElement;
             const isDark = root.classList.contains('dark');
+            
+            // Support both new data-theme-icon and old class-based icons
+            document.querySelectorAll('[data-theme-icon]').forEach((icon) => {
+                const targetTheme = icon.getAttribute('data-theme-icon');
+                icon.classList.toggle('hidden', targetTheme !== (isDark ? 'dark' : 'light'));
+            });
+            
             const lightIcons = document.querySelectorAll('.theme-icon-light');
             const darkIcons = document.querySelectorAll('.theme-icon-dark');
             
@@ -82,9 +90,12 @@
             }
             
             // Theme toggle button functionality
-            const themeToggle = document.getElementById('theme-toggle');
-            if (themeToggle) {
-                themeToggle.addEventListener('click', function() {
+            const toggleButtons = document.querySelectorAll('[data-theme-toggle], #theme-toggle');
+            toggleButtons.forEach((button) => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
                     const isCurrentlyDark = root.classList.contains('dark');
                     const newTheme = isCurrentlyDark ? 'light' : 'dark';
                     
@@ -97,6 +108,11 @@
                     localStorage.setItem('theme', newTheme);
                     
                     // Update theme icons
+                    document.querySelectorAll('[data-theme-icon]').forEach((icon) => {
+                        const targetTheme = icon.getAttribute('data-theme-icon');
+                        icon.classList.toggle('hidden', targetTheme !== newTheme);
+                    });
+                    
                     if (newTheme === 'dark') {
                         lightIcons.forEach(icon => icon.classList.add('hidden'));
                         darkIcons.forEach(icon => icon.classList.remove('hidden'));
@@ -105,17 +121,17 @@
                         darkIcons.forEach(icon => icon.classList.add('hidden'));
                     }
                 });
-            }
+            });
         });
     </script>
     
     @stack('head')
 </head>
-<body class="bg-gray-900">
+<body class="bg-gray-50 dark:bg-gray-900">
     <!-- Header -->
     @include('partials.header')
     
-    <div class="flex gap-4 p-4">
+    <div class="flex gap-4 p-4 bg-gray-50 dark:bg-gray-900 min-h-screen">
         <!-- Sidebar -->
         @include('components.sidebar.profile-sidebar')
 
@@ -124,6 +140,7 @@
             @yield('content')
         </main>
     </div>
+    @include('partials.footer')
 
     @stack('scripts')
 </body>

@@ -6,8 +6,10 @@
     <title>Under Maintenance - {{ config('app.name') }}</title>
     
     <script>
+        // Initialize theme - default to light mode for new visitors
         (function() {
-            const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            const storedTheme = localStorage.getItem('theme');
+            const theme = storedTheme || 'light'; // Default to light mode, not system preference
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
             } else {

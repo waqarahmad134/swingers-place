@@ -100,6 +100,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/users/{user}/data', [\App\Http\Controllers\Admin\UserController::class, 'getData'])->name('users.data');
     Route::post('/users/{user}/verify', [\App\Http\Controllers\Admin\UserController::class, 'verify'])->name('users.verify');
     Route::post('/users/{user}/toggle-status', [\App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle-status');
+    Route::post('/users/{user}/toggle-online-status', [\App\Http\Controllers\Admin\UserController::class, 'toggleOnlineStatus'])->name('users.toggle-online-status');
+    Route::post('/users/{user}/set-scheduled-offline', [\App\Http\Controllers\Admin\UserController::class, 'setScheduledOffline'])->name('users.set-scheduled-offline');
     Route::get('/users/create/select-profile-type', [\App\Http\Controllers\Admin\UserController::class, 'selectProfileType'])->name('users.select-profile-type');
     Route::post('/users/create/select-profile-type', [\App\Http\Controllers\Admin\UserController::class, 'storeProfileType'])->name('users.store-profile-type');
     

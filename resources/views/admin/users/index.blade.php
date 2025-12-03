@@ -62,9 +62,10 @@
             <thead class="text-sm text-[#0A0A0A] bg-[#FFF5F7] border-[#0000001A] border-b">
                 <tr>
                     <th scope="col" class="py-6 px-6 text-left font-bold">User</th>
-                    <th scope="col" class="py-3 px-6 text-left font-bold hidden sm:table-cell">Age</th>
                     <th scope="col" class="py-3 px-6 text-left font-semibold">Email</th>
                     <th scope="col" class="py-3 px-6 text-left font-semibold hidden md:table-cell">Status</th>
+                    <th scope="col" class="py-3 px-6 text-center font-semibold">Online</th>
+                    <th scope="col" class="py-3 px-6 text-center font-semibold">Scheduled Offline</th>
                     <th scope="col" class="py-3 px-6 text-left font-semibold hidden lg:table-cell">Joined Date</th>
                     <th scope="col" class="py-3 px-6 text-center font-semibold">Actions</th>
                 </tr>
@@ -75,11 +76,8 @@
                 @forelse ($users as $user)
                     @php
                         $profile = $user->profile;
-                        $age = null;
-                        if ($profile && $profile->date_of_birth) {
-                            $age = \Carbon\Carbon::parse($profile->date_of_birth)->age;
-                        }
                         $location = $profile && $profile->home_location ? $profile->home_location : 'N/A';
+                        $isOnline = $user->isOnline();
                         
                         // Determine user status
                         $userStatus = 'pending';
@@ -109,7 +107,6 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="py-4 px-6 hidden sm:table-cell">{{ $age ?? 'N/A' }}</td>
                         <td class="py-4 px-6">{{ $user->email }}</td>
                         <td class="py-4 px-6 hidden md:table-cell">
                             @if($userStatus === 'verified')
@@ -121,6 +118,31 @@
                             @else
                                 <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800 ring-1 ring-red-500/30">Banned</span>
                             @endif
+                        </td>
+                        <td class="py-4 px-6 text-center">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" 
+                                       class="sr-only peer online-status-toggle" 
+                                       data-user-id="{{ $user->id }}"
+                                       {{ $isOnline ? 'checked' : '' }}>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-500"></div>
+                            </label>
+                        </td>
+                        <td class="py-4 px-6 text-center">
+                            <div class="flex flex-col gap-2 items-center">
+                                <input type="datetime-local" 
+                                       class="scheduled-offline-input text-xs border border-gray-300 rounded px-2 py-1 w-full max-w-[180px]" 
+                                       data-user-id="{{ $user->id }}"
+                                       value="{{ $user->scheduled_offline_at ? $user->scheduled_offline_at->format('Y-m-d\TH:i') : '' }}"
+                                       placeholder="Set offline time">
+                                @if($user->scheduled_offline_at)
+                                    <button type="button" 
+                                            class="clear-scheduled-offline text-xs text-red-600 hover:text-red-800 underline"
+                                            data-user-id="{{ $user->id }}">
+                                        Clear
+                                    </button>
+                                @endif
+                            </div>
                         </td>
                         <td class="py-4 px-6 hidden lg:table-cell">{{ $user->created_at->format('Y-m-d') }}</td>
                         <td class="py-4 px-6 text-center">
@@ -415,6 +437,136 @@
             if (e.key === 'Escape') {
                 closeEditModal();
             }
+        });
+
+        // Handle online status toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggles = document.querySelectorAll('.online-status-toggle');
+            
+            toggles.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const userId = this.dataset.userId;
+                    const isOnline = this.checked;
+                    
+                    // Disable toggle during request
+                    this.disabled = true;
+                    
+                    fetch(`/admin/users/${userId}/toggle-online-status`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            is_online: isOnline
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update toggle state based on response
+                            this.checked = data.is_online;
+                        } else {
+                            // Revert toggle on error
+                            this.checked = !isOnline;
+                            alert('Failed to update online status');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Revert toggle on error
+                        this.checked = !isOnline;
+                        alert('Failed to update online status');
+                    })
+                    .finally(() => {
+                        // Re-enable toggle
+                        this.disabled = false;
+                    });
+                });
+            });
+        });
+
+        // Handle scheduled offline datetime input
+        document.addEventListener('DOMContentLoaded', function() {
+            const scheduledInputs = document.querySelectorAll('.scheduled-offline-input');
+            
+            scheduledInputs.forEach(input => {
+                let timeout;
+                
+                input.addEventListener('change', function() {
+                    const userId = this.dataset.userId;
+                    const scheduledTime = this.value;
+                    
+                    clearTimeout(timeout);
+                    
+                    // Debounce the request
+                    timeout = setTimeout(() => {
+                        fetch(`/admin/users/${userId}/set-scheduled-offline`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                scheduled_offline_at: scheduledTime || null
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Reload page to update online status
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 500);
+                            } else {
+                                alert(data.message || 'Failed to set scheduled offline time');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred. Please try again.');
+                        });
+                    }, 500);
+                });
+            });
+
+            // Handle clear scheduled offline button
+            const clearButtons = document.querySelectorAll('.clear-scheduled-offline');
+            
+            clearButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = this.dataset.userId;
+                    const input = document.querySelector(`.scheduled-offline-input[data-user-id="${userId}"]`);
+                    
+                    if (input) {
+                        input.value = '';
+                        
+                        fetch(`/admin/users/${userId}/set-scheduled-offline`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                scheduled_offline_at: null
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Reload page to update
+                                location.reload();
+                            } else {
+                                alert(data.message || 'Failed to clear scheduled offline time');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred. Please try again.');
+                        });
+                    }
+                });
+            });
         });
     </script>
     @endpush

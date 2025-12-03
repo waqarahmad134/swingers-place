@@ -193,6 +193,7 @@
                 reader.readAsDataURL(file);
             }
         });
+
     </script>
     @endpush
 @endsection

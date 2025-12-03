@@ -178,6 +178,26 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Online Users Toggle Filter -->
+            <div class="mt-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" 
+                               name="online_only" 
+                               value="1"
+                               id="onlineOnlyToggle"
+                               {{ request('online_only') ? 'checked' : '' }}
+                               onchange="document.getElementById('filterForm').submit();"
+                               class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#9810FA]"></div>
+                    </label>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">
+                        <i class="ri-wifi-line text-lg mr-1"></i>
+                        Show only online users
+                    </span>
+                </div>
+            </div>
         </div>
 
     <!-- action buttons -->
@@ -264,6 +284,10 @@
                 }
                 $category = $profile && $profile->category ? $profile->category : 'single_male';
                 $displayName = $member->name ?: ($member->first_name . ' ' . $member->last_name) ?: 'User #' . $member->id;
+                // Check online status - respect privacy setting
+                // Only hide online status if profile exists AND show_online_status is explicitly false
+                $hideOnlineStatus = $profile && $profile->show_online_status === false;
+                $isOnline = !$hideOnlineStatus && $member->isOnline();
             @endphp
             <a href="{{ route('user.profile', $member->id) }}" class="block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg hover:shadow-purple-500/20">
                 <!-- Profile Image -->
@@ -284,10 +308,12 @@
                             </div>
                         @endif
 
-                        <!-- Online Badge (static - not in DB) -->
-                        @if(rand(0, 1))
-                            <div class="bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-xl">
-                                Online
+                        <!-- Online Badge -->
+                        
+                        @if($isOnline)
+                            <div class="bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-xl flex items-center gap-1">
+                                <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                                <span>Online</span>
                             </div>
                         @endif
                     </div>

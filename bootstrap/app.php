@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Apply maintenance mode check to all web routes
         $middleware->web(append: [
             \App\Http\Middleware\CheckMaintenanceMode::class,
+            \App\Http\Middleware\UpdateLastSeenAt::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

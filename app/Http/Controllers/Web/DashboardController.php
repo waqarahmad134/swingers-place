@@ -136,6 +136,38 @@ class DashboardController extends Controller
             });
         }
 
+        // Online only filter
+        if ($request->boolean('online_only')) {
+            $fiveMinutesAgo = now()->subMinutes(5);
+            $now = now();
+            
+            // Filter users who are online based on isOnline() logic
+            $query->where(function ($q) use ($fiveMinutesAgo, $now) {
+                // User must have last_seen_at
+                $q->whereNotNull('last_seen_at')
+                  // last_seen_at must be within last 5 minutes
+                  ->where('last_seen_at', '>', $fiveMinutesAgo)
+                  // Either no scheduled_offline_at or it hasn't passed yet
+                  ->where(function ($subQ) use ($now) {
+                      $subQ->whereNull('scheduled_offline_at')
+                           ->orWhere('scheduled_offline_at', '>', $now);
+                  });
+            })
+            // Also respect privacy setting: only exclude if profile exists AND show_online_status is explicitly false
+            ->where(function ($q) {
+                // Users without profile are included (default to showing online)
+                $q->whereDoesntHave('profile')
+                  // OR users with profile where show_online_status is not explicitly false
+                  ->orWhereHas('profile', function ($profileQuery) {
+                      $profileQuery->where(function ($pq) {
+                          // Include if null (default) or true
+                          $pq->whereNull('show_online_status')
+                             ->orWhere('show_online_status', true);
+                      });
+                  });
+            });
+        }
+
         // Sort by
         $sortBy = $request->get('sort_by', 'All');
         if ($sortBy !== 'All') {

@@ -38,6 +38,8 @@ class User extends Authenticatable
         'business_address',
         'ssn',
         'email_verified_at',
+        'last_seen_at',
+        'scheduled_offline_at',
     ];
 
     /**
@@ -59,6 +61,8 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'last_seen_at' => 'datetime',
+            'scheduled_offline_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
             'is_active' => 'boolean',
@@ -71,5 +75,32 @@ class User extends Authenticatable
     public function profile()
     {
         return $this->hasOne(UserProfile::class);
+    }
+
+    /**
+     * Check if user is currently online.
+     * User is considered online if last_seen_at is within the last 5 minutes.
+     * Also checks if scheduled_offline_at has passed (admin-controlled auto-offline).
+     */
+    public function isOnline(): bool
+    {
+        // Check if admin scheduled an offline time and it has passed
+        if ($this->scheduled_offline_at && $this->scheduled_offline_at->lte(now())) {
+            return false;
+        }
+
+        if (!$this->last_seen_at) {
+            return false;
+        }
+
+        return $this->last_seen_at->gt(now()->subMinutes(5));
+    }
+
+    /**
+     * Update the last seen timestamp.
+     */
+    public function updateLastSeen(): void
+    {
+        $this->update(['last_seen_at' => now()]);
     }
 }

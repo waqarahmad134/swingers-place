@@ -348,5 +348,66 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')
             ->with('success', 'User deleted successfully!');
     }
+
+    public function toggleOnlineStatus(User $user): \Illuminate\Http\JsonResponse
+    {
+        $isOnline = request()->boolean('is_online');
+        
+        if ($isOnline) {
+            // Force online: set last_seen_at to now and clear scheduled offline (if any)
+            $user->last_seen_at = now();
+            $user->scheduled_offline_at = null; // Clear scheduled offline when manually setting online
+            $message = 'User set to online';
+        } else {
+            // Force offline: set last_seen_at to 10 minutes ago (will appear offline)
+            $user->last_seen_at = now()->subMinutes(10);
+            $message = 'User set to offline';
+        }
+        
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'is_online' => $user->isOnline(),
+        ]);
+    }
+
+    /**
+     * Set scheduled offline time for a user (admin only).
+     */
+    public function setScheduledOffline(User $user): \Illuminate\Http\JsonResponse
+    {
+        $scheduledTime = request()->input('scheduled_offline_at');
+        
+        if ($scheduledTime) {
+            try {
+                $user->scheduled_offline_at = \Carbon\Carbon::parse($scheduledTime);
+                $user->save();
+                
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Scheduled offline time set successfully',
+                    'scheduled_offline_at' => $user->scheduled_offline_at->format('Y-m-d H:i:s'),
+                    'is_online' => $user->isOnline(),
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid date/time format',
+                ], 400);
+            }
+        } else {
+            // Clear scheduled offline time
+            $user->scheduled_offline_at = null;
+            $user->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Scheduled offline time cleared',
+                'is_online' => $user->isOnline(),
+            ]);
+        }
+    }
 }
 

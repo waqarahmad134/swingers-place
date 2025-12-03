@@ -33,6 +33,9 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
+            // Update last seen at on login
+            Auth::user()->updateLastSeen();
+
             // Redirect based on user role
             if (Auth::user()->is_admin) {
                 return redirect()->intended('/admin');
@@ -51,6 +54,11 @@ class LoginController extends Controller
      */
     public function logout(Request $request): RedirectResponse
     {
+        // Update last seen at before logout (user will be shown as offline after 5 minutes)
+        if (Auth::check()) {
+            Auth::user()->updateLastSeen();
+        }
+
         Auth::logout();
 
         $request->session()->invalidate();

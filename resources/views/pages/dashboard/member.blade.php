@@ -7,195 +7,133 @@
     <!-- Header Section with Search -->
     <form method="GET" action="{{ route('dashboard.members') }}" id="filterForm">
         <div class="mb-6">
-            <!-- Enhanced Search Bar with Filter Dropdown -->
-            <div class="w-full">
-                <div class="flex gap-2">
-                    <!-- Filter Type Dropdown -->
-                    <div class="relative">
-                        <select 
-                            name="filter_type" 
-                            id="filterType"
-                            onchange="updateSearchPlaceholder(); handleFilterTypeChange(this.value);"
-                            class="text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 min-w-[180px]"
-                        >
-                            <option value="all" {{ request('filter_type') == 'all' || !request('filter_type') ? 'selected' : '' }}>All</option>
-                            <option value="gender" {{ request('filter_type') == 'gender' ? 'selected' : '' }}>Gender</option>
-                            <option value="company" {{ request('filter_type') == 'company' ? 'selected' : '' }}>Company</option>
-                            <option value="location" {{ request('filter_type') == 'location' ? 'selected' : '' }}>Location</option>
-                            <option value="country" {{ request('filter_type') == 'country' ? 'selected' : '' }}>Country</option>
-                            <option value="city" {{ request('filter_type') == 'city' ? 'selected' : '' }}>City</option>
-                            <option value="profile_type" {{ request('filter_type') == 'profile_type' ? 'selected' : '' }}>Profile Type</option>
-                            <option value="category" {{ request('filter_type') == 'category' ? 'selected' : '' }}>Category</option>
-                            <option value="eye_color" {{ request('filter_type') == 'eye_color' ? 'selected' : '' }}>Eye Color</option>
-                            <option value="preferences" {{ request('filter_type') == 'preferences' ? 'selected' : '' }}>Things They Like</option>
-                        </select>
-                    </div>
-
-                    <!-- Search Input / Select Field -->
-                    <div class="relative flex-1">
-                        <i class="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 text-xl"></i>
-                        
-                        <!-- Text Input for General Search -->
+            <!-- Filter Grid with 6 Columns -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm dark:shadow-none border border-gray-200 dark:border-gray-700">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                    <!-- Search / Name -->
+                    <div>
+                        <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="ri-search-line mr-1"></i> Search
+                        </label>
                         <input 
                             type="text" 
                             name="search"
-                            id="searchInput"
+                            id="search"
                             value="{{ request('search') }}"
-                            placeholder="Search by name, location, interests..." 
-                            class="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl pl-10 pr-32 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                            style="display: {{ request('filter_type') && request('filter_type') != 'all' ? 'none' : 'block' }};"
+                            placeholder="Name, location, interests..." 
+                            class="w-full text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                         />
+                    </div>
 
-                        <!-- Gender Dropdown -->
+                    <!-- Gender -->
+                    <div>
+                        <label for="filter_gender" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="ri-user-line mr-1"></i> Gender
+                        </label>
                         <select 
                             name="filter_gender"
-                            id="filterGender"
-                            class="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl pl-10 pr-32 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            style="display: {{ request('filter_type') == 'gender' ? 'block' : 'none' }};"
-                            onchange="document.getElementById('filterForm').submit();"
+                            id="filter_gender"
+                            class="w-full text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                         >
-                            <option value="">Select Gender</option>
+                            <option value="">All Genders</option>
                             <option value="male" {{ request('filter_gender') == 'male' ? 'selected' : '' }}>Male</option>
                             <option value="female" {{ request('filter_gender') == 'female' ? 'selected' : '' }}>Female</option>
                             <option value="other" {{ request('filter_gender') == 'other' ? 'selected' : '' }}>Other</option>
                             <option value="prefer_not_to_say" {{ request('filter_gender') == 'prefer_not_to_say' ? 'selected' : '' }}>Prefer Not to Say</option>
                         </select>
+                    </div>
 
-                        <!-- Company Input -->
-                        <input 
-                            type="text" 
-                            name="filter_company"
-                            id="filterCompany"
-                            value="{{ request('filter_company') }}"
-                            placeholder="Enter company name..." 
-                            class="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl pl-10 pr-32 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                            style="display: {{ request('filter_type') == 'company' ? 'block' : 'none' }};"
-                        />
-
-                        <!-- Location Input -->
-                        <input 
-                            type="text" 
-                            name="filter_location"
-                            id="filterLocation"
-                            value="{{ request('filter_location') }}"
-                            placeholder="Enter location..." 
-                            class="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl pl-10 pr-32 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                            style="display: {{ request('filter_type') == 'location' ? 'block' : 'none' }};"
-                        />
-
-                        <!-- Country Input -->
-                        <input 
-                            type="text" 
-                            name="filter_country"
-                            id="filterCountry"
-                            value="{{ request('filter_country') }}"
-                            placeholder="Enter country..." 
-                            class="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl pl-10 pr-32 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                            style="display: {{ request('filter_type') == 'country' ? 'block' : 'none' }};"
-                        />
-
-                        <!-- City Input -->
-                        <input 
-                            type="text" 
-                            name="filter_city"
-                            id="filterCity"
-                            value="{{ request('filter_city') }}"
-                            placeholder="Enter city..." 
-                            class="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl pl-10 pr-32 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                            style="display: {{ request('filter_type') == 'city' ? 'block' : 'none' }};"
-                        />
-
-                        <!-- Profile Type Dropdown -->
-                        <select 
-                            name="filter_profile_type"
-                            id="filterProfileType"
-                            class="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl pl-10 pr-32 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            style="display: {{ request('filter_type') == 'profile_type' ? 'block' : 'none' }};"
-                            onchange="document.getElementById('filterForm').submit();"
-                        >
-                            <option value="">Select Profile Type</option>
-                            <option value="normal" {{ request('filter_profile_type') == 'normal' ? 'selected' : '' }}>Normal</option>
-                            <option value="business" {{ request('filter_profile_type') == 'business' ? 'selected' : '' }}>Business</option>
-                        </select>
-
-                        <!-- Category Dropdown -->
+                    <!-- Category -->
+                    <div>
+                        <label for="filter_category" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="ri-group-line mr-1"></i> Category
+                        </label>
                         <select 
                             name="filter_category"
-                            id="filterCategory"
-                            class="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl pl-10 pr-32 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            style="display: {{ request('filter_type') == 'category' ? 'block' : 'none' }};"
-                            onchange="document.getElementById('filterForm').submit();"
+                            id="filter_category"
+                            class="w-full text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                         >
-                            <option value="">Select Category</option>
+                            <option value="">All Categories</option>
                             <option value="single_male" {{ request('filter_category') == 'single_male' ? 'selected' : '' }}>Single Male</option>
                             <option value="single_female" {{ request('filter_category') == 'single_female' ? 'selected' : '' }}>Single Female</option>
                             <option value="couple" {{ request('filter_category') == 'couple' ? 'selected' : '' }}>Couple</option>
                             <option value="group" {{ request('filter_category') == 'group' ? 'selected' : '' }}>Group</option>
                         </select>
+                    </div>
 
-                        <!-- Eye Color Dropdown -->
-                        <select 
-                            name="filter_eye_color"
-                            id="filterEyeColor"
-                            class="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl pl-10 pr-32 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            style="display: {{ request('filter_type') == 'eye_color' ? 'block' : 'none' }};"
-                            onchange="document.getElementById('filterForm').submit();"
-                        >
-                            <option value="">Select Eye Color</option>
-                            <option value="brown" {{ request('filter_eye_color') == 'brown' ? 'selected' : '' }}>Brown</option>
-                            <option value="blue" {{ request('filter_eye_color') == 'blue' ? 'selected' : '' }}>Blue</option>
-                            <option value="green" {{ request('filter_eye_color') == 'green' ? 'selected' : '' }}>Green</option>
-                            <option value="hazel" {{ request('filter_eye_color') == 'hazel' ? 'selected' : '' }}>Hazel</option>
-                            <option value="gray" {{ request('filter_eye_color') == 'gray' ? 'selected' : '' }}>Gray</option>
-                            <option value="amber" {{ request('filter_eye_color') == 'amber' ? 'selected' : '' }}>Amber</option>
-                        </select>
+                    <!-- Location -->
+                    <div>
+                        <label for="filter_location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="ri-map-pin-line mr-1"></i> Location
+                        </label>
+                        <input 
+                            type="text" 
+                            name="filter_location"
+                            id="filter_location"
+                            value="{{ request('filter_location') }}"
+                            placeholder="Enter location..." 
+                            class="w-full text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        />
+                    </div>
 
-                        <!-- Preferences (Things They Like) Dropdown -->
-                        <select 
-                            name="filter_preferences"
-                            id="filterPreferences"
-                            class="w-full text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl pl-10 pr-32 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            style="display: {{ request('filter_type') == 'preferences' ? 'block' : 'none' }};"
-                            onchange="document.getElementById('filterForm').submit();"
-                        >
-                            <option value="">Select Preference</option>
-                            <option value="full_swap" {{ request('filter_preferences') == 'full_swap' ? 'selected' : '' }}>Full Swap</option>
-                            <option value="soft_swap" {{ request('filter_preferences') == 'soft_swap' ? 'selected' : '' }}>Soft Swap</option>
-                            <option value="exhibitionist" {{ request('filter_preferences') == 'exhibitionist' ? 'selected' : '' }}>Exhibitionist</option>
-                            <option value="voyeur" {{ request('filter_preferences') == 'voyeur' ? 'selected' : '' }}>Voyeur</option>
-                            <option value="still_exploring" {{ request('filter_preferences') == 'still_exploring' ? 'selected' : '' }}>Still Exploring</option>
-                            <option value="hotwife" {{ request('filter_preferences') == 'hotwife' ? 'selected' : '' }}>Hotwife</option>
-                            <option value="others" {{ request('filter_preferences') == 'others' ? 'selected' : '' }}>Others</option>
-                        </select>
+                    <!-- Country -->
+                    <div>
+                        <label for="filter_country" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="ri-global-line mr-1"></i> Country
+                        </label>
+                        <input 
+                            type="text" 
+                            name="filter_country"
+                            id="filter_country"
+                            value="{{ request('filter_country') }}"
+                            placeholder="Enter country..." 
+                            class="w-full text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        />
+                    </div>
 
-                        <!-- Search Button -->
-                        <button 
-                            type="submit" 
-                            class="absolute right-2 top-1/2 -translate-y-1/2 bg-[#9810FA] hover:bg-purple-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
-                        >
-                            Search
-                        </button>
+                    <!-- City -->
+                    <div>
+                        <label for="filter_city" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <i class="ri-building-line mr-1"></i> City
+                        </label>
+                        <input 
+                            type="text" 
+                            name="filter_city"
+                            id="filter_city"
+                            value="{{ request('filter_city') }}"
+                            placeholder="Enter city..." 
+                            class="w-full text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        />
                     </div>
                 </div>
-            </div>
-            
-            <!-- Online Users Toggle Filter -->
-            <div class="mt-4 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" 
-                               name="online_only" 
-                               value="1"
-                               id="onlineOnlyToggle"
-                               {{ request('online_only') ? 'checked' : '' }}
-                               onchange="document.getElementById('filterForm').submit();"
-                               class="sr-only peer">
-                        <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#9810FA]"></div>
-                    </label>
-                    <span class="text-sm font-medium text-gray-900 dark:text-white">
-                        <i class="ri-wifi-line text-lg mr-1"></i>
-                        Show only online users
-                    </span>
+
+                <!-- Search Button and Online Toggle -->
+                <div class="mt-6 flex items-center justify-between">
+                    <button 
+                        type="submit" 
+                        class="bg-[#9810FA] hover:bg-purple-700 text-white text-sm font-semibold px-8 py-3 rounded-xl transition-colors flex items-center gap-2"
+                    >
+                        <i class="ri-search-line"></i>
+                        Search
+                    </button>
+
+                    <!-- Online Users Toggle Filter -->
+                    <div class="flex items-center gap-3">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" 
+                                   name="online_only" 
+                                   value="1"
+                                   id="onlineOnlyToggle"
+                                   {{ request('online_only') ? 'checked' : '' }}
+                                   onchange="document.getElementById('filterForm').submit();"
+                                   class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#9810FA]"></div>
+                        </label>
+                        <span class="text-sm font-medium text-gray-900 dark:text-white">
+                            <i class="ri-wifi-line text-lg mr-1"></i>
+                            Show only online users
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -377,7 +315,7 @@
     @if($members->hasPages())
         <div class="mt-6 flex justify-center">
             <div class="text-gray-900 dark:text-gray-100">
-                {{ $members->links() }}
+            {{ $members->links() }}
             </div>
         </div>
     @endif
@@ -385,80 +323,5 @@
     <!-- Footer -->
 </div>
 
-@push('scripts')
-<script>
-    function updateSearchPlaceholder() {
-        const filterType = document.getElementById('filterType').value;
-        const searchInput = document.getElementById('searchInput');
-        const filterGender = document.getElementById('filterGender');
-        const filterCompany = document.getElementById('filterCompany');
-        const filterLocation = document.getElementById('filterLocation');
-        const filterCountry = document.getElementById('filterCountry');
-        const filterCity = document.getElementById('filterCity');
-        const filterProfileType = document.getElementById('filterProfileType');
-        const filterCategory = document.getElementById('filterCategory');
-        const filterEyeColor = document.getElementById('filterEyeColor');
-        const filterPreferences = document.getElementById('filterPreferences');
-
-        // Hide all inputs first
-        searchInput.style.display = 'none';
-        filterGender.style.display = 'none';
-        filterCompany.style.display = 'none';
-        filterLocation.style.display = 'none';
-        filterCountry.style.display = 'none';
-        filterCity.style.display = 'none';
-        filterProfileType.style.display = 'none';
-        filterCategory.style.display = 'none';
-        filterEyeColor.style.display = 'none';
-        filterPreferences.style.display = 'none';
-
-        // Show the appropriate input based on filter type
-        if (filterType === 'all') {
-            searchInput.style.display = 'block';
-            searchInput.placeholder = 'Search by name, location, interests...';
-        } else if (filterType === 'gender') {
-            filterGender.style.display = 'block';
-        } else if (filterType === 'company') {
-            filterCompany.style.display = 'block';
-        } else if (filterType === 'location') {
-            filterLocation.style.display = 'block';
-        } else if (filterType === 'country') {
-            filterCountry.style.display = 'block';
-        } else if (filterType === 'city') {
-            filterCity.style.display = 'block';
-        } else if (filterType === 'profile_type') {
-            filterProfileType.style.display = 'block';
-        } else if (filterType === 'category') {
-            filterCategory.style.display = 'block';
-        } else if (filterType === 'eye_color') {
-            filterEyeColor.style.display = 'block';
-        } else if (filterType === 'preferences') {
-            filterPreferences.style.display = 'block';
-        }
-    }
-
-    function handleFilterTypeChange(filterType) {
-        // Clear all filter values when changing filter type
-        if (filterType !== '{{ request('filter_type', 'all') }}') {
-            // Reset form values when switching filter types
-            document.getElementById('filterGender').value = '';
-            document.getElementById('filterCompany').value = '';
-            document.getElementById('filterLocation').value = '';
-            document.getElementById('filterCountry').value = '';
-            document.getElementById('filterCity').value = '';
-            document.getElementById('filterProfileType').value = '';
-            document.getElementById('filterCategory').value = '';
-            document.getElementById('filterEyeColor').value = '';
-            document.getElementById('filterPreferences').value = '';
-            document.getElementById('searchInput').value = '';
-        }
-    }
-
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        updateSearchPlaceholder();
-    });
-</script>
-@endpush
 @endsection
 

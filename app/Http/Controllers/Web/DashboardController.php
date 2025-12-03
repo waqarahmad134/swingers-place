@@ -19,11 +19,8 @@ class DashboardController extends Controller
             ->where('is_admin', false)
             ->where('id', '!=', auth()->id());
 
-        // Get filter type
-        $filterType = $request->get('filter_type', 'all');
-
-        // Search filter (only when filter_type is 'all' or not set)
-        if ($filterType === 'all' && $request->filled('search')) {
+        // Search filter (general search - name, location, interests)
+        if ($request->filled('search')) {
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -37,53 +34,53 @@ class DashboardController extends Controller
         }
 
         // Gender filter
-        if ($filterType === 'gender' && $request->filled('filter_gender')) {
+        if ($request->filled('filter_gender')) {
             $query->where('gender', $request->get('filter_gender'));
         }
 
-        // Company filter
-        if ($filterType === 'company' && $request->filled('filter_company')) {
-            $company = $request->get('filter_company');
-            $query->where('company', 'like', "%{$company}%");
-        }
-
         // Location filter
-        if ($filterType === 'location' && $request->filled('filter_location')) {
+        if ($request->filled('filter_location')) {
             $location = $request->get('filter_location');
             $query->whereHas('profile', function ($q) use ($location) {
                 $q->where('home_location', 'like', "%{$location}%");
             });
         }
 
-        // Country filter
-        if ($filterType === 'country' && $request->filled('filter_country')) {
+        // Category filter
+        if ($request->filled('filter_category')) {
+            $category = $request->get('filter_category');
+            $query->whereHas('profile', function ($q) use ($category) {
+                $q->where('category', $category);
+            });
+        }
+
+        // Company filter (still available if needed)
+        if ($request->filled('filter_company')) {
+            $company = $request->get('filter_company');
+            $query->where('company', 'like', "%{$company}%");
+        }
+
+        // Country filter (still available if needed)
+        if ($request->filled('filter_country')) {
             $country = $request->get('filter_country');
             $query->whereHas('profile', function ($q) use ($country) {
                 $q->where('country', 'like', "%{$country}%");
             });
         }
 
-        // City filter
-        if ($filterType === 'city' && $request->filled('filter_city')) {
+        // City filter (still available if needed)
+        if ($request->filled('filter_city')) {
             $city = $request->get('filter_city');
             $query->whereHas('profile', function ($q) use ($city) {
                 $q->where('city', 'like', "%{$city}%");
             });
         }
 
-        // Profile Type filter
-        if ($filterType === 'profile_type' && $request->filled('filter_profile_type')) {
+        // Profile Type filter (still available if needed)
+        if ($request->filled('filter_profile_type')) {
             $profileType = $request->get('filter_profile_type');
             $query->whereHas('profile', function ($q) use ($profileType) {
                 $q->where('profile_type', $profileType);
-            });
-        }
-
-        // Category filter (new filter method)
-        if ($filterType === 'category' && $request->filled('filter_category')) {
-            $category = $request->get('filter_category');
-            $query->whereHas('profile', function ($q) use ($category) {
-                $q->where('category', $category);
             });
         }
 
@@ -95,16 +92,16 @@ class DashboardController extends Controller
             });
         }
 
-        // Eye Color filter
-        if ($filterType === 'eye_color' && $request->filled('filter_eye_color')) {
+        // Eye Color filter (still available if needed)
+        if ($request->filled('filter_eye_color')) {
             $eyeColor = $request->get('filter_eye_color');
             $query->whereHas('profile', function ($q) use ($eyeColor) {
                 $q->where('eye_color', $eyeColor);
             });
         }
 
-        // Preferences (Things They Like) filter
-        if ($filterType === 'preferences' && $request->filled('filter_preferences')) {
+        // Preferences (Things They Like) filter (still available if needed)
+        if ($request->filled('filter_preferences')) {
             $preference = $request->get('filter_preferences');
             $query->whereHas('profile', function ($q) use ($preference) {
                 $q->whereJsonContains('preferences', $preference);

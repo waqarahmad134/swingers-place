@@ -3,6 +3,32 @@
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\MessageController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+// Clear Cache facade value:
+Route::get('/clear', function () {
+    $exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('optimize');
+    $exitCode = Artisan::call('route:cache');
+    $exitCode = Artisan::call('route:clear');
+    $exitCode = Artisan::call('view:clear');
+    $exitCode = Artisan::call('config:cache');
+    $exitCode = Artisan::call('config:clear');
+    return '<h1>Cache facade value cleared</h1>';
+});
+
+Route::get('/migrations', function () {
+    Artisan::call('migrate', ['--force' => true]);
+    return 'Migrations executed successfully!';
+});
+
+Route::get('/seed', function () {
+    Artisan::call('db:seed', ['--force' => true]);
+    return 'Database seeded successfully!';
+});
+
 
 // Home (Landing Page)
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -15,10 +41,13 @@ Route::get('/user/{id}', [HomeController::class, 'showProfile'])->name('user.pro
 
 // Messaging
 Route::middleware('auth')->group(function () {
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
     Route::get('/messages/recent', [MessageController::class, 'recent'])->name('messages.recent');
     Route::get('/messages/{user}', [MessageController::class, 'show'])->name('messages.show')->whereNumber('user');
     Route::post('/messages/{user}', [MessageController::class, 'store'])->name('messages.store')->whereNumber('user');
     Route::get('/messages/{user}/poll', [MessageController::class, 'poll'])->name('messages.poll')->whereNumber('user');
+    Route::post('/messages/{user}/clear', [MessageController::class, 'clearChat'])->name('messages.clear')->whereNumber('user');
+    Route::post('/messages/{user}/block', [MessageController::class, 'blockUser'])->name('messages.block')->whereNumber('user');
 });
 
 // Static Pages (with database fallback)

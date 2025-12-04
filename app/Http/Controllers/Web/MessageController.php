@@ -13,9 +13,51 @@ use Illuminate\View\View;
 class MessageController extends Controller
 {
     /**
+     * Display all conversations with an optional selected conversation.
+     */
+    public function index(Request $request): View
+    {
+        $currentUser = $request->user();
+        $selectedUserId = $request->get('user');
+
+        // Get all conversations
+        $conversations = $this->getAllConversations($currentUser);
+
+        $selectedUser = null;
+        $messages = collect();
+        $lastMessageId = 0;
+
+        // If a user is selected, load their conversation
+        if ($selectedUserId) {
+            $selectedUser = User::find($selectedUserId);
+            
+            if ($selectedUser && $selectedUser->is_active && $selectedUser->id !== $currentUser->id) {
+                $messages = Message::betweenUsers($currentUser->id, $selectedUser->id)
+                    ->orderBy('created_at')
+                    ->get();
+
+                // Mark incoming messages as read
+                Message::where('sender_id', $selectedUser->id)
+                    ->where('receiver_id', $currentUser->id)
+                    ->whereNull('read_at')
+                    ->update(['read_at' => now()]);
+
+                $lastMessageId = $messages->last()?->id ?? 0;
+            }
+        }
+
+        return view('pages.messages.index', [
+            'conversations' => $conversations,
+            'selectedUser' => $selectedUser,
+            'messages' => $messages,
+            'lastMessageId' => $lastMessageId,
+        ]);
+    }
+
+    /**
      * Display the conversation with the given user.
      */
-    public function show(Request $request, User $user): View
+    public function show(Request $request, User $user): RedirectResponse
     {
         $currentUser = $request->user();
 
@@ -32,11 +74,8 @@ class MessageController extends Controller
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
 
-        return view('pages.messages.show', [
-            'otherUser' => $user,
-            'messages' => $messages,
-            'lastMessageId' => $messages->last()?->id ?? 0,
-        ]);
+        // Redirect to messages index with selected user
+        return redirect()->route('messages.index', ['user' => $user->id]);
     }
 
     /**
@@ -49,15 +88,59 @@ class MessageController extends Controller
         abort_unless($user->is_active, 404);
         abort_if($user->id === $currentUser->id, 422, 'You cannot message yourself.');
 
+        // Check if either user has blocked the other
+        $isBlocked = \DB::table('blocked_users')
+            ->where(function ($query) use ($currentUser, $user) {
+                $query->where('user_id', $currentUser->id)
+                      ->where('blocked_user_id', $user->id);
+            })
+            ->orWhere(function ($query) use ($currentUser, $user) {
+                $query->where('user_id', $user->id)
+                      ->where('blocked_user_id', $currentUser->id);
+            })
+            ->exists();
+
+        if ($isBlocked) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Cannot send message.'], 403);
+            }
+            return redirect()->back()->with('error', 'Cannot send message to this user.');
+        }
+
         $validated = $request->validate([
-            'body' => ['required', 'string', 'max:2000'],
+            'body' => ['nullable', 'string', 'max:2000'],
+            'attachment' => ['nullable', 'file', 'max:10240'], // 10MB max
+            'image' => ['nullable', 'image', 'max:5120'], // 5MB max
         ]);
+
+        $attachmentPath = null;
+        $attachmentType = null;
+        $attachmentName = null;
+
+        // Handle file attachment
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $attachmentName = $file->getClientOriginalName();
+            $attachmentPath = $file->store('attachments', 'public');
+            $attachmentType = 'file';
+        }
+
+        // Handle image attachment
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $attachmentName = $file->getClientOriginalName();
+            $attachmentPath = $file->store('images', 'public');
+            $attachmentType = 'image';
+        }
 
         /** @var \App\Models\Message $message */
         $message = Message::create([
             'sender_id' => $currentUser->id,
             'receiver_id' => $user->id,
-            'body' => $validated['body'],
+            'body' => $validated['body'] ?? '',
+            'attachment' => $attachmentPath,
+            'attachment_type' => $attachmentType,
+            'attachment_name' => $attachmentName,
         ]);
 
         $payload = [
@@ -69,7 +152,7 @@ class MessageController extends Controller
         }
 
         return redirect()
-            ->route('messages.show', $user)
+            ->route('messages.index', ['user' => $user->id])
             ->with('success', 'Message sent successfully.');
     }
 
@@ -182,6 +265,183 @@ class MessageController extends Controller
         return response()->json([
             'conversations' => $result,
             'unread_count' => $totalUnread,
+        ]);
+    }
+
+    /**
+     * Get all conversations for the current user.
+     */
+    protected function getAllConversations(User $currentUser): array
+    {
+        // Get all messages for the current user (as sender or receiver)
+        $allMessages = Message::where(function ($query) use ($currentUser) {
+                $query->where('sender_id', $currentUser->id)
+                      ->orWhere('receiver_id', $currentUser->id);
+            })
+            ->with(['sender.profile', 'receiver.profile'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Group by conversation partner and get the latest message
+        $conversationsMap = [];
+        foreach ($allMessages as $message) {
+            $otherUserId = $message->sender_id === $currentUser->id 
+                ? $message->receiver_id 
+                : $message->sender_id;
+            
+            if (!isset($conversationsMap[$otherUserId])) {
+                $conversationsMap[$otherUserId] = [
+                    'latest_message' => $message,
+                    'latest_at' => $message->created_at,
+                ];
+            }
+        }
+
+        // Sort by latest message time
+        usort($conversationsMap, function ($a, $b) {
+            return $b['latest_at'] <=> $a['latest_at'];
+        });
+
+        $result = [];
+
+        foreach ($conversationsMap as $otherUserId => $conv) {
+            $otherUser = $otherUserId === $conv['latest_message']->sender_id
+                ? $conv['latest_message']->sender
+                : $conv['latest_message']->receiver;
+
+            if (!$otherUser || !$otherUser->is_active) {
+                continue;
+            }
+
+            $unreadCount = Message::where('sender_id', $otherUser->id)
+                ->where('receiver_id', $currentUser->id)
+                ->whereNull('read_at')
+                ->count();
+
+            $latestMessage = $conv['latest_message'];
+            $profile = $otherUser->profile;
+            $category = $profile?->category ?? '';
+
+            // Format category for display
+            $categoryDisplay = match($category) {
+                'single_male' => 'Single Male',
+                'single_female' => 'Single Female',
+                'couple' => 'Couple',
+                'couple_ff' => 'Couple F/F',
+                'couple_mm' => 'Couple M/M',
+                'group' => 'Group',
+                'transgender' => 'Transgender',
+                'non_binary' => 'Non-Binary',
+                default => $category ? ucfirst(str_replace('_', ' ', $category)) : null,
+            };
+
+            // Get avatar initials
+            $initials = '';
+            if ($otherUser->first_name || $otherUser->last_name) {
+                $initials = strtoupper(substr($otherUser->first_name ?? '', 0, 1) . substr($otherUser->last_name ?? '', 0, 1));
+            } else {
+                $nameParts = explode(' ', $otherUser->name);
+                $initials = strtoupper(substr($nameParts[0] ?? '', 0, 1) . substr($nameParts[1] ?? '', 0, 1));
+            }
+
+            // Format time (WhatsApp style)
+            $diffInMinutes = (int) $latestMessage->created_at->diffInMinutes(now());
+            $diffInHours = (int) $latestMessage->created_at->diffInHours(now());
+            $diffInDays = (int) $latestMessage->created_at->diffInDays(now());
+            
+            if ($diffInMinutes < 1) {
+                $timeDisplay = 'Just now';
+            } elseif ($diffInMinutes < 60) {
+                $timeDisplay = $diffInMinutes . ' min ago';
+            } elseif ($diffInHours < 24) {
+                $timeDisplay = $diffInHours . ' hour' . ($diffInHours > 1 ? 's' : '') . ' ago';
+            } elseif ($diffInDays == 1) {
+                $timeDisplay = '1 day ago';
+            } elseif ($diffInDays < 7) {
+                $timeDisplay = $diffInDays . ' days ago';
+            } elseif ($latestMessage->created_at->isCurrentYear()) {
+                $timeDisplay = $latestMessage->created_at->format('M j');
+            } else {
+                $timeDisplay = $latestMessage->created_at->format('M j, Y');
+            }
+
+            $result[] = [
+                'user_id' => $otherUser->id,
+                'user_name' => $otherUser->name,
+                'user_avatar' => $otherUser->profile_image ? asset('storage/' . $otherUser->profile_image) : null,
+                'user_initials' => $initials,
+                'category' => $categoryDisplay,
+                'profile_type' => $profile?->profile_type ?? 'normal',
+                'is_online' => $otherUser->isOnline() && ($profile?->show_online_status !== false),
+                'latest_message' => [
+                    'id' => $latestMessage->id,
+                    'body' => \Str::limit($latestMessage->body, 50),
+                    'is_me' => $latestMessage->sender_id === $currentUser->id,
+                    'created_at' => $latestMessage->created_at->toIso8601String(),
+                    'time_for_humans' => $timeDisplay,
+                ],
+                'unread_count' => $unreadCount,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Clear all messages in a conversation.
+     */
+    public function clearChat(Request $request, User $user): JsonResponse
+    {
+        $currentUser = $request->user();
+
+        abort_unless($user->is_active, 404);
+        abort_if($user->id === $currentUser->id, 403, 'Invalid action.');
+
+        // Delete all messages between the two users
+        Message::where(function ($query) use ($currentUser, $user) {
+            $query->where('sender_id', $currentUser->id)
+                  ->where('receiver_id', $user->id);
+        })->orWhere(function ($query) use ($currentUser, $user) {
+            $query->where('sender_id', $user->id)
+                  ->where('receiver_id', $currentUser->id);
+        })->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Chat cleared successfully.',
+        ]);
+    }
+
+    /**
+     * Block a user from messaging.
+     */
+    public function blockUser(Request $request, User $user): JsonResponse
+    {
+        $currentUser = $request->user();
+
+        abort_unless($user->is_active, 404);
+        abort_if($user->id === $currentUser->id, 403, 'You cannot block yourself.');
+
+        // Create blocked_users table entry if it doesn't exist
+        // For now, we'll use a simple approach - you can create a proper migration later
+        try {
+            \DB::table('blocked_users')->insert([
+                'user_id' => $currentUser->id,
+                'blocked_user_id' => $user->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        } catch (\Exception $e) {
+            // If table doesn't exist, return error message
+            return response()->json([
+                'success' => false,
+                'message' => 'Block feature requires database setup. Please contact administrator.',
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User blocked successfully.',
         ]);
     }
 

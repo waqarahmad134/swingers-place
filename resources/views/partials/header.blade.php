@@ -82,7 +82,7 @@
           </a>
           
           <!-- Messages -->
-          <a href="{{ route('messages.recent') }}" class="relative p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+          <a href="{{ route('messages.index') }}" class="relative p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
             <i class="ri-message-3-line text-2xl"></i>
             @if($unreadMessageCount > 0)
               <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ $unreadMessageCount > 9 ? '9+' : $unreadMessageCount }}</span>

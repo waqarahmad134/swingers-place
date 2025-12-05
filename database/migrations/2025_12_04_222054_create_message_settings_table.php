@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('last_seen_at')->nullable()->after('updated_at');
+        Schema::create('message_settings', function (Blueprint $table) {
+            $table->id();
+            $table->boolean('global_messaging_enabled')->default(true);
+            $table->timestamps();
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('last_seen_at');
-        });
+        Schema::dropIfExists('message_settings');
     }
 };

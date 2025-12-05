@@ -66,6 +66,7 @@
                     <th scope="col" class="py-3 px-6 text-left font-semibold hidden md:table-cell">Status</th>
                     <th scope="col" class="py-3 px-6 text-center font-semibold">Online</th>
                     <th scope="col" class="py-3 px-6 text-center font-semibold">Scheduled Offline</th>
+                    <th scope="col" class="py-3 px-6 text-center font-semibold">Can Message</th>
                     <th scope="col" class="py-3 px-6 text-left font-semibold hidden lg:table-cell">Joined Date</th>
                     <th scope="col" class="py-3 px-6 text-center font-semibold">Actions</th>
                 </tr>
@@ -143,6 +144,15 @@
                                     </button>
                                 @endif
                             </div>
+                        </td>
+                        <td class="py-4 px-6 text-center">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" 
+                                       class="sr-only peer message-block-toggle" 
+                                       data-user-id="{{ $user->id }}"
+                                       {{ ($user->can_message ?? true) ? 'checked' : '' }}>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-500"></div>
+                            </label>
                         </td>
                         <td class="py-4 px-6 hidden lg:table-cell">{{ $user->created_at->format('Y-m-d') }}</td>
                         <td class="py-4 px-6 text-center">
@@ -466,17 +476,29 @@
                         if (data.success) {
                             // Update toggle state based on response
                             this.checked = data.is_online;
+                            // Show success toast
+                            if (window.showToast) {
+                                window.showToast(data.message || (data.is_online ? 'User set to online' : 'User set to offline'), 'success');
+                            }
                         } else {
                             // Revert toggle on error
                             this.checked = !isOnline;
-                            alert('Failed to update online status');
+                            if (window.showToast) {
+                                window.showToast(data.message || 'Failed to update online status', 'error');
+                            } else {
+                                alert('Failed to update online status');
+                            }
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
                         // Revert toggle on error
                         this.checked = !isOnline;
-                        alert('Failed to update online status');
+                        if (window.showToast) {
+                            window.showToast('Failed to update online status', 'error');
+                        } else {
+                            alert('Failed to update online status');
+                        }
                     })
                     .finally(() => {
                         // Re-enable toggle
@@ -514,17 +536,29 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
+                                // Show success toast
+                                if (window.showToast) {
+                                    window.showToast(data.message || 'Scheduled offline time set successfully', 'success');
+                                }
                                 // Reload page to update online status
                                 setTimeout(() => {
                                     location.reload();
                                 }, 500);
                             } else {
-                                alert(data.message || 'Failed to set scheduled offline time');
+                                if (window.showToast) {
+                                    window.showToast(data.message || 'Failed to set scheduled offline time', 'error');
+                                } else {
+                                    alert(data.message || 'Failed to set scheduled offline time');
+                                }
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('An error occurred. Please try again.');
+                            if (window.showToast) {
+                                window.showToast('An error occurred. Please try again.', 'error');
+                            } else {
+                                alert('An error occurred. Please try again.');
+                            }
                         });
                     }, 500);
                 });
@@ -554,17 +588,88 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
+                                // Show success toast
+                                if (window.showToast) {
+                                    window.showToast(data.message || 'Scheduled offline time cleared', 'success');
+                                }
                                 // Reload page to update
                                 location.reload();
                             } else {
-                                alert(data.message || 'Failed to clear scheduled offline time');
+                                if (window.showToast) {
+                                    window.showToast(data.message || 'Failed to clear scheduled offline time', 'error');
+                                } else {
+                                    alert(data.message || 'Failed to clear scheduled offline time');
+                                }
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('An error occurred. Please try again.');
+                            if (window.showToast) {
+                                window.showToast('An error occurred. Please try again.', 'error');
+                            } else {
+                                alert('An error occurred. Please try again.');
+                            }
                         });
                     }
+                });
+            });
+        });
+
+        // Handle message block toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageToggles = document.querySelectorAll('.message-block-toggle');
+            
+            messageToggles.forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const userId = this.dataset.userId;
+                    const canMessage = this.checked;
+                    
+                    // Disable toggle during request
+                    this.disabled = true;
+                    
+                    fetch(`/admin/users/${userId}/toggle-message-block`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            can_message: canMessage
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update toggle state based on response
+                            this.checked = data.can_message;
+                            // Show success toast
+                            if (window.showToast) {
+                                window.showToast(data.message || (data.can_message ? 'User messaging enabled' : 'User messaging blocked'), 'success');
+                            }
+                        } else {
+                            // Revert toggle on error
+                            this.checked = !canMessage;
+                            if (window.showToast) {
+                                window.showToast(data.message || 'Failed to update message block status', 'error');
+                            } else {
+                                alert(data.message || 'Failed to update message block status');
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Revert toggle on error
+                        this.checked = !canMessage;
+                        if (window.showToast) {
+                            window.showToast('Failed to update message block status', 'error');
+                        } else {
+                            alert('Failed to update message block status');
+                        }
+                    })
+                    .finally(() => {
+                        // Re-enable toggle
+                        this.disabled = false;
+                    });
                 });
             });
         });

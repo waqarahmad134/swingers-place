@@ -40,6 +40,7 @@ class User extends Authenticatable
         'email_verified_at',
         'last_seen_at',
         'scheduled_offline_at',
+        'can_message',
     ];
 
     /**
@@ -66,6 +67,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'is_admin' => 'boolean',
             'is_active' => 'boolean',
+            'can_message' => 'boolean',
         ];
     }
 

@@ -41,6 +41,9 @@
         <!-- Conversations List -->
         <div class="flex-1 overflow-y-auto" id="conversations-list">
             @forelse($conversations as $conversation)
+                @if($conversation['user_id'] == $currentUserId)
+                    @continue
+                @endif
                 <a 
                     href="{{ route('messages.index', ['user' => $conversation['user_id']]) }}" 
                     class="conversation-item flex items-start gap-3 px-3 py-3 border-b-2 border-gray-50 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ $selectedUser && $selectedUser->id == $conversation['user_id'] ? 'bg-purple-50 dark:bg-purple-900/20' : '' }}"

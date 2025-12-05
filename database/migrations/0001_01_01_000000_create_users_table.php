@@ -24,6 +24,7 @@ return new class extends Migration
             $table->enum('gender', ['male', 'female', 'other', 'prefer_not_to_say'])->nullable();
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_active')->default(true);
+            $table->boolean('can_message')->default(true);
             $table->string('profile_image')->nullable();
             $table->enum('profile_type', ['normal', 'business'])->default('normal');
             $table->string('company')->nullable();
@@ -31,6 +32,8 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->text('business_address')->nullable();
             $table->string('ssn')->nullable();
+            $table->timestamp('last_seen_at')->nullable();
+            $table->timestamp('scheduled_offline_at')->nullable();
             
             $table->rememberToken();
             $table->timestamps();

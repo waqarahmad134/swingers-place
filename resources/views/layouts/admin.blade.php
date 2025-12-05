@@ -218,6 +218,9 @@
     
     @stack('scripts')
     
+    <!-- Load app.js for toast notifications -->
+    @vite(['resources/js/app.js'])
+    
     <!-- Verify RemixIcon is loaded -->
     <script>
         // Check if RemixIcon font is loaded

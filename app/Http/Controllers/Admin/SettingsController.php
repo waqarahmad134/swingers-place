@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\MessageSetting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -14,8 +15,10 @@ class SettingsController extends Controller
     public function general(): View
     {
         $user = auth()->user();
+        $messageSettings = MessageSetting::getSettings();
         $settings = [
             'maintenance_mode' => config('app.maintenance_mode', false),
+            'global_messaging_enabled' => $messageSettings->global_messaging_enabled,
         ];
 
         return view('admin.settings.general', compact('settings', 'user'));
@@ -27,6 +30,7 @@ class SettingsController extends Controller
             'name' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'string', 'email', 'max:255'],
             'maintenance_mode' => ['nullable', 'boolean'],
+            'global_messaging_enabled' => ['nullable', 'boolean'],
         ]);
 
         try {
@@ -55,6 +59,13 @@ class SettingsController extends Controller
                     }
                     File::put($envPath, $envContent);
                 }
+            }
+            
+            // Update global messaging setting
+            if (isset($validated['global_messaging_enabled'])) {
+                MessageSetting::updateSettings([
+                    'global_messaging_enabled' => $request->boolean('global_messaging_enabled'),
+                ]);
             }
             
             return redirect()->route('admin.settings.general')

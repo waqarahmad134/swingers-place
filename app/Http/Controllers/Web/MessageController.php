@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Message;
+use App\Models\MessageSetting;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -51,6 +52,7 @@ class MessageController extends Controller
             'selectedUser' => $selectedUser,
             'messages' => $messages,
             'lastMessageId' => $lastMessageId,
+            'currentUserId' => $currentUser->id,
         ]);
     }
 
@@ -87,6 +89,24 @@ class MessageController extends Controller
 
         abort_unless($user->is_active, 404);
         abort_if($user->id === $currentUser->id, 422, 'You cannot message yourself.');
+
+        // Check global messaging setting first
+        $messageSettings = MessageSetting::getSettings();
+        if ($messageSettings->global_messaging_enabled === false) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Messaging is currently disabled for all users.'], 403);
+            }
+            return redirect()->back()->with('error', 'Messaging is currently disabled for all users.');
+        }
+
+        // Check if admin has blocked this user from messaging
+        // Admins should always be able to send messages, so skip this check for admins
+        if (!$currentUser->is_admin && $currentUser->can_message === false) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Your messaging has been blocked by admin.'], 403);
+            }
+            return redirect()->back()->with('error', 'Your messaging has been blocked by admin.');
+        }
 
         // Check if either user has blocked the other
         $isBlocked = \DB::table('blocked_users')
@@ -198,10 +218,12 @@ class MessageController extends Controller
         $currentUser = $request->user();
         
         // Get all messages for the current user (as sender or receiver)
+        // Exclude messages where sender and receiver are the same
         $allMessages = Message::where(function ($query) use ($currentUser) {
                 $query->where('sender_id', $currentUser->id)
                       ->orWhere('receiver_id', $currentUser->id);
             })
+            ->whereColumn('sender_id', '!=', 'receiver_id') // Exclude self-messages
             ->with(['sender', 'receiver'])
             ->orderBy('created_at', 'desc')
             ->get();
@@ -212,6 +234,11 @@ class MessageController extends Controller
             $otherUserId = $message->sender_id === $currentUser->id 
                 ? $message->receiver_id 
                 : $message->sender_id;
+            
+            // Skip if somehow the other user is the current user
+            if ($otherUserId === $currentUser->id) {
+                continue;
+            }
             
             if (!isset($conversationsMap[$otherUserId])) {
                 $conversationsMap[$otherUserId] = [
@@ -231,13 +258,25 @@ class MessageController extends Controller
         $totalUnread = 0;
 
         foreach ($conversationsMap as $otherUserId => $conv) {
-            $otherUser = $otherUserId === $conv['latest_message']->sender_id
-                ? $conv['latest_message']->sender
-                : $conv['latest_message']->receiver;
-
-            if (!$otherUser || !$otherUser->is_active) {
+            // Skip if this is the current user (shouldn't happen, but safety check)
+            if ($otherUserId === $currentUser->id) {
                 continue;
             }
+
+            // Fetch the user directly by ID instead of relying on relationship
+            // Use withTrashed() to include soft-deleted users so conversations still show
+            $otherUser = User::withTrashed()->find($otherUserId);
+
+            if (!$otherUser) {
+                continue;
+            }
+
+            // Skip if user is soft-deleted
+            if ($otherUser->trashed()) {
+                continue;
+            }
+
+            // Show conversations even if user is inactive (for message history)
 
             $unreadCount = Message::where('sender_id', $otherUser->id)
                 ->where('receiver_id', $currentUser->id)
@@ -273,56 +312,69 @@ class MessageController extends Controller
      */
     protected function getAllConversations(User $currentUser): array
     {
-        // Get all messages for the current user (as sender or receiver)
-        $allMessages = Message::where(function ($query) use ($currentUser) {
+        // Get distinct conversation partners using a subquery
+        $conversationPartners = Message::selectRaw('
+                CASE 
+                    WHEN sender_id = ? THEN receiver_id 
+                    ELSE sender_id 
+                END as other_user_id,
+                MAX(created_at) as latest_message_at
+            ', [$currentUser->id])
+            ->where(function ($query) use ($currentUser) {
                 $query->where('sender_id', $currentUser->id)
                       ->orWhere('receiver_id', $currentUser->id);
             })
-            ->with(['sender.profile', 'receiver.profile'])
-            ->orderBy('created_at', 'desc')
+            ->whereColumn('sender_id', '!=', 'receiver_id')
+            ->groupBy('other_user_id')
+            ->orderBy('latest_message_at', 'desc')
             ->get();
-
-        // Group by conversation partner and get the latest message
-        $conversationsMap = [];
-        foreach ($allMessages as $message) {
-            $otherUserId = $message->sender_id === $currentUser->id 
-                ? $message->receiver_id 
-                : $message->sender_id;
-            
-            if (!isset($conversationsMap[$otherUserId])) {
-                $conversationsMap[$otherUserId] = [
-                    'latest_message' => $message,
-                    'latest_at' => $message->created_at,
-                ];
-            }
-        }
-
-        // Sort by latest message time
-        usort($conversationsMap, function ($a, $b) {
-            return $b['latest_at'] <=> $a['latest_at'];
-        });
 
         $result = [];
 
-        foreach ($conversationsMap as $otherUserId => $conv) {
-            $otherUser = $otherUserId === $conv['latest_message']->sender_id
-                ? $conv['latest_message']->sender
-                : $conv['latest_message']->receiver;
-
-            if (!$otherUser || !$otherUser->is_active) {
+        foreach ($conversationPartners as $partner) {
+            $otherUserId = $partner->other_user_id;
+            
+            // Skip if it's the current user
+            if ($otherUserId == $currentUser->id) {
                 continue;
             }
 
-            $unreadCount = Message::where('sender_id', $otherUser->id)
+            // Get the other user
+            $otherUser = User::withTrashed()->find($otherUserId);
+            
+            // Skip if user doesn't exist or is soft-deleted
+            if (!$otherUser || $otherUser->trashed()) {
+                continue;
+            }
+
+            // Get the latest message between these two users
+            $latestMessage = Message::where(function ($query) use ($currentUser, $otherUserId) {
+                $query->where(function ($q) use ($currentUser, $otherUserId) {
+                    $q->where('sender_id', $currentUser->id)
+                      ->where('receiver_id', $otherUserId);
+                })->orWhere(function ($q) use ($currentUser, $otherUserId) {
+                    $q->where('sender_id', $otherUserId)
+                      ->where('receiver_id', $currentUser->id);
+                });
+            })
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+            if (!$latestMessage) {
+                continue;
+            }
+
+            // Get unread count
+            $unreadCount = Message::where('sender_id', $otherUserId)
                 ->where('receiver_id', $currentUser->id)
                 ->whereNull('read_at')
                 ->count();
 
-            $latestMessage = $conv['latest_message'];
+            // Get profile
             $profile = $otherUser->profile;
             $category = $profile?->category ?? '';
 
-            // Format category for display
+            // Format category
             $categoryDisplay = match($category) {
                 'single_male' => 'Single Male',
                 'single_female' => 'Single Female',
@@ -344,7 +396,7 @@ class MessageController extends Controller
                 $initials = strtoupper(substr($nameParts[0] ?? '', 0, 1) . substr($nameParts[1] ?? '', 0, 1));
             }
 
-            // Format time (WhatsApp style)
+            // Format time
             $diffInMinutes = (int) $latestMessage->created_at->diffInMinutes(now());
             $diffInHours = (int) $latestMessage->created_at->diffInHours(now());
             $diffInDays = (int) $latestMessage->created_at->diffInDays(now());
@@ -367,7 +419,7 @@ class MessageController extends Controller
 
             $result[] = [
                 'user_id' => $otherUser->id,
-                'user_name' => $otherUser->name,
+                'user_name' => $otherUser->name ?? 'Unknown User',
                 'user_avatar' => $otherUser->profile_image ? asset('storage/' . $otherUser->profile_image) : null,
                 'user_initials' => $initials,
                 'category' => $categoryDisplay,
@@ -375,7 +427,7 @@ class MessageController extends Controller
                 'is_online' => $otherUser->isOnline() && ($profile?->show_online_status !== false),
                 'latest_message' => [
                     'id' => $latestMessage->id,
-                    'body' => \Str::limit($latestMessage->body, 50),
+                    'body' => \Str::limit($latestMessage->body ?? '', 50),
                     'is_me' => $latestMessage->sender_id === $currentUser->id,
                     'created_at' => $latestMessage->created_at->toIso8601String(),
                     'time_for_humans' => $timeDisplay,

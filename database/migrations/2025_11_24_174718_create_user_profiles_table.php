@@ -47,7 +47,12 @@ return new class extends Migration
             $table->string('hair_color')->nullable();
             $table->string('tattoos')->nullable();
             $table->string('piercings')->nullable();
-            $table->string('race')->nullable();
+            $table->string('boob_size')->nullable();
+            $table->string('dick_size')->nullable();
+            
+            // Location fields
+            $table->string('country')->nullable();
+            $table->string('city')->nullable();
             
             // Photos (Step 7)
             $table->string('profile_photo')->nullable();

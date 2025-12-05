@@ -409,5 +409,25 @@ class UserController extends Controller
             ]);
         }
     }
+
+    /**
+     * Toggle message blocking for a user (admin only).
+     */
+    public function toggleMessageBlock(User $user): \Illuminate\Http\JsonResponse
+    {
+        $canMessage = request()->boolean('can_message', true);
+        
+        $user->can_message = $canMessage;
+        $user->save();
+        
+        $status = $canMessage ? 'enabled' : 'blocked';
+        $message = "User messaging {$status} successfully";
+        
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'can_message' => $user->can_message,
+        ]);
+    }
 }
 

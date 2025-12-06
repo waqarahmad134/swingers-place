@@ -164,14 +164,14 @@ class RegisterController extends Controller
             return response()->json([
                 'valid' => true,
                 'available' => true,
-                'message' => 'Email is Already in Use'
+                'message' => 'Email is available'
             ]);
         }
 
         return response()->json([
             'valid' => true,
             'available' => false,
-            'message' => 'Email is Invalid or Already in Use'
+            'message' => 'Email is already registered'
         ]);
     }
 

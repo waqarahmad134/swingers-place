@@ -289,7 +289,6 @@ class RegisterController extends Controller
             'city' => ['nullable', 'string', 'max:255'],
             'home_location_lat' => ['nullable', 'numeric'],
             'home_location_lng' => ['nullable', 'numeric'],
-            'travel_location' => ['nullable', 'string', 'max:255'],
             'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'], // 5MB max
         ]);
 
@@ -302,7 +301,6 @@ class RegisterController extends Controller
         $registrationData['city'] = $request->input('city');
         $registrationData['home_location_lat'] = $request->input('home_location_lat');
         $registrationData['home_location_lng'] = $request->input('home_location_lng');
-        $registrationData['travel_location'] = $request->input('travel_location');
         
         // Handle profile photo upload
         if ($request->hasFile('profile_photo')) {
@@ -458,7 +456,6 @@ class RegisterController extends Controller
         $city = $registrationData['city'] ?? null;
         $latitude = $registrationData['home_location_lat'] ?? null;
         $longitude = $registrationData['home_location_lng'] ?? null;
-        $travelLocation = $registrationData['travel_location'] ?? null;
         $profilePhoto = $registrationData['profile_photo'] ?? null;
 
         // Create basic profile (not completed) to start onboarding
@@ -472,7 +469,6 @@ class RegisterController extends Controller
             'city' => $city,
             'latitude' => $latitude,
             'longitude' => $longitude,
-            'travel_location' => $travelLocation,
             'profile_photo' => $profilePhoto,
             'onboarding_completed' => false,
             'onboarding_step' => 0, // Will start at step 1

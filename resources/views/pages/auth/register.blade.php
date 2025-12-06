@@ -217,19 +217,19 @@
 
                     <!-- Category Selection Section (Initially Hidden) -->
                     <div id="category-section" class="hidden mt-6 p-6 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600">
-                        <div class="text-center mb-6">
+                        <div class="mb-6">
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                                 You are a *
                             </h3>
                         </div>
                         
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-4 gap-4">
                             <!-- Couple -->
                             <label class="category-option">
                                 <input type="radio" name="category" value="couple" class="sr-only category-input" required>
-                                <div class="category-card flex p-6 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
+                                <div class="category-card flex flex-col items-center p-2 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
                                     <div class="">
-                                        <img src="https://www.sdc.com/react/assets/couple_male_female_icon.a2db86e4.svg" alt="Couple" class="w-16 h-16">
+                                        <img src="{{ asset('assets/couple_icon.svg') }}" alt="Couple" class="w-10 h-10">
                                     </div>
                                     <p class="font-semibold text-gray-900 dark:text-white">Couple</p>
                                 </div>
@@ -238,9 +238,9 @@
                             <!-- Female -->
                             <label class="category-option">
                                 <input type="radio" name="category" value="single_female" class="sr-only category-input" required>
-                                <div class="category-card flex p-6 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
+                                <div class="category-card flex flex-col items-center p-2 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
                                     <div class="">
-                                        <img src="https://www.sdc.com/react/assets/transgender(gray).bbb0993d.svg" alt="Female" class="w-16 h-16">
+                                        <img src="{{ asset('assets/female.svg') }}" alt="Female" class="w-10 h-10">
                                     </div>
                                     <p class="font-semibold text-gray-900 dark:text-white">Female</p>
                                 </div>
@@ -249,9 +249,9 @@
                             <!-- Male -->
                             <label class="category-option">
                                 <input type="radio" name="category" value="single_male" class="sr-only category-input" required>
-                                <div class="category-card flex p-6 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
+                                <div class="category-card flex flex-col items-center p-2 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
                                     <div class="">
-                                        <img src="https://www.sdc.com/react/assets/boy(gray).390729bb.svg" alt="Male" class="w-16 h-16">
+                                        <img src="{{ asset('assets/male.svg') }}" alt="Male" class="w-10 h-10">
                                     </div>
                                     <p class="font-semibold text-gray-900 dark:text-white">Male</p>
                                 </div>
@@ -260,9 +260,9 @@
                             <!-- Transgender -->
                             <label class="category-option">
                                 <input type="radio" name="category" value="transsexual" class="sr-only category-input" required>
-                                <div class="category-card flex p-6 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
+                                <div class="category-card flex flex-col items-center p-2 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
                                     <div class="">
-                                        <img src="https://www.sdc.com/react/assets/transgender(gray).bbb0993d.svg" alt="Transgender" class="w-16 h-16">
+                                        <img src="{{ asset('assets/transgender.svg') }}" alt="Transgender" class="w-10 h-10">
                                     </div>
                                     <p class="font-semibold text-gray-900 dark:text-white">Transgender</p>
                                 </div>
@@ -271,76 +271,54 @@
 
                         <!-- Preferences Section (Initially Hidden) -->
                         <div id="preferences-section" class="hidden mt-6">
-                            <div class="text-center mb-6">
+                            <div class="mb-6">
                                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                                    What Do You Prefer?
+                                    What Do You Prefer? (Choose 1 or more)*
                                 </h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">
-                                    Select all that apply
-                                </p>
                             </div>
                             
-                            <div class="grid grid-cols-2 gap-4">
+                            <div class="grid grid-cols-4 gap-4">
                                 <!-- Full Swap -->
                                 <label class="preference-option">
                                     <input type="checkbox" name="preferences[]" value="full_swap" class="sr-only preference-input">
-                                    <div class="preference-card p-6 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
-                                        <div class="text-4xl mb-3">🔄</div>
-                                        <p class="font-semibold text-gray-900 dark:text-white">Full swap</p>
+                                    <div class="preference-card flex flex-col items-center p-2 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
+                                        <div class="">
+                                            <img src="{{ asset('assets/couple_icon.svg') }}" alt="Couple" class="w-10 h-10">
+                                        </div>
+                                        <p class="font-semibold text-gray-900 dark:text-white">Couple</p>
                                     </div>
                                 </label>
 
                                 <!-- Soft Swap -->
                                 <label class="preference-option">
                                     <input type="checkbox" name="preferences[]" value="soft_swap" class="sr-only preference-input">
-                                    <div class="preference-card p-6 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
-                                        <div class="text-4xl mb-3">💛</div>
-                                        <p class="font-semibold text-gray-900 dark:text-white">Soft swap</p>
+                                    <div class="preference-card flex flex-col items-center p-2 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
+                                        <div class="">
+                                            <img src="{{ asset('assets/female.svg') }}" alt="Female" class="w-10 h-10">
+                                        </div>
+                                        <p class="font-semibold text-gray-900 dark:text-white">Female</p>
                                     </div>
                                 </label>
 
                                 <!-- Exhibitionist -->
                                 <label class="preference-option">
                                     <input type="checkbox" name="preferences[]" value="exhibitionist" class="sr-only preference-input">
-                                    <div class="preference-card p-6 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
-                                        <div class="text-4xl mb-3">👀</div>
-                                        <p class="font-semibold text-gray-900 dark:text-white">Exhibitionist</p>
+                                    <div class="preference-card flex flex-col items-center p-2 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
+                                        <div class="">
+                                            <img src="{{ asset('assets/male.svg') }}" alt="Male" class="w-10 h-10">
+                                        </div>
+                                        <p class="font-semibold text-gray-900 dark:text-white">Male</p>
                                     </div>
                                 </label>
 
                                 <!-- Voyeur -->
                                 <label class="preference-option">
                                     <input type="checkbox" name="preferences[]" value="voyeur" class="sr-only preference-input">
-                                    <div class="preference-card p-6 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
-                                        <div class="text-4xl mb-3">✨</div>
-                                        <p class="font-semibold text-gray-900 dark:text-white">Voyeur</p>
-                                    </div>
-                                </label>
-
-                                <!-- Still Exploring -->
-                                <label class="preference-option">
-                                    <input type="checkbox" name="preferences[]" value="still_exploring" class="sr-only preference-input">
-                                    <div class="preference-card p-6 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
-                                        <div class="text-4xl mb-3">🧭</div>
-                                        <p class="font-semibold text-gray-900 dark:text-white">Still exploring</p>
-                                    </div>
-                                </label>
-
-                                <!-- Hotwife -->
-                                <label class="preference-option">
-                                    <input type="checkbox" name="preferences[]" value="hotwife" class="sr-only preference-input">
-                                    <div class="preference-card p-6 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
-                                        <div class="text-4xl mb-3">💋</div>
-                                        <p class="font-semibold text-gray-900 dark:text-white">Hotwife</p>
-                                    </div>
-                                </label>
-
-                                <!-- Others -->
-                                <label class="preference-option">
-                                    <input type="checkbox" name="preferences[]" value="others" class="sr-only preference-input">
-                                    <div class="preference-card p-6 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
-                                        <div class="text-4xl mb-3">✨</div>
-                                        <p class="font-semibold text-gray-900 dark:text-white">Others</p>
+                                    <div class="preference-card flex flex-col items-center p-2 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
+                                        <div class="">
+                                            <img src="{{ asset('assets/transgender.svg') }}" alt="Transgender" class="w-10 h-10">
+                                        </div>
+                                        <p class="font-semibold text-gray-900 dark:text-white">Transgender</p>
                                     </div>
                                 </label>
                             </div>
@@ -348,13 +326,10 @@
 
                         <!-- Location Section (Initially Hidden) -->
                         <div id="location-section" class="hidden mt-6">
-                            <div class="text-center mb-6">
+                            <div class="mb-6">
                                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                                     Location
                                 </h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">
-                                    Where are you based?
-                                </p>
                             </div>
                             
                             <div class="space-y-4">
@@ -405,16 +380,6 @@
                                             <p class="text-gray-500 dark:text-gray-400 text-sm">Map will appear when you select a location</p>
                                         </div>
                                     </div>
-                                </div>
-
-                                <!-- Travel Location -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                        Travel Location (Optional)
-                                    </label>
-                                    <input type="text" id="travel_location" name="travel_location" 
-                                           placeholder="Where do you travel to?"
-                                           class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
                                 </div>
                             </div>
                         </div>
@@ -886,7 +851,6 @@
             const city = document.getElementById('city').value;
             const homeLocationLat = document.getElementById('home_location_lat').value;
             const homeLocationLng = document.getElementById('home_location_lng').value;
-            const travelLocation = document.getElementById('travel_location').value;
             
             // Get profile photo
             const profilePhotoInput = document.getElementById('profile_photo');
@@ -903,7 +867,6 @@
             formData.append('city', city);
             formData.append('home_location_lat', homeLocationLat);
             formData.append('home_location_lng', homeLocationLng);
-            formData.append('travel_location', travelLocation);
             if (profilePhoto) {
                 formData.append('profile_photo', profilePhoto);
             }
@@ -940,7 +903,6 @@
     let map;
     let marker;
     let homeLocationAutocomplete;
-    let travelLocationAutocomplete;
 
     function extractCountryAndCity(addressComponents) {
         let country = '';
@@ -1010,26 +972,6 @@
                 });
             } catch (error) {
                 console.error('Error initializing autocomplete:', error);
-            }
-        }
-
-        // Initialize Travel Location Autocomplete
-        const travelLocationInput = document.getElementById('travel_location');
-        if (travelLocationInput && typeof google !== 'undefined' && google.maps && google.maps.places) {
-            try {
-                travelLocationAutocomplete = new google.maps.places.Autocomplete(travelLocationInput, {
-                    types: ['(cities)'],
-                    fields: ['formatted_address', 'name']
-                });
-
-                travelLocationAutocomplete.addListener('place_changed', function() {
-                    const place = travelLocationAutocomplete.getPlace();
-                    if (place.formatted_address) {
-                        travelLocationInput.value = place.formatted_address || place.name;
-                    }
-                });
-            } catch (error) {
-                console.error('Error initializing travel autocomplete:', error);
             }
         }
     }

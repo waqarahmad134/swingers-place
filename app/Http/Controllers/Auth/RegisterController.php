@@ -164,7 +164,7 @@ class RegisterController extends Controller
             return response()->json([
                 'valid' => true,
                 'available' => true,
-                'message' => 'Email is available'
+                'message' => ''
             ]);
         }
 

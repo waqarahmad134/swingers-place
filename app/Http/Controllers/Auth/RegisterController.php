@@ -325,9 +325,8 @@ class RegisterController extends Controller
         // Handle profile photo upload
         if ($request->hasFile('profile_photo')) {
             $photo = $request->file('profile_photo');
-            $filename = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
-            $photo->storeAs('public/profile_photos', $filename);
-            $registrationData['profile_photo'] = 'profile_photos/' . $filename;
+            $path = $photo->store('profiles', 'public');
+            $registrationData['profile_photo'] = $path;
         }
         
         session(['registration_data' => $registrationData]);
@@ -497,7 +496,7 @@ class RegisterController extends Controller
             $sexuality = $registrationData['sexuality'] ?? null;
         }
 
-        // Create basic profile (not completed) to start onboarding
+        // Create profile with all data collected during registration (onboarding completed)
         UserProfile::create([
             'user_id' => $user->id,
             'profile_type' => $profileType,
@@ -513,8 +512,8 @@ class RegisterController extends Controller
             'couple_data' => $coupleData ? json_encode($coupleData) : null,
             'bio' => $bio,
             'profile_photo' => $profilePhoto,
-            'onboarding_completed' => false,
-            'onboarding_step' => 0, // Will start at step 1
+            'onboarding_completed' => true, // All data collected during registration
+            'onboarding_step' => 9, // Mark as completed
         ]);
 
         // Clear session data
@@ -526,8 +525,8 @@ class RegisterController extends Controller
             'otp_verified'
         ]);
 
-        // Redirect to step 1 (Choose Category)
-        return redirect()->route('onboarding.step1');
+        // Redirect to profile page since all onboarding is done
+        return redirect()->route('account.profile');
     }
 }
 

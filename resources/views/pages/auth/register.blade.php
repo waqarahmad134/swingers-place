@@ -853,7 +853,6 @@
                     @if(config('app.env') === 'local' || config('app.debug'))
                         const devHint = document.createElement('p');
                         devHint.className = 'text-xs text-center text-gray-500 dark:text-gray-400 mt-2';
-                        devHint.textContent = 'Dev Mode: OTP is 1111';
                         document.getElementById('otp-validation').parentElement.appendChild(devHint);
                     @endif
                 } else {

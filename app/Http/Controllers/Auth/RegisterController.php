@@ -289,6 +289,13 @@ class RegisterController extends Controller
             'city' => ['nullable', 'string', 'max:255'],
             'home_location_lat' => ['nullable', 'numeric'],
             'home_location_lng' => ['nullable', 'numeric'],
+            'bio' => ['nullable', 'string', 'max:5000'],
+            'date_of_birth' => ['nullable', 'date', 'before:today', 'before:' . now()->subYears(18)->format('Y-m-d')],
+            'sexuality' => ['nullable', 'string', 'in:heterosexual,bisexual,homosexual,pansexual'],
+            'date_of_birth_her' => ['nullable', 'date', 'before:today', 'before:' . now()->subYears(18)->format('Y-m-d')],
+            'sexuality_her' => ['nullable', 'string', 'in:heterosexual,bisexual,homosexual,pansexual'],
+            'date_of_birth_him' => ['nullable', 'date', 'before:today', 'before:' . now()->subYears(18)->format('Y-m-d')],
+            'sexuality_him' => ['nullable', 'string', 'in:heterosexual,bisexual,homosexual,pansexual'],
             'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'], // 5MB max
         ]);
 
@@ -301,6 +308,19 @@ class RegisterController extends Controller
         $registrationData['city'] = $request->input('city');
         $registrationData['home_location_lat'] = $request->input('home_location_lat');
         $registrationData['home_location_lng'] = $request->input('home_location_lng');
+        $registrationData['bio'] = $request->input('bio');
+        
+        // Store basic info based on category
+        $category = $request->input('category');
+        if ($category === 'couple') {
+            $registrationData['date_of_birth_her'] = $request->input('date_of_birth_her');
+            $registrationData['sexuality_her'] = $request->input('sexuality_her');
+            $registrationData['date_of_birth_him'] = $request->input('date_of_birth_him');
+            $registrationData['sexuality_him'] = $request->input('sexuality_him');
+        } else {
+            $registrationData['date_of_birth'] = $request->input('date_of_birth');
+            $registrationData['sexuality'] = $request->input('sexuality');
+        }
         
         // Handle profile photo upload
         if ($request->hasFile('profile_photo')) {
@@ -448,7 +468,7 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        // Get category, preferences, location, and profile photo from session data
+        // Get category, preferences, location, bio, basic info, and profile photo from session data
         $category = $registrationData['category'] ?? null;
         $preferences = $registrationData['preferences'] ?? [];
         $homeLocation = $registrationData['home_location'] ?? null;
@@ -456,7 +476,26 @@ class RegisterController extends Controller
         $city = $registrationData['city'] ?? null;
         $latitude = $registrationData['home_location_lat'] ?? null;
         $longitude = $registrationData['home_location_lng'] ?? null;
+        $bio = $registrationData['bio'] ?? null;
         $profilePhoto = $registrationData['profile_photo'] ?? null;
+        
+        // Get basic info based on category
+        $dateOfBirth = null;
+        $sexuality = null;
+        $coupleData = null;
+        
+        if ($category === 'couple') {
+            // Store couple data in JSON (matching the structure used in AdminOnboardingController)
+            $coupleData = [
+                'date_of_birth_her' => $registrationData['date_of_birth_her'] ?? null,
+                'sexuality_her' => $registrationData['sexuality_her'] ?? null,
+                'date_of_birth_him' => $registrationData['date_of_birth_him'] ?? null,
+                'sexuality_him' => $registrationData['sexuality_him'] ?? null,
+            ];
+        } else {
+            $dateOfBirth = $registrationData['date_of_birth'] ?? null;
+            $sexuality = $registrationData['sexuality'] ?? null;
+        }
 
         // Create basic profile (not completed) to start onboarding
         UserProfile::create([
@@ -469,6 +508,10 @@ class RegisterController extends Controller
             'city' => $city,
             'latitude' => $latitude,
             'longitude' => $longitude,
+            'date_of_birth' => $dateOfBirth,
+            'sexuality' => $sexuality,
+            'couple_data' => $coupleData ? json_encode($coupleData) : null,
+            'bio' => $bio,
             'profile_photo' => $profilePhoto,
             'onboarding_completed' => false,
             'onboarding_step' => 0, // Will start at step 1

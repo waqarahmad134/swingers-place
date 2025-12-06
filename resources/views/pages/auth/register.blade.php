@@ -194,24 +194,26 @@
 
                     <!-- Profile Photo Section (Initially Hidden) -->
                     <div id="profile-photo-section" class="hidden mt-6">
-                        <div class="text-center mb-6">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                                Add Profile Photo
-                            </h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">
-                                Make your profile stand out
-                            </p>
-                        </div>
                         
                         <!-- Profile Photo Upload -->
-                        <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer" 
-                                onclick="document.getElementById('profile_photo').click()">
+                        <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer relative" 
+                                onclick="if(!document.getElementById('profile-preview').querySelector('img')) { document.getElementById('profile_photo').click(); }">
                             <input type="file" id="profile_photo" name="profile_photo" accept="image/*" class="hidden" onchange="previewProfileImage(this, 'profile-preview')">
                             <div id="profile-preview">
                                 <i class="ri-camera-line text-5xl text-gray-400 mb-3"></i>
                                 <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Profile Photo</p>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
                             </div>
+                            <!-- Delete Button (hidden by default) -->
+                            <button 
+                                type="button" 
+                                id="delete-profile-photo-btn" 
+                                onclick="event.stopPropagation(); deleteProfilePhoto();"
+                                class="hidden absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-colors"
+                                title="Remove photo"
+                            >
+                                <i class="ri-delete-bin-line text-lg"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -267,6 +269,128 @@
                                     <p class="font-semibold text-gray-900 dark:text-white">Transgender</p>
                                 </div>
                             </label>
+                        </div>
+
+                        <!-- Basic Information Section (Initially Hidden) -->
+                        <div id="basic-info-section" class="hidden mt-6">
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                                    Basic Information
+                                </h3>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    Tell us more about yourself
+                                </p>
+                            </div>
+                            
+                            <!-- Couple Mode: Show Her and Him sections -->
+                            <div id="couple-info" class="hidden">
+                                <!-- Her Section -->
+                                <div class="border-2 border-pink-200 dark:border-pink-800 rounded-2xl p-6 mb-6">
+                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                        <span class="text-pink-500">👩</span> Her Information
+                                    </h3>
+                                    
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <!-- Date of Birth - Her -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                Date of Birth
+                                            </label>
+                                            <div class="relative">
+                                                <input type="date" id="date_of_birth_her" name="date_of_birth_her" 
+                                                       max="{{ date('Y-m-d', strtotime('-18 years')) }}"
+                                                       class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                                <i class="ri-calendar-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sexuality - Her -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                Sexuality
+                                            </label>
+                                            <select id="sexuality_her" name="sexuality_her" 
+                                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                                <option value="">Select...</option>
+                                                <option value="heterosexual">Heterosexual</option>
+                                                <option value="bisexual">Bisexual</option>
+                                                <option value="homosexual">Homosexual</option>
+                                                <option value="pansexual">Pansexual</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Him Section -->
+                                <div class="border-2 border-blue-200 dark:border-blue-800 rounded-2xl p-6">
+                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                        <span class="text-blue-500">👨</span> Him Information
+                                    </h3>
+                                    
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <!-- Date of Birth - Him -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                Date of Birth
+                                            </label>
+                                            <div class="relative">
+                                                <input type="date" id="date_of_birth_him" name="date_of_birth_him" 
+                                                       max="{{ date('Y-m-d', strtotime('-18 years')) }}"
+                                                       class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                                <i class="ri-calendar-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                                            </div>
+                                        </div>
+
+                                        <!-- Sexuality - Him -->
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                Sexuality
+                                            </label>
+                                            <select id="sexuality_him" name="sexuality_him" 
+                                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                                <option value="">Select...</option>
+                                                <option value="heterosexual">Heterosexual</option>
+                                                <option value="bisexual">Bisexual</option>
+                                                <option value="homosexual">Homosexual</option>
+                                                <option value="pansexual">Pansexual</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Single Mode: Single fields -->
+                            <div id="single-info" class="hidden">
+                                <div class="grid grid-cols-2 gap-4">
+                                    <!-- Date of Birth -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Date of Birth
+                                        </label>
+                                        <div class="relative">
+                                            <input type="date" id="date_of_birth" name="date_of_birth" 
+                                                   max="{{ date('Y-m-d', strtotime('-18 years')) }}"
+                                                   class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                            <i class="ri-calendar-line absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"></i>
+                                        </div>
+                                    </div>
+
+                                    <!-- Sexuality -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Sexuality
+                                        </label>
+                                        <select id="sexuality" name="sexuality" 
+                                                class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                            <option value="">Select...</option>
+                                            <option value="heterosexual">Heterosexual</option>
+                                            <option value="bisexual">Bisexual</option>
+                                            <option value="homosexual">Homosexual</option>
+                                            <option value="pansexual">Pansexual</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Preferences Section (Initially Hidden) -->
@@ -384,7 +508,30 @@
                             </div>
                         </div>
 
-                        
+                        <!-- Describe Yourself Section (Initially Hidden) -->
+                        <div id="describe-section" class="hidden mt-6">
+                            <div class="mb-6">
+                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                                    Bio
+                                </h3>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <!-- Describe Yourself -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Describe Yourself
+                                    </label>
+                                    <textarea 
+                                        id="bio" 
+                                        name="bio" 
+                                        rows="4" 
+                                        placeholder="Tell us about yourself, your interests, and what makes you unique..."
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all resize-none"
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="mt-6">
                             <button
@@ -692,8 +839,8 @@
                     // Hide form fields visually but keep them in DOM for submission
                     const formFields = document.querySelectorAll('#register-form > div');
                     formFields.forEach(el => {
-                        // Don't hide OTP section, category section, preferences section, location section, profile photo section, or CSRF token container
-                        if (el.id !== 'otp-section' && el.id !== 'category-section' && el.id !== 'preferences-section' && el.id !== 'location-section' && el.id !== 'profile-photo-section' && !el.querySelector('input[name="_token"]')) {
+                        // Don't hide OTP section, category section, basic info section, preferences section, location section, describe section, profile photo section, or CSRF token container
+                        if (el.id !== 'otp-section' && el.id !== 'category-section' && el.id !== 'basic-info-section' && el.id !== 'preferences-section' && el.id !== 'location-section' && el.id !== 'describe-section' && el.id !== 'profile-photo-section' && !el.querySelector('input[name="_token"]')) {
                             el.style.display = 'none';
                         }
                     });
@@ -743,11 +890,12 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // OTP verified - show category, preferences, location, and profile photo selection
+                    // OTP verified - show category, preferences, location, describe yourself, and profile photo selection
                     document.getElementById('otp-section').classList.add('hidden');
                     document.getElementById('category-section').classList.remove('hidden');
                     document.getElementById('preferences-section').classList.remove('hidden');
                     document.getElementById('location-section').classList.remove('hidden');
+                    document.getElementById('describe-section').classList.remove('hidden');
                     document.getElementById('profile-photo-section').classList.remove('hidden');
                 } else {
                     otpValidation.classList.remove('hidden');
@@ -809,7 +957,7 @@
             }
         });
 
-        // Handle category selection visual feedback
+        // Handle category selection visual feedback and show basic info section
         document.querySelectorAll('.category-input').forEach(input => {
             input.addEventListener('change', function() {
                 document.querySelectorAll('.category-card').forEach(card => {
@@ -817,6 +965,25 @@
                 });
                 if(this.checked) {
                     this.closest('.category-option').querySelector('.category-card').classList.add('border-[#9810FA]', 'bg-pink-50', 'dark:bg-pink-900/10');
+                    
+                    // Show basic info section based on category
+                    const basicInfoSection = document.getElementById('basic-info-section');
+                    const coupleInfo = document.getElementById('couple-info');
+                    const singleInfo = document.getElementById('single-info');
+                    
+                    if (basicInfoSection) {
+                        basicInfoSection.classList.remove('hidden');
+                        
+                        if (this.value === 'couple') {
+                            // Show couple sections (Her and Him)
+                            coupleInfo.classList.remove('hidden');
+                            singleInfo.classList.add('hidden');
+                        } else {
+                            // Show single section
+                            coupleInfo.classList.add('hidden');
+                            singleInfo.classList.remove('hidden');
+                        }
+                    }
                 }
             });
         });
@@ -856,7 +1023,22 @@
             const profilePhotoInput = document.getElementById('profile_photo');
             const profilePhoto = profilePhotoInput.files[0];
             
-            // Store category, preferences, location, and profile photo in session via AJAX before submitting
+            // Get bio/describe yourself
+            const bio = document.getElementById('bio').value;
+            
+            // Get basic info based on category
+            let dateOfBirth, sexuality, dateOfBirthHer, sexualityHer, dateOfBirthHim, sexualityHim;
+            if (selectedCategory.value === 'couple') {
+                dateOfBirthHer = document.getElementById('date_of_birth_her').value;
+                sexualityHer = document.getElementById('sexuality_her').value;
+                dateOfBirthHim = document.getElementById('date_of_birth_him').value;
+                sexualityHim = document.getElementById('sexuality_him').value;
+            } else {
+                dateOfBirth = document.getElementById('date_of_birth').value;
+                sexuality = document.getElementById('sexuality').value;
+            }
+            
+            // Store category, preferences, location, basic info, bio, and profile photo in session via AJAX before submitting
             const formData = new FormData();
             formData.append('category', selectedCategory.value);
             selectedPreferences.forEach(pref => {
@@ -867,6 +1049,18 @@
             formData.append('city', city);
             formData.append('home_location_lat', homeLocationLat);
             formData.append('home_location_lng', homeLocationLng);
+            formData.append('bio', bio);
+            
+            // Add basic info based on category
+            if (selectedCategory.value === 'couple') {
+                formData.append('date_of_birth_her', dateOfBirthHer);
+                formData.append('sexuality_her', sexualityHer);
+                formData.append('date_of_birth_him', dateOfBirthHim);
+                formData.append('sexuality_him', sexualityHim);
+            } else {
+                formData.append('date_of_birth', dateOfBirth);
+                formData.append('sexuality', sexuality);
+            }
             if (profilePhoto) {
                 formData.append('profile_photo', profilePhoto);
             }
@@ -1036,9 +1230,34 @@
                     <img src="${e.target.result}" class="max-h-48 rounded-lg mx-auto">
                     <p class="text-sm text-green-600 dark:text-green-400 mt-3">✓ Photo selected</p>
                 `;
+                // Show delete button
+                const deleteBtn = document.getElementById('delete-profile-photo-btn');
+                if (deleteBtn) deleteBtn.classList.remove('hidden');
             }
             reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    // Delete Profile Photo Function
+    function deleteProfilePhoto() {
+        const profilePhotoInput = document.getElementById('profile_photo');
+        const profilePreview = document.getElementById('profile-preview');
+        const deleteBtn = document.getElementById('delete-profile-photo-btn');
+        
+        if (!profilePhotoInput || !profilePreview || !deleteBtn) return;
+        
+        // Reset file input
+        profilePhotoInput.value = '';
+        
+        // Reset preview to default state
+        profilePreview.innerHTML = `
+            <i class="ri-camera-line text-5xl text-gray-400 mb-3"></i>
+            <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Profile Photo</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
+        `;
+        
+        // Hide delete button
+        deleteBtn.classList.add('hidden');
     }
     </script>
     @else
@@ -1054,9 +1273,34 @@
                     <img src="${e.target.result}" class="max-h-48 rounded-lg mx-auto">
                     <p class="text-sm text-green-600 dark:text-green-400 mt-3">✓ Photo selected</p>
                 `;
+                // Show delete button
+                const deleteBtn = document.getElementById('delete-profile-photo-btn');
+                if (deleteBtn) deleteBtn.classList.remove('hidden');
             }
             reader.readAsDataURL(input.files[0]);
         }
+    }
+
+    // Delete Profile Photo Function
+    function deleteProfilePhoto() {
+        const profilePhotoInput = document.getElementById('profile_photo');
+        const profilePreview = document.getElementById('profile-preview');
+        const deleteBtn = document.getElementById('delete-profile-photo-btn');
+        
+        if (!profilePhotoInput || !profilePreview || !deleteBtn) return;
+        
+        // Reset file input
+        profilePhotoInput.value = '';
+        
+        // Reset preview to default state
+        profilePreview.innerHTML = `
+            <i class="ri-camera-line text-5xl text-gray-400 mb-3"></i>
+            <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Profile Photo</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
+        `;
+        
+        // Hide delete button
+        deleteBtn.classList.add('hidden');
     }
     </script>
     @endif
@@ -1072,10 +1316,35 @@
                         <img src="${e.target.result}" class="max-h-48 rounded-lg mx-auto">
                         <p class="text-sm text-green-600 dark:text-green-400 mt-3">✓ Photo selected</p>
                     `;
+                    // Show delete button
+                    const deleteBtn = document.getElementById('delete-profile-photo-btn');
+                    if (deleteBtn) deleteBtn.classList.remove('hidden');
                 }
                 reader.readAsDataURL(input.files[0]);
             }
         }
+    }
+
+    // Delete Profile Photo Function
+    function deleteProfilePhoto() {
+        const profilePhotoInput = document.getElementById('profile_photo');
+        const profilePreview = document.getElementById('profile-preview');
+        const deleteBtn = document.getElementById('delete-profile-photo-btn');
+        
+        if (!profilePhotoInput || !profilePreview || !deleteBtn) return;
+        
+        // Reset file input
+        profilePhotoInput.value = '';
+        
+        // Reset preview to default state
+        profilePreview.innerHTML = `
+            <i class="ri-camera-line text-5xl text-gray-400 mb-3"></i>
+            <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Profile Photo</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
+        `;
+        
+        // Hide delete button
+        deleteBtn.classList.add('hidden');
     }
     </script>
 @endsection

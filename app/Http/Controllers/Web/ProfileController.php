@@ -86,7 +86,7 @@ class ProfileController extends Controller
             'show_online_status' => ['nullable', 'boolean'],
             'show_last_active' => ['nullable', 'boolean'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'current_password' => ['nullable', 'string'],
+            'current_password' => ['nullable', 'required_with:password', 'string'],
         ];
 
         // Add validation rules based on category
@@ -171,6 +171,8 @@ class ProfileController extends Controller
         $profile->home_location = $validated['home_location'] ?? null;
         $profile->country = $validated['country'] ?? null;
         $profile->city = $validated['city'] ?? null;
+        $profile->latitude = $validated['latitude'] ?? null;
+        $profile->longitude = $validated['longitude'] ?? null;
         
         // Handle preferences array - use null coalescing to avoid undefined key error
         $preferences = $validated['preferences'] ?? [];
@@ -235,7 +237,11 @@ class ProfileController extends Controller
         $profile->save();
 
         // Update password if provided
-        if (!empty($validated['password']) && !empty($validated['current_password'])) {
+        if (!empty($validated['password'])) {
+            if (empty($validated['current_password'])) {
+                return back()->withErrors(['current_password' => 'Current password is required to change your password.']);
+            }
+            
             if (Hash::check($validated['current_password'], $user->password)) {
                 $user->password = bcrypt($validated['password']);
                 $user->save();
@@ -244,8 +250,66 @@ class ProfileController extends Controller
             }
         }
 
+        $message = !empty($validated['password']) 
+            ? 'Account information and password updated successfully!' 
+            : 'Account information updated successfully!';
+
         return redirect()->route('account.profile')
-            ->with('success', 'Profile updated successfully!');
+            ->with('success', $message);
+    }
+
+    /**
+     * Delete the user account.
+     */
+    public function destroy(Request $request): RedirectResponse
+    {
+        $user = Auth::user();
+        $profile = $user->profile;
+
+        // Delete profile images if they exist
+        if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+            Storage::disk('public')->delete($user->profile_image);
+        }
+
+        // Delete profile photos if they exist
+        if ($profile) {
+            if ($profile->profile_photo && Storage::disk('public')->exists($profile->profile_photo)) {
+                Storage::disk('public')->delete($profile->profile_photo);
+            }
+            
+            if ($profile->cover_photo && Storage::disk('public')->exists($profile->cover_photo)) {
+                Storage::disk('public')->delete($profile->cover_photo);
+            }
+
+            // Delete album photos if they exist
+            if ($profile->album_photos) {
+                $albumPhotos = is_array($profile->album_photos) 
+                    ? $profile->album_photos 
+                    : json_decode($profile->album_photos, true) ?? [];
+                
+                foreach ($albumPhotos as $photo) {
+                    if ($photo && Storage::disk('public')->exists($photo)) {
+                        Storage::disk('public')->delete($photo);
+                    }
+                }
+            }
+
+            // Delete the profile
+            $profile->delete();
+        }
+
+        // Logout the user before deleting account
+        Auth::logout();
+
+        // Delete the user account (soft delete)
+        $user->delete();
+
+        // Invalidate the session
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home')
+            ->with('success', 'Your account has been deleted successfully.');
     }
 }
 

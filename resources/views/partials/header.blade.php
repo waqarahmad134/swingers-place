@@ -100,6 +100,11 @@
             <i class="ri-sun-line text-2xl hidden" data-theme-icon="dark"></i>
           </button>
           
+          <!-- Settings Icon -->
+          <button id="settings-toggle-btn" class="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors" title="Settings">
+            <i class="ri-settings-3-line text-2xl"></i>
+          </button>
+          
           <!-- User Avatar Dropdown -->
           <div class="relative group">
             <button class="flex items-center focus:outline-none">

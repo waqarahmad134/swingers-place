@@ -66,7 +66,7 @@
     @stack('head')
 </head>
 <body class="antialiased font-sans bg-light text-dark dark:bg-dark dark:text-light">
-    <div class="flex min-h-screen flex-col">
+    <div class="min-h-screen">
         @include('partials.header')
 
         {{-- Profile Pending Approval Bar --}}
@@ -85,7 +85,7 @@
             @endif
         @endauth
 
-        <main class="flex-1">
+        <main>
             @if (session('success'))
                 <div class="container mx-auto px-4 py-4 sm:px-6 lg:px-8">
                     <div class="rounded-full border border-green-200 bg-green-50 px-6 py-3 text-sm font-semibold text-green-700 shadow-sm dark:border-green-800 dark:bg-green-900/40 dark:text-green-300">
@@ -110,7 +110,7 @@
             @hasSection('full-width')
                 @yield('full-width')
             @else
-                <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <div class="px-4 sm:px-6 lg:px-8 py-10">
                     @yield('content')
                 </div>
             @endif
@@ -123,6 +123,54 @@
 
     @stack('modals')
     @stack('scripts')
+    
+    <!-- Global Settings Toggle Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const settingsToggleBtn = document.getElementById('settings-toggle-btn');
+        
+        if (settingsToggleBtn) {
+            // Remove any existing listeners
+            const newBtn = settingsToggleBtn.cloneNode(true);
+            settingsToggleBtn.parentNode.replaceChild(newBtn, settingsToggleBtn);
+            
+            newBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Check if we're on the profile page
+                const isProfilePage = window.location.pathname.includes('/account/profile');
+                
+                if (isProfilePage) {
+                    // If on profile page, toggle sidebar
+                    const sidebar = document.getElementById('settings-sidebar');
+                    if (sidebar) {
+                        const isOpen = sidebar.style.width !== '0px' && sidebar.style.width !== '0';
+                        if (isOpen) {
+                            // Close sidebar
+                            sidebar.style.width = '0';
+                            sidebar.style.minWidth = '0';
+                            sidebar.style.overflow = 'hidden';
+                        } else {
+                            // Open sidebar
+                            sidebar.style.width = '320px'; // w-80 = 320px
+                            sidebar.style.minWidth = '320px';
+                            sidebar.style.overflow = 'auto';
+                        }
+                    } else {
+                        // Fallback: use global function if available
+                        if (typeof window.toggleSettingsSidebar === 'function') {
+                            window.toggleSettingsSidebar();
+                        }
+                    }
+                } else {
+                    // If not on profile page, navigate to profile page and open sidebar
+                    window.location.href = '{{ route("account.profile") }}?settings=true';
+                }
+            });
+        }
+    });
+    </script>
 </body>
 </html>
 

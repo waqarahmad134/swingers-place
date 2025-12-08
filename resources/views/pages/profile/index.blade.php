@@ -4,375 +4,526 @@
 
 @section('content')
 <div class="min-h-screen">
-    <!-- Profile Area -->
-    <div class="relative border-gray-200 dark:border-gray-700 border bg-gray-50 dark:bg-transparent pb-6 rounded-2xl mb-6">
-        <!-- Cover Photo -->
-        <div class="rounded-t-2xl h-64 md:h-80 w-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 relative overflow-hidden">
-            @if($profile && $profile->cover_photo)
-                <img src="{{ asset('storage/' . $profile->cover_photo) }}" alt="Cover Photo" class="w-full h-full object-cover">
-            @else
-                <!-- Default gradient pattern -->
-                <div class="absolute inset-0 opacity-20" style="background-image: url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;0.4&quot;%3E%3Cpath d=&quot;M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
-            @endif
+    <!-- Main Content Area with Sidebar -->
+    <div class="flex gap-0 w-full">
+        <!-- Main Content -->
+        <div id="main-content" class="flex-1 transition-all duration-300 ease-in-out min-w-0">
+            <!-- Profile Tab Content -->
+            <div id="tab-profile" class="tab-content">
+                @include('pages.profile.tabs.profile', ['user' => $user, 'profile' => $profile, 'age' => $age, 'joinDate' => $joinDate, 'isOwnProfile' => $isOwnProfile ?? false])
+            </div>
             
-            <!-- Profile Button -->
-            <div class="absolute flex gap-2 bottom-4 right-4 z-50">
-                <!-- Like Button -->
-                <a href="#" class="inline-flex items-center gap-2 bg-white/90 hover:bg-white px-4 py-2 rounded-full text-sm font-semibold text-gray-800 shadow-lg transition-all">
-                    <i class="ri-heart-line"></i>
-                    Like
-                </a>
-
-                <!-- Friend Button -->
-                <a href="#" class="inline-flex items-center gap-2 bg-white/90 hover:bg-white px-4 py-2 rounded-full text-sm font-semibold text-gray-800 shadow-lg transition-all">
-                   <i class="ri-user-add-line"></i>
-                    Add Friend
-                </a>
-                
-                <!-- Message Button -->
-                <a href="{{ auth()->check() ? route('messages.show', $user->id) : route('login') }}" class="inline-flex items-center gap-2 bg-white/90 hover:bg-white px-4 py-2 rounded-full text-sm font-semibold text-gray-800 shadow-lg transition-all">
-                  <i class="ri-chat-1-line"></i>
-                   Message
-                </a>
-
-                 <!-- EDIT Button - Only show on own profile -->
-                @if(isset($isOwnProfile) && $isOwnProfile)
-                    <a href="{{ route('account.profile.edit') }}" class="inline-flex items-center gap-2 bg-white/90 hover:bg-white px-4 py-2 rounded-full text-sm font-semibold text-gray-800 shadow-lg transition-all">
-                        <i class="ri-pencil-line"></i>
-                        Edit Profile
-                    </a>
-                @endif
-            </div>
-        </div>
-
-        <!-- Profile Picture & Info -->
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
-            <div class="flex flex-col md:flex-row items-start md:items-end gap-6 pb-6">
-                <!-- Profile Picture -->
-                <div class="relative">
-                    @if($profile && $profile->profile_photo)
-                        <img src="{{ asset('storage/' . $profile->profile_photo) }}" alt="{{ $user->name }}" class="rounded-3xl w-32 h-32 md:w-40 md:h-40 border-4 border-white shadow-xl object-cover">
-                    @elseif($user->profile_image)
-                        <img src="{{ asset('storage/' . $user->profile_image) }}" alt="{{ $user->name }}" class="rounded-3xl w-32 h-32 md:w-40 md:h-40 border-4 border-white shadow-xl object-cover">
-                    @else
-                        <div class="rounded-3xl w-32 h-32 md:w-40 md:h-40 border-4 border-white shadow-xl bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-4xl font-bold">
-                            {{ strtoupper(substr($user->first_name ?? $user->name, 0, 1)) }}{{ strtoupper(substr($user->last_name ?? '', 0, 1)) }}
+            <!-- Account Tab Content -->
+            <div id="tab-account" class="tab-content hidden">
+                <div class="py-8 px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Account Settings</h1>
+                    
+                    @if(session('success'))
+                        <div class="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-700 dark:border-green-800 dark:bg-green-900/40 dark:text-green-300">
+                            {{ session('success') }}
                         </div>
                     @endif
-                    <!-- Online Status Indicator -->
-                    <div class="absolute bottom-0 right-0 w-5 h-5 bg-green-500 border-4 border-white rounded-full"></div>
-                </div>
 
-                <!-- Profile Name & Info -->
-                <div class="flex-1 pb-4">
-                    <div class="flex flex-wrap items-center gap-3 mb-3">
-                        <h1 class="text-3xl md:text-4xl font-medium text-gray-900 dark:text-white">
-                            {{ $user->first_name && $user->last_name ? $user->first_name . ' & ' . $user->last_name : $user->name }}
-                        </h1>
-                        <!-- Verified Badge -->
-                        <span class="inline-flex items-center gap-2 bg-blue-500 text-white px-3 py-1 rounded-lg text-sm font-semibold">
-                            <i class="ri-checkbox-circle-fill"></i>
-                            Verified
-                        </span>
-                    </div>
-                    
-                    <!-- Key Information -->
-                    <div class="flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-300 text-sm md:text-base">
-                        @if($profile && $profile->category)
-                            <span class="font-semibold text-xs px-2 py-1 capitalize bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 text-center">{{ str_replace('_', ' ', $profile->category) }}</span>
-                        @endif
-                        @if($age)
-                            <span class="font-semibold text-xs px-2 py-1 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 text-center">{{ $age }} years old</span>
-                        @endif
-                        @if($profile && $profile->sexuality)
-                            <span class="font-semibold text-xs px-2 py-1 capitalize bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 text-center">{{ $profile->sexuality }}</span>
-                        @endif
-                    </div>
-                    <div class="flex gap-2.5 mt-4">
-                            @if($profile && $profile->home_location)
-                            <div class="flex gap-2 text-sm">
-                                <i class="ri-map-pin-2-line"></i>
-                                <span>  {{ $profile->home_location }}</span>
-                            </div>
-                            @endif
-                            <div class="flex gap-2 text-sm">
-                                <i class="ri-calendar-line"></i> 
-                                <span> Joined {{ $joinDate }}</span>
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Profile Statistics -->
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <!-- Likes -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-                    <i class="ri-heart-line text-2xl text-[#9810FA] mb-2"></i>
-                    <div class="text-2xl font-bold text-gray-900 dark:text-white">156</div>
-                    <div class="text-sm text-gray-600 dark:text-gray-400">Likes</div>
-                </div>
-                
-                <!-- Photos -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-                    <i class="ri-image-line text-2xl text-[#9810FA] mb-2"></i>
-                    @php
-                        $photoCount = 0;
-                        if ($profile && $profile->album_photos) {
-                            $photos = is_array($profile->album_photos) ? $profile->album_photos : json_decode($profile->album_photos, true) ?? [];
-                            $photoCount = is_array($photos) ? count($photos) : 0;
-                        }
-                    @endphp
-                    <div class="text-2xl font-bold text-gray-900 dark:text-white">{{ $photoCount }}</div>
-                    <div class="text-sm text-gray-600 dark:text-gray-400">Photos</div>
-                </div>
-                
-                <!-- Videos -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-                    <i class="ri-video-line text-2xl text-[#9810FA] mb-2"></i>
-                    <div class="text-2xl font-bold text-gray-900 dark:text-white">8</div>
-                    <div class="text-sm text-gray-600 dark:text-gray-400">Videos</div>
-                </div>
-                
-                <!-- Friends -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-                    <i class="ri-group-line text-2xl text-[#9810FA] mb-2"></i>
-                    <div class="text-2xl font-bold text-gray-900 dark:text-white">89</div>
-                    <div class="text-sm text-gray-600 dark:text-gray-400">Friends</div>
-                </div>
-                
-                <!-- Validations -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm border border-gray-200 dark:border-gray-700 text-center">
-                    <i class="ri-award-line text-2xl text-[#9810FA] mb-2"></i>
-                    <div class="text-2xl font-bold text-gray-900 dark:text-white">12</div>
-                    <div class="text-sm text-gray-600 dark:text-gray-400">Validations</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Extra Buttons -->
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex gap-2 pt-6">
-                <a href="#" class="inline-flex items-center gap-2 text-black/90 border px-4 border-gray-200 dark:border-gray-700 py-2 rounded-full text-sm font-semibold shadow-lg transition-all">
-                    <i class="ri-heart-line"></i>
-                    Validate
-                </a>
-
-                <a href="#" class="inline-flex items-center gap-2 text-black/90 border px-4 border-gray-200 dark:border-gray-700 py-2 rounded-full text-sm font-semibold shadow-lg transition-all">
-                   <i class="ri-user-add-line"></i>
-                    Remember
-                </a>
-                
-                <a href="#" class="inline-flex items-center gap-2 text-black/90 border px-4 border-gray-200 dark:border-gray-700 py-2 rounded-full text-sm font-semibold shadow-lg transition-all">
-                  <i class="ri-chat-1-line"></i>
-                   Give Subscription
-                </a>
-
-                <a href="{{ route('account.profile.edit') }}" class="inline-flex items-center gap-2 text-black/90 border px-4 border-gray-200 dark:border-gray-700 py-2 rounded-full text-sm font-semibold shadow-lg transition-all">
-                    <i class="ri-pencil-line"></i>
-                   Report
-                </a>
-        </div>
-    </div>
-
-    <!-- Main Content Area -->
-    <div class="container mx-auto pb-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Left Sidebar -->
-            <div class="lg:col-span-1 space-y-6">
-                <!-- About Section -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                    <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4">About</h2>
-                    
-                    <!-- Languages -->
-                    @php
-                        $languages = $profile && $profile->languages 
-                            ? (is_array($profile->languages) ? $profile->languages : json_decode($profile->languages, true) ?? [])
-                            : [];
-                    @endphp
-                    @if(!empty($languages))
-                        <div class="mb-4">
-                            <div class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Languages</div>
-                            <div class="flex flex-wrap gap-2">
-                                @foreach($languages as $language)
-                                    <span class="font-semibold capitalize bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 text-center text-purple-700 dark:text-purple-300 px-3 py-1 rounded-full text-xs">
-                                        {{ $language }}
-                                    </span>
+                    @if($errors->any())
+                        <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700 dark:border-red-800 dark:bg-red-900/40 dark:text-red-300">
+                            <ul class="list-disc list-inside">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
                                 @endforeach
-                            </div>
+                            </ul>
                         </div>
                     @endif
                     
-                    <!-- Looking For -->
-                    @php
-                        $preferences = $profile && $profile->preferences 
-                            ? (is_array($profile->preferences) ? $profile->preferences : json_decode($profile->preferences, true) ?? [])
-                            : [];
-                    @endphp
-                    @if(!empty($preferences))
-                        <div class="mb-4">
-                            <div class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Looking For</div>
-                            <div class="flex flex-wrap gap-2">
-                                @foreach($preferences as $pref)
-                                    <span class="font-semibold text-xs px-2 py-1 capitalize bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 text-center text-pink-700 dark:text-pink-300 rounded-full">
-                                        {{ str_replace('_', ' ', $pref) }}
-                                    </span>
-                                @endforeach
+                    <form id="account-form" method="POST" action="{{ route('account.profile.update') }}" class="space-y-6">
+                        @csrf
+                        @method('PUT')
+                        
+                        <!-- Account Information -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 mb-6">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Account Information</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Display Name</label>
+                                    <input type="text" name="name" value="{{ old('name', $user->name) }}" required class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                                    <input type="email" name="email" value="{{ old('email', $user->email) }}" required class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Joining Date</label>
+                                    <div class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white opacity-75 cursor-not-allowed">
+                                        {{ $user->created_at->format('F j, Y') }}
+                                    </div>
+                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">This field cannot be changed</p>
+                                </div>
                             </div>
                         </div>
-                    @endif
-                </div>
 
-                <!-- Description -->
-                @if($profile && $profile->bio)
+                        <!-- Change Password -->
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700 mb-6">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                <i class="ri-lock-line"></i>
+                                Change Password
+                            </h3>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Leave blank if you don't want to change your password.</p>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Current Password</label>
+                                    <input type="password" name="current_password" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all" placeholder="Enter current password">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">New Password</label>
+                                    <input type="password" name="password" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all" placeholder="Enter new password">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Confirm New Password</label>
+                                    <input type="password" name="password_confirmation" class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all" placeholder="Confirm new password">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex items-center justify-end gap-3 mb-6">
+                            <button type="submit" class="inline-flex items-center gap-2 px-6 py-2.5 bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)] text-white text-base font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:ring-offset-2">
+                                <i class="ri-save-line"></i>
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Danger Zone -->
+                    <div class="bg-red-50 dark:bg-red-900/20 rounded-2xl p-6 shadow-sm border-2 border-red-200 dark:border-red-800">
+                        <h3 class="text-lg font-bold text-red-900 dark:text-red-300 mb-2 flex items-center gap-2">
+                            <i class="ri-delete-bin-line"></i>
+                            Danger Zone
+                        </h3>
+                        <p class="text-sm text-red-700 dark:text-red-400 mb-4">Once you delete your account, there is no going back. Please be certain.</p>
+                        <div class="flex gap-2">
+                            <input type="text" id="delete-confirm-input" placeholder="Type DELETE to confirm" class="flex-1 rounded-lg border border-red-300 dark:border-red-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            <button type="button" id="delete-account-btn" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                <i class="ri-delete-bin-line"></i>
+                                Delete Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Location Tab Content -->
+            <div id="tab-location" class="tab-content hidden">
+                <div class="px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Location Settings</h1>
+                    
+                    <form id="location-form" method="POST" action="{{ route('account.profile.update') }}" class="space-y-6">
+                        @csrf
+                        @method('PUT')
+                        
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <div class="space-y-4">
+                                <!-- Home Location -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Home Location
+                                    </label>
+                                    <input type="text" id="profile-home_location" name="home_location" 
+                                           value="{{ $profile->home_location ?? '' }}"
+                                           placeholder="Search for your city..."
+                                           class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <input type="hidden" id="profile-home_location_lat" name="latitude" value="{{ $profile->latitude ?? '' }}">
+                                    <input type="hidden" id="profile-home_location_lng" name="longitude" value="{{ $profile->longitude ?? '' }}">
+                                </div>
+
+                                <!-- Country and City Fields -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <!-- Country -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Country
+                                        </label>
+                                        <input type="text" id="profile-country" name="country" 
+                                               value="{{ $profile->country ?? '' }}"
+                                               placeholder="Country will auto-fill from location..."
+                                               class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    </div>
+
+                                    <!-- City -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            City
+                                        </label>
+                                        <input type="text" id="profile-city" name="city" 
+                                               value="{{ $profile->city ?? '' }}"
+                                               placeholder="City will auto-fill from location..."
+                                               class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    </div>
+                                </div>
+
+                                <!-- Map Display -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Location Map
+                                    </label>
+                                    <div id="profile-map" class="rounded-xl h-64 w-full border border-gray-200 dark:border-gray-600" style="display: {{ ($profile && $profile->latitude && $profile->longitude) ? 'block' : 'none' }};"></div>
+                                    <div id="profile-map-placeholder" class="bg-gray-100 dark:bg-gray-700 rounded-xl h-64 flex items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600" style="display: {{ ($profile && $profile->latitude && $profile->longitude) ? 'none' : 'flex' }};">
+                                        <div class="text-center">
+                                            <i class="ri-map-pin-2-line text-4xl text-gray-400 mb-2"></i>
+                                            <p class="text-gray-500 dark:text-gray-400 text-sm">Map will appear when you select a location</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Save Button -->
+                            <div class="mt-6">
+                                <button type="submit" class="w-full py-3.5 px-4 bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)] text-white text-base font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:ring-offset-2">
+                                    Save Location
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Privacy Tab Content -->
+            <div id="tab-privacy" class="tab-content hidden">
+                <div class="py-8">
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Privacy Settings</h1>
                     <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Description</h2>
-                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed">{{ $profile->bio }}</p>
-                    </div>
-                @endif
-
-                <!-- Photos Section -->
-                <div class="hidden bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-bold text-gray-900 dark:text-white">Photos</h2>
-                        <a href="#" class="text-sm text-purple-600 dark:text-purple-400 hover:underline font-medium">View All</a>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2">
-                        @php
-                            $albumPhotos = $profile && $profile->album_photos 
-                                ? (is_array($profile->album_photos) ? $profile->album_photos : json_decode($profile->album_photos, true) ?? [])
-                                : [];
-                        @endphp
-                        @if(!empty($albumPhotos))
-                            @foreach(array_slice($albumPhotos, 0, 6) as $photo)
-                                <img src="{{ asset('storage/' . $photo) }}" alt="Photo" class="w-full h-24 object-cover rounded-lg">
-                            @endforeach
-                        @else
-                            @for($i = 0; $i < 6; $i++)
-                                <div class="w-full h-24 bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
-                                    <i class="ri-image-line text-2xl text-gray-400"></i>
-                                </div>
-                            @endfor
-                        @endif
+                        <p class="text-gray-600 dark:text-gray-400">Privacy settings content will go here.</p>
                     </div>
                 </div>
             </div>
-
-            <!-- Main Content (Wall) -->
-            <div class="lg:col-span-2">
-                <!-- Navigation Tabs -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 mb-8">
-                    <div class="flex space-x-1 p-2">
-                        <button class="px-4 py-2 text-sm font-semibold text-purple-600 dark:text-purple-40">
-                            Wall
-                        </button>
-                        <button class="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400">
-                            Information
-                        </button>
-                        <button class="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400">
-                            Photos
-                        </button>
-                        <button class="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400">
-                            Events
-                        </button>
-                        <button class="px-4 py-2 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400">
-                            Friends
-                        </button>
-                    </div>
+        </div>
+        
+        <!-- Settings Sidebar (Right Side) -->
+        <div id="settings-sidebar" class="min-h-screen bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 overflow-y-auto shadow-2xl transition-all duration-300 ease-in-out" style="width: 0; min-width: 0; overflow: hidden;">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Settings</h2>
+                    <button id="close-sidebar" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+                        <i class="ri-close-line text-2xl"></i>
+                    </button>
                 </div>
-
-                <!-- Wall Posts -->
-                <!-- Post 1 -->
-                    <div class="mb-6 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-                        <div class="flex items-start gap-4 flex-col">
-                            <div class="flex gap-3">
-                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold">
-                                    {{ strtoupper(substr($user->first_name ?? $user->name, 0, 1)) }}
-                                </div>
-                                <div class="flex gap mb-2 flex-col">
-                                    <span class="font-medium text-gray-900 dark:text-white">{{ $user->first_name && $user->last_name ? $user->first_name . ' & ' . $user->last_name : $user->name }}</span>
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">2 hours ago</span>
-                                </div>
-                            </div> 
-
-                            <div class="w-full">
-                                <p class="text-gray-700 dark:text-gray-300 mb-3">Had an amazing time at the beach party last night! Met so many wonderful people ✨🥂</p>
-                                <div class="mb-3 rounded-lg overflow-hidden">
-                                    <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&h=400&fit=crop" alt="Concert" class="w-full h-64 object-cover">
-                                </div>
-                                <div class="pt-4 mt-8 border-t border-gray-200 dark:border-gray-700 flex items-center gap-4 text-gray-600 dark:text-gray-400">
-                                    <button class="flex items-center gap-2 hover:text-red-500 transition-colors">
-                                        <i class="ri-heart-line"></i>
-                                        <span>89</span>
-                                    </button>
-                                    <button class="flex items-center gap-2 hover:text-blue-500 transition-colors">
-                                        <i class="ri-chat-3-line"></i>
-                                        <span>23</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Post 2 -->
-                        <div class="mb-6 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-                            <div class="flex items-start gap-4 flex-col">
-                                <div class="flex gap-3">
-                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold">
-                                        {{ strtoupper(substr($user->first_name ?? $user->name, 0, 1)) }}
-                                    </div>
-                                    <div class="flex gap mb-2 flex-col">
-                                        <span class="font-medium text-gray-900 dark:text-white">{{ $user->first_name && $user->last_name ? $user->first_name . ' & ' . $user->last_name : $user->name }}</span>
-                                        <span class="text-sm text-gray-500 dark:text-gray-400">1 day ago</span>
-                                    </div>
-                                </div> 
-
-                                <div class="w-full">
-                                        <p class="text-gray-700 dark:text-gray-300 mb-3">Looking forward to our trip to Miami next month. Anyone else going to be there?</p>
-                                        <div class="pt-4 mt-8 border-t border-gray-200 dark:border-gray-700 flex items-center gap-4 text-gray-600 dark:text-gray-400">
-                                            <button class="flex items-center gap-2 hover:text-red-500 transition-colors">
-                                                <i class="ri-heart-line"></i>
-                                                <span>149</span>
-                                            </button>
-                                            <button class="flex items-center gap-2 hover:text-blue-500 transition-colors">
-                                                <i class="ri-chat-3-line"></i>
-                                                <span>13</span>
-                                            </button>
-                                        </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    <!-- Post 3 -->
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
-                            <div class="flex items-start gap-4 flex-col">
-                                <div class="flex gap-3">
-                                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold">
-                                        {{ strtoupper(substr($user->first_name ?? $user->name, 0, 1)) }}
-                                    </div>
-                                    <div class="flex gap mb-2 flex-col">
-                                        <span class="font-medium text-gray-900 dark:text-white">{{ $user->first_name && $user->last_name ? $user->first_name . ' & ' . $user->last_name : $user->name }}</span>
-                                        <span class="text-sm text-gray-500 dark:text-gray-400">3 hours ago</span>
-                                    </div>
-                                </div> 
-
-                                <div class="w-full">
-                                        <p class="text-gray-700 dark:text-gray-300 mb-3">Thank you everyone for the warm welcome to the community! We're excited to connect with you all 💕</p>
-                                        <div class="pt-4 mt-8 border-t border-gray-200 dark:border-gray-700 flex items-center gap-4 text-gray-600 dark:text-gray-400">
-                                            <button class="flex items-center gap-2 hover:text-red-500 transition-colors">
-                                                <i class="ri-heart-line"></i>
-                                                <span>89</span>
-                                            </button>
-                                            <button class="flex items-center gap-2 hover:text-blue-500 transition-colors">
-                                                <i class="ri-chat-3-line"></i>
-                                                <span>23</span>
-                                            </button>
-                                        </div>
-                                </div>
-                            </div>
-                        </div>
+                
+                <nav class="space-y-2">
+                    <button data-tab="profile" class="settings-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors bg-[#9810FA] text-white">
+                        <i class="ri-user-line text-xl"></i>
+                        <span class="font-semibold">Profile</span>
+                    </button>
+                    
+                    <button data-tab="account" class="settings-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="ri-account-box-line text-xl"></i>
+                        <span class="font-semibold">Account</span>
+                    </button>
+                    
+                    <button data-tab="location" class="settings-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="ri-map-pin-line text-xl"></i>
+                        <span class="font-semibold">Location</span>
+                    </button>
+                    
+                    <button data-tab="privacy" class="settings-tab w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="ri-shield-line text-xl"></i>
+                        <span class="font-semibold">Privacy</span>
+                    </button>
+                </nav>
             </div>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebar = document.getElementById('settings-sidebar');
+    const mainContent = document.getElementById('main-content');
+    const closeBtn = document.getElementById('close-sidebar');
+    const settingsToggleBtn = document.getElementById('settings-toggle-btn');
+    const tabButtons = document.querySelectorAll('.settings-tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Check if sidebar is open
+    function isSidebarOpen() {
+        return sidebar && sidebar.style.width !== '0px' && sidebar.style.width !== '0';
+    }
+    
+    // Open sidebar function
+    function openSidebar() {
+        if (sidebar) {
+            sidebar.style.width = '320px'; // w-80 = 320px
+            sidebar.style.minWidth = '320px';
+            sidebar.style.overflow = 'auto';
+        }
+    }
+    
+    // Close sidebar function
+    function closeSidebar() {
+        if (sidebar) {
+            sidebar.style.width = '0';
+            sidebar.style.minWidth = '0';
+            sidebar.style.overflow = 'hidden';
+        }
+    }
+    
+    // Toggle sidebar function
+    function toggleSidebar() {
+        if (isSidebarOpen()) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+    }
+    
+    // Initialize sidebar - already set in HTML
+    
+    // Check if we should open sidebar (from settings icon via URL)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('settings') === 'true') {
+        openSidebar();
+        // Clean up URL
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
+    }
+    
+    // Close sidebar handlers
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeSidebar);
+    }
+    
+    // Tab switching
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            
+            // Update active tab button
+            tabButtons.forEach(btn => {
+                btn.classList.remove('bg-[#9810FA]', 'text-white');
+                btn.classList.add('text-gray-700', 'dark:text-gray-300', 'hover:bg-gray-100', 'dark:hover:bg-gray-700');
+            });
+            this.classList.add('bg-[#9810FA]', 'text-white');
+            this.classList.remove('text-gray-700', 'dark:text-gray-300', 'hover:bg-gray-100', 'dark:hover:bg-gray-700');
+            
+            // Show corresponding content
+            tabContents.forEach(content => {
+                content.classList.add('hidden');
+            });
+            const targetTab = document.getElementById('tab-' + tabName);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+            }
+        });
+    });
+    
+    // ESC key to close sidebar
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && isSidebarOpen()) {
+            closeSidebar();
+        }
+    });
+    
+    // Make toggle function globally available
+    window.toggleSettingsSidebar = toggleSidebar;
+    window.openSettingsSidebar = openSidebar;
+    window.closeSettingsSidebar = closeSidebar;
+    
+    // Account deletion confirmation
+    const deleteConfirmInput = document.getElementById('delete-confirm-input');
+    const deleteAccountBtn = document.getElementById('delete-account-btn');
+    
+    if (deleteConfirmInput && deleteAccountBtn) {
+        deleteConfirmInput.addEventListener('input', function() {
+            if (this.value.trim().toUpperCase() === 'DELETE') {
+                deleteAccountBtn.disabled = false;
+            } else {
+                deleteAccountBtn.disabled = true;
+            }
+        });
+        
+        deleteAccountBtn.addEventListener('click', function() {
+            if (this.disabled) return;
+            
+            if (confirm('Are you absolutely sure you want to delete your account? This action cannot be undone. All your data will be permanently deleted.')) {
+                // Create a form to submit DELETE request
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("account.profile.delete") }}';
+                
+                // Add CSRF token
+                const csrfToken = document.createElement('input');
+                csrfToken.type = 'hidden';
+                csrfToken.name = '_token';
+                csrfToken.value = '{{ csrf_token() }}';
+                form.appendChild(csrfToken);
+                
+                // Add method spoofing for DELETE
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'DELETE';
+                form.appendChild(methodInput);
+                
+                // Append form to body and submit
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+    }
+});
+</script>
+
+<!-- Google Maps Script for Location Tab -->
+@php
+    $googleMapsApiKey = config('services.google_maps.api_key');
+@endphp
+@if($googleMapsApiKey)
+<script>
+let profileMap;
+let profileMarker;
+let profileHomeLocationAutocomplete;
+
+function extractCountryAndCityForProfile(addressComponents) {
+    let country = '';
+    let city = '';
+    
+    if (addressComponents) {
+        for (let component of addressComponents) {
+            const types = component.types;
+            
+            // Extract country
+            if (types.includes('country')) {
+                country = component.long_name;
+            }
+            
+            // Extract city - try multiple types in order of preference
+            if (!city && types.includes('locality')) {
+                city = component.long_name;
+            } else if (!city && types.includes('administrative_area_level_2')) {
+                city = component.long_name;
+            } else if (!city && types.includes('administrative_area_level_1')) {
+                city = component.long_name;
+            } else if (!city && types.includes('sublocality')) {
+                city = component.long_name;
+            }
+        }
+    }
+    
+    // Update country and city fields
+    const countryInput = document.getElementById('profile-country');
+    const cityInput = document.getElementById('profile-city');
+    if (countryInput) countryInput.value = country;
+    if (cityInput) cityInput.value = city;
+}
+
+function initProfileGoogleMaps() {
+    // Initialize Home Location Autocomplete
+    const homeLocationInput = document.getElementById('profile-home_location');
+    if (homeLocationInput && typeof google !== 'undefined' && google.maps && google.maps.places) {
+        try {
+            profileHomeLocationAutocomplete = new google.maps.places.Autocomplete(homeLocationInput, {
+                types: ['(cities)'],
+                fields: ['formatted_address', 'geometry', 'name', 'address_components']
+            });
+
+            profileHomeLocationAutocomplete.addListener('place_changed', function() {
+                const place = profileHomeLocationAutocomplete.getPlace();
+                if (!place.geometry) {
+                    return;
+                }
+
+                document.getElementById('profile-home_location_lat').value = place.geometry.location.lat();
+                document.getElementById('profile-home_location_lng').value = place.geometry.location.lng();
+                homeLocationInput.value = place.formatted_address || place.name;
+
+                // Extract country and city from address components
+                extractCountryAndCityForProfile(place.address_components);
+
+                if (!profileMap) {
+                    initProfileMap(place.geometry.location);
+                } else {
+                    profileMap.setCenter(place.geometry.location);
+                    profileMarker.setPosition(place.geometry.location);
+                }
+
+                document.getElementById('profile-map-placeholder').style.display = 'none';
+                document.getElementById('profile-map').style.display = 'block';
+            });
+        } catch (error) {
+            console.error('Error initializing autocomplete:', error);
+        }
+    }
+}
+
+function initProfileMap(location) {
+    const mapElement = document.getElementById('profile-map');
+    if (!mapElement) return;
+
+    profileMap = new google.maps.Map(mapElement, {
+        center: location || { lat: 0, lng: 0 },
+        zoom: 12,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false
+    });
+
+    profileMarker = new google.maps.Marker({
+        map: profileMap,
+        position: location || { lat: 0, lng: 0 },
+        draggable: true,
+        animation: google.maps.Animation.DROP
+    });
+
+    profileMarker.addListener('dragend', function() {
+        const position = profileMarker.getPosition();
+        document.getElementById('profile-home_location_lat').value = position.lat();
+        document.getElementById('profile-home_location_lng').value = position.lng();
+        
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ location: position }, (results, status) => {
+            if (status === 'OK' && results[0]) {
+                document.getElementById('profile-home_location').value = results[0].formatted_address;
+                // Extract country and city from geocoded results
+                extractCountryAndCityForProfile(results[0].address_components);
+            }
+        });
+    });
+}
+
+// Load Google Maps API with proper async loading and callback
+(function() {
+    // Check if script already exists
+    if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+        // Script already loaded, initialize directly
+        if (typeof google !== 'undefined' && google.maps) {
+            initProfileGoogleMaps();
+            // Initialize map if location exists
+            @if($profile && $profile->latitude && $profile->longitude)
+                initProfileMap({ lat: {{ $profile->latitude }}, lng: {{ $profile->longitude }} });
+            @endif
+        }
+    } else {
+        const script = document.createElement('script');
+        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&loading=async&libraries=places&callback=initProfileMapCallback';
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    }
+})();
+
+// Callback function for when Google Maps loads
+window.initProfileMapCallback = function() {
+    if (typeof google !== 'undefined' && google.maps) {
+        initProfileGoogleMaps();
+        // Initialize map if location exists
+        @if($profile && $profile->latitude && $profile->longitude)
+            initProfileMap({ lat: {{ $profile->latitude }}, lng: {{ $profile->longitude }} });
+        @endif
+    }
+};
+</script>
+@else
+<script>
+console.warn('Google Maps API key is not configured. Please add GOOGLE_MAPS_API_KEY to your .env file.');
+</script>
+@endif
+@endpush
 @endsection

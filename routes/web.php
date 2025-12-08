@@ -124,6 +124,7 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     Route::get('/profile', [\App\Http\Controllers\Web\ProfileController::class, 'index'])->name('profile');
     Route::get('/profile/edit', [\App\Http\Controllers\Web\ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [\App\Http\Controllers\Web\ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [\App\Http\Controllers\Web\ProfileController::class, 'destroy'])->name('profile.delete');
 });
 
 // Admin Routes (restricted to admins)

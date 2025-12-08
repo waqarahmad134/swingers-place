@@ -169,182 +169,222 @@
       </div>
     </section>--}}
 
-    <!-- SECTION: Everything You Need to Connect -->
-    <section class="py-[32px] sm:px-0 px-5 bg-[#F9FAFB]">
-      <div class="pb-[64px] mx-auto sm:max-w-[700px] max-w-full">
-        <div
-          class="bg-[rgba(243,232,255,1)] py-[2px] max-w-[62px] mx-auto mb-6 px-[7px] text-[rgba(130,0,219,1)] rounded-xl"
-        >
-          <h2 class="text-xs font-thin leading-[16px]">Features</h2>
-        </div>
-        <h2
-          class="pb-6 text-[rgba(16,24,40,1)] font-arimo font-normal text-4xl leading-none tracking-normal text-center"
-        >
-          Everything You Need to Connect
-        </h2>
-
-        <p
-          class="font-arimo font-normal text-xl leading-7 tracking-normal text-center text-[rgba(74,85,101,1)]"
-        >
-          Powerful features designed to help you build meaningful relationships
-          safely and authentically
-        </p>
-      </div>
-
-      <!-- Grid 6 columns -->
-      <div
-        class="sm:max-w-[1280px] max-w-full grid md:grid-cols-3 grid-cols-1 gap-8 mx-auto"
-      >
-        <div
-          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
-        >
-          <img src="assets/heart.png" class="size-[56px]" alt="heart" />
-          <h3 class="text-[#101828] text-xl">Smart Matching</h3>
-          <p class="text-[#4A5565] leading-[24px]">
-            Advanced algorithms connect you with compatible people based on
-            interests, preferences, and location.
+    <!-- SECTION: Why Choose Us -->
+    <section class="py-16 sm:py-20 px-5 bg-gradient-to-b from-white to-[#F9FAFB]">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+          <div class="inline-block bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 px-4 py-1.5 rounded-full mb-4">
+            <span class="text-[#9810FA] dark:text-purple-400 text-sm font-semibold">Why Choose Us</span>
+          </div>
+          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+            Find Your Perfect Match
+          </h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            Join a community where genuine connections happen. Experience dating reimagined with safety, authenticity, and excitement.
           </p>
         </div>
 
-        <div
-          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
-        >
-          <img src="assets/Safe.png" class="size-[56px]" alt="heart" />
-          <h3 class="text-[#101828] text-xl">Verified & Safe</h3>
-          <p class="text-[#4A5565] leading-[24px]">
-            Identity verification, photo verification, and strict community
-            guidelines ensure a secure environment.
-          </p>
-        </div>
+        <!-- Feature Cards Grid -->
+        <div class="grid md:grid-cols-3 grid-cols-1 gap-6 mb-12">
+          <!-- Card 1 -->
+          <div class="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-bl-3xl rounded-tr-2xl opacity-50"></div>
+            <div class="relative">
+              <div class="w-16 h-16 bg-gradient-to-br from-[#9810FA] to-[#E60076] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <i class="ri-heart-3-fill text-white text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Smart Matching</h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Our advanced algorithm learns your preferences and connects you with people who share your interests, values, and lifestyle.
+              </p>
+            </div>
+          </div>
 
-        <div
-          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
-        >
-          <img src="assets/Videocall.png" class="size-[56px]" alt="heart" />
-          <h3 class="text-[#101828] text-xl">Video Calls</h3>
-          <p class="text-[#4A5565] leading-[24px]">
-            Built-in video calling and messaging features let you connect safely
-            before meeting in person.
-          </p>
-        </div>
+          <!-- Card 2 -->
+          <div class="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 rounded-bl-3xl rounded-tr-2xl opacity-50"></div>
+            <div class="relative">
+              <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <i class="ri-shield-check-fill text-white text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">100% Verified</h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Every member is verified through identity and photo verification. Your safety and privacy are our top priorities.
+              </p>
+            </div>
+          </div>
 
-        <div
-          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
-        >
-          <img src="assets/Events.png" class="size-[56px]" alt="heart" />
-          <h3 class="text-[#101828] text-xl">Events & Travel</h3>
-          <p class="text-[#4A5565] leading-[24px]">
-            Discover local events, plan travel meetups, and join exclusive
-            community gatherings.
-          </p>
-        </div>
+          <!-- Card 3 -->
+          <div class="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-pink-100 to-rose-100 dark:from-pink-900/30 dark:to-rose-900/30 rounded-bl-3xl rounded-tr-2xl opacity-50"></div>
+            <div class="relative">
+              <div class="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <i class="ri-video-chat-fill text-white text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Video Chat</h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Connect face-to-face before meeting in person. Built-in video calls let you build trust and chemistry safely.
+              </p>
+            </div>
+          </div>
 
-        <div
-          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
-        >
-          <img src="assets/Chats.png" class="size-[56px]" alt="heart" />
-          <h3 class="text-[#101828] text-xl">Real-time Chat</h3>
-          <p class="text-[#4A5565] leading-[24px]">
-            Instant messaging with media sharing, voice messages, and read
-            receipts for seamless communication.
-          </p>
-        </div>
+          <!-- Card 4 -->
+          <div class="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-orange-100 to-amber-100 dark:from-orange-900/30 dark:to-amber-900/30 rounded-bl-3xl rounded-tr-2xl opacity-50"></div>
+            <div class="relative">
+              <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <i class="ri-calendar-event-fill text-white text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Exclusive Events</h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Join curated events, parties, and meetups. Plan travel adventures and connect with members worldwide.
+              </p>
+            </div>
+          </div>
 
-        <div
-          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
-        >
-          <img src="assets/Global.png" class="size-[56px]" alt="heart" />
-          <h3 class="text-[#101828] text-xl">Global Community</h3>
-          <p class="text-[#4A5565] leading-[24px]">
-            Connect locally or internationally with members from over 150
-            countries worldwide.
-          </p>
+          <!-- Card 5 -->
+          <div class="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-bl-3xl rounded-tr-2xl opacity-50"></div>
+            <div class="relative">
+              <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <i class="ri-message-3-fill text-white text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Instant Messaging</h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Real-time chat with photos, voice messages, and read receipts. Stay connected wherever you are.
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500">
+            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 rounded-bl-3xl rounded-tr-2xl opacity-50"></div>
+            <div class="relative">
+              <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <i class="ri-global-line text-white text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Global Network</h3>
+              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                Connect with thousands of verified members worldwide. Find local matches or plan international meetups.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- How it works -->
-    <section class="py-[32px]">
-      <div class="pb-[40px] md:pb-[64px] mx-auto sm:max-w-[700px] max-w-full">
-        <div
-          class="bg-[rgba(243,232,255,1)] py-[2px] max-w-[90px] mx-auto mb-6 px-[7px] text-[rgba(130,0,219,1)] rounded-xl"
-        >
-          <h2 class="text-xs font-thin leading-[16px]">How It Works</h2>
-        </div>
-        <h2
-          class="pb-6 text-[rgba(16,24,40,1)] font-arimo font-normal text-4xl leading-none tracking-normal text-center"
-        >
-          Your Journey Starts Here
-        </h2>
-
-        <p
-          class="font-arimo font-normal text-xl leading-7 tracking-normal text-center text-[rgba(74,85,101,1)]"
-        >
-          Four simple steps to start making meaningful connections
-        </p>
-      </div>
-
-      <!-- Steps -->
-      <div class="py-2 items-center flex flex-col gap-7 md:gap-10">
-        <!-- step 1 -->
-        <div
-          class="md:w-[1024px] w-[90%] rounded-xl items-center flex gap-5 py-3 px-5 border-2 border-[#E5E7EB]"
-        >
-          <img src="./assets/Frame 2.png" class="w-[60px] md:w-[80px]" alt="" />
-
-          <div>
-            <h1 class="md:text-2xl text-[#101828] text-xl">
-              Create Your Profile
-            </h1>
-            <p class="text-[#4A5565] text-xs md:text-sm mt-1">
-              Sign up in minutes with our easy 9-step process. Add photos,
-              preferences, and what you're looking for.
-            </p>
+    <section class="py-16 sm:py-20 px-5 bg-white dark:bg-gray-900">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+          <div class="inline-block bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 px-4 py-1.5 rounded-full mb-4">
+            <span class="text-[#9810FA] dark:text-purple-400 text-sm font-semibold">Simple Steps</span>
           </div>
+          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+            How It Works
+          </h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            Start your journey to meaningful connections in just four easy steps
+          </p>
         </div>
 
-        <!-- step 2 -->
-        <div
-          class="md:w-[1024px] w-[90%] rounded-xl items-center flex gap-5 py-3 px-5 border-2 border-[#E5E7EB]"
-        >
-          <img src="./assets/Frame 1.png" class="w-[60px] md:w-[80px]" alt="" />
+        <!-- Steps Timeline -->
+        <div class="relative">
+          <!-- Connection Line (hidden on mobile) -->
+          <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#9810FA] via-[#E60076] to-[#9810FA] transform -translate-x-1/2" style="height: calc(100% - 80px); margin-top: 40px;"></div>
 
-          <div>
-            <h1 class="md:text-2xl text-[#101828] text-xl">Get Verified</h1>
-            <p class="text-[#4A5565] text-xs md:text-sm mt-1">
-              Complete identity and photo verification to gain trust and access
-              premium features.
-            </p>
-          </div>
-        </div>
+          <div class="space-y-12 md:space-y-16">
+            <!-- Step 1 -->
+            <div class="relative flex flex-col md:flex-row items-center gap-6 md:gap-8">
+              <div class="flex-shrink-0 w-full md:w-auto">
+                <div class="bg-gradient-to-br from-[#9810FA] to-[#E60076] rounded-2xl p-6 md:p-8 shadow-xl w-full md:w-64 h-48 md:h-56 flex items-center justify-center group hover:scale-105 transition-transform">
+                  <div class="text-center">
+                    <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
+                      <i class="ri-user-add-line text-white text-3xl"></i>
+                    </div>
+                    <span class="text-white text-sm font-semibold">Step 1</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-1 bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 dark:border-gray-700">
+                <div class="flex items-center gap-3 mb-3">
+                  <span class="w-8 h-8 bg-gradient-to-br from-[#9810FA] to-[#E60076] rounded-full flex items-center justify-center text-white font-bold">1</span>
+                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Create Your Profile</h3>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Sign up in minutes with our simple onboarding process. Add your photos, share your interests, and tell us what you're looking for. Your profile is your first impression - make it count!
+                </p>
+              </div>
+            </div>
 
-        <!-- step 3 -->
-        <div
-          class="md:w-[1024px] w-[90%] rounded-xl items-center flex gap-5 py-3 px-5 border-2 border-[#E5E7EB]"
-        >
-          <img src="./assets/Frame 3.png" class="w-[60px] md:w-[80px]" alt="" />
+            <!-- Step 2 -->
+            <div class="relative flex flex-col md:flex-row-reverse items-center gap-6 md:gap-8">
+              <div class="flex-shrink-0 w-full md:w-auto">
+                <div class="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl p-6 md:p-8 shadow-xl w-full md:w-64 h-48 md:h-56 flex items-center justify-center group hover:scale-105 transition-transform">
+                  <div class="text-center">
+                    <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
+                      <i class="ri-shield-check-line text-white text-3xl"></i>
+                    </div>
+                    <span class="text-white text-sm font-semibold">Step 2</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-1 bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 dark:border-gray-700">
+                <div class="flex items-center gap-3 mb-3">
+                  <span class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold">2</span>
+                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Get Verified</h3>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Complete our quick verification process to build trust with other members. Verified profiles get more matches and access to premium features. Safety first, always.
+                </p>
+              </div>
+            </div>
 
-          <div>
-            <h1 class="md:text-2xl text-[#101828] text-xl">Discover Matches</h1>
-            <p class="text-[#4A5565] text-xs md:text-sm mt-1">
-              Browse members, receive smart suggestions, and use advanced
-              filters to find your perfect connection.
-            </p>
-          </div>
-        </div>
+            <!-- Step 3 -->
+            <div class="relative flex flex-col md:flex-row items-center gap-6 md:gap-8">
+              <div class="flex-shrink-0 w-full md:w-auto">
+                <div class="bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl p-6 md:p-8 shadow-xl w-full md:w-64 h-48 md:h-56 flex items-center justify-center group hover:scale-105 transition-transform">
+                  <div class="text-center">
+                    <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
+                      <i class="ri-search-heart-line text-white text-3xl"></i>
+                    </div>
+                    <span class="text-white text-sm font-semibold">Step 3</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-1 bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 dark:border-gray-700">
+                <div class="flex items-center gap-3 mb-3">
+                  <span class="w-8 h-8 bg-gradient-to-br from-pink-500 to-rose-500 rounded-full flex items-center justify-center text-white font-bold">3</span>
+                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Discover Matches</h3>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Browse through verified profiles, receive personalized match suggestions, and use advanced filters to find exactly what you're looking for. Your perfect match is just a swipe away.
+                </p>
+              </div>
+            </div>
 
-        <!-- step 4 -->
-        <div
-          class="md:w-[1024px] w-[90%] rounded-xl items-center flex gap-5 py-3 px-5 border-2 border-[#E5E7EB]"
-        >
-          <img src="./assets/Frame 4.png" class="w-[60px] md:w-[80px]" alt="" />
-
-          <div>
-            <h1 class="md:text-2xl text-[#101828] text-xl">Connect & Meet</h1>
-            <p class="text-[#4A5565] text-xs md:text-sm mt-1">
-              Chat, video call, and arrange meetups at events or private
-              locations. Stay safe with our community guidelines.
-            </p>
+            <!-- Step 4 -->
+            <div class="relative flex flex-col md:flex-row-reverse items-center gap-6 md:gap-8">
+              <div class="flex-shrink-0 w-full md:w-auto">
+                <div class="bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl p-6 md:p-8 shadow-xl w-full md:w-64 h-48 md:h-56 flex items-center justify-center group hover:scale-105 transition-transform">
+                  <div class="text-center">
+                    <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
+                      <i class="ri-hearts-line text-white text-3xl"></i>
+                    </div>
+                    <span class="text-white text-sm font-semibold">Step 4</span>
+                  </div>
+                </div>
+              </div>
+              <div class="flex-1 bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 dark:border-gray-700">
+                <div class="flex items-center gap-3 mb-3">
+                  <span class="w-8 h-8 bg-gradient-to-br from-orange-500 to-amber-500 rounded-full flex items-center justify-center text-white font-bold">4</span>
+                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Connect & Meet</h3>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Start conversations, video chat to build chemistry, and arrange meetups at events or private locations. We provide the tools - you create the magic. Remember to always meet safely!
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -618,157 +658,206 @@
       </div>
     </section>--}}
 
-    <!-- Section: FAQ -->
-    <section class="py-[32px] bg-[#F9FAFB]">
-      <div class="pb-[40px] md:pb-[64px] mx-auto sm:max-w-[700px] max-w-full">
-        <div
-          class="bg-[rgba(243,232,255,1)] py-[2px] max-w-[40px] mx-auto mb-6 px-[7px] text-[rgba(130,0,219,1)] rounded-xl"
-        >
-          <h2 class="text-xs font-thin leading-[16px]">FAQ</h2>
+    <!-- Section: Success Stories / Testimonials -->
+    <section class="py-16 sm:py-20 px-5 bg-gradient-to-b from-[#F9FAFB] to-white dark:from-gray-900 dark:to-gray-800">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-12">
+          <div class="inline-block bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 px-4 py-1.5 rounded-full mb-4">
+            <span class="text-[#9810FA] dark:text-purple-400 text-sm font-semibold">Success Stories</span>
+          </div>
+          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+            Real Connections, Real Stories
+          </h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            See how our members are finding meaningful relationships and unforgettable experiences
+          </p>
         </div>
-        <h2
-          class="pb-6 text-[rgba(16,24,40,1)] font-arimo font-normal text-4xl leading-none tracking-normal text-center"
-        >
-          Frequently Asked Questions
-        </h2>
 
-        <p
-          class="font-arimo font-normal text-xl leading-7 tracking-normal text-center text-[rgba(74,85,101,1)]"
-        >
-          Everything you need to know about swingers place
-        </p>
+        <div class="grid md:grid-cols-3 grid-cols-1 gap-6">
+          <!-- Testimonial 1 -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-2xl transition-all">
+            <div class="flex items-center gap-1 mb-4">
+              <i class="ri-star-fill text-yellow-400"></i>
+              <i class="ri-star-fill text-yellow-400"></i>
+              <i class="ri-star-fill text-yellow-400"></i>
+              <i class="ri-star-fill text-yellow-400"></i>
+              <i class="ri-star-fill text-yellow-400"></i>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
+              "We've met incredible people through this platform! The verification system gives us confidence, and the events are always amazing. Best decision we made!"
+            </p>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-rose-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                SM
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-900 dark:text-white">Sarah & Mike</h4>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Verified Couple</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Testimonial 2 -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-2xl transition-all">
+            <div class="flex items-center gap-1 mb-4">
+              <i class="ri-star-fill text-yellow-400"></i>
+              <i class="ri-star-fill text-yellow-400"></i>
+              <i class="ri-star-fill text-yellow-400"></i>
+              <i class="ri-star-fill text-yellow-400"></i>
+              <i class="ri-star-fill text-yellow-400"></i>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
+              "The community here is genuine and respectful. I love how easy it is to connect with people who share my interests. Made friends in 5 different countries!"
+            </p>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                JM
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-900 dark:text-white">Jessica M.</h4>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Premium Member</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Testimonial 3 -->
+          <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-2xl transition-all">
+            <div class="flex items-center gap-1 mb-4">
+              <i class="ri-star-fill text-yellow-400"></i>
+              <i class="ri-star-fill text-yellow-400"></i>
+              <i class="ri-star-fill text-yellow-400"></i>
+              <i class="ri-star-fill text-yellow-400"></i>
+              <i class="ri-star-fill text-yellow-400"></i>
+            </div>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
+              "As someone new to this lifestyle, I was nervous at first. But the platform made it so easy to meet like-minded people. The video chat feature helped me feel comfortable before meeting in person."
+            </p>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                AL
+              </div>
+              <div>
+                <h4 class="font-semibold text-gray-900 dark:text-white">Alex L.</h4>
+                <p class="text-sm text-gray-500 dark:text-gray-400">New Member</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <div class="py-2 items-center flex flex-col gap-7 md:gap-10">
-        <!-- faq 1 -->
-        <div
-          class="md:w-[896px] flex-col bg-white w-[90%] rounded-xl flex md:gap-[40px] gap-[20px] p-[32px] border-2 border-[#E5E7EB]"
-        >
-          <div>
-            <h1 class="md:text-2xl text-[#101828] text-[18px]">
-              Is swingers place safe and secure?
-            </h1>
+    <!-- Section: FAQ -->
+    <section class="py-16 sm:py-20 px-5 bg-white dark:bg-gray-900">
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+          <div class="inline-block bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 px-4 py-1.5 rounded-full mb-4">
+            <span class="text-[#9810FA] dark:text-purple-400 text-sm font-semibold">Got Questions?</span>
           </div>
-          <p
-            class="text-[#4A5565] text-[14px] md:text-[16px] mt-1 leading-5 md:leading-7"
-          >
-            Yes! We use industry-leading security measures including identity
-            verification, photo verification, encrypted communications, and
-            strict community guidelines. Our dedicated moderation team reviews
-            all content and responds to reports within 24 hours.
+          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+            Frequently Asked Questions
+          </h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400">
+            Everything you need to know to get started
           </p>
         </div>
 
-        <!-- faq 2 -->
-        <div
-          class="md:w-[896px] flex-col bg-white w-[90%] rounded-xl flex md:gap-[40px] gap-[20px] p-[32px] border-2 border-[#E5E7EB]"
-        >
-          <div>
-            <h1 class="md:text-2xl text-[#101828] text-[18px]">
-              Is swingers place safe and secure?
-            </h1>
+        <div class="space-y-4">
+          <!-- FAQ 1 -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500 transition-all shadow-sm">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              <i class="ri-shield-check-line text-[#9810FA]"></i>
+              Is the platform safe and secure?
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+              Absolutely! We use industry-leading security measures including identity verification, photo verification, encrypted communications, and strict community guidelines. Our dedicated moderation team reviews all content and responds to reports within 24 hours. Your privacy and safety are our top priorities.
+            </p>
           </div>
-          <p
-            class="text-[#4A5565] text-[14px] md:text-[16px] mt-1 leading-5 md:leading-7"
-          >
-            Yes! We use industry-leading security measures including identity
-            verification, photo verification, encrypted communications, and
-            strict community guidelines. Our dedicated moderation team reviews
-            all content and responds to reports within 24 hours.
-          </p>
-        </div>
 
-        <!-- faq 3 -->
-        <div
-          class="md:w-[896px] flex-col bg-white w-[90%] rounded-xl flex md:gap-[40px] gap-[20px] p-[32px] border-2 border-[#E5E7EB]"
-        >
-          <div>
-            <h1 class="md:text-2xl text-[#101828] text-[18px]">
-              Is swingers place safe and secure?
-            </h1>
+          <!-- FAQ 2 -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500 transition-all shadow-sm">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              <i class="ri-user-line text-[#9810FA]"></i>
+              How do I create a profile?
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+              Creating a profile is quick and easy! Simply click "Sign Up" and choose your profile type (Couple, Single Female, Single Male, or Non-binary). Follow our guided 9-step onboarding process to add photos, preferences, and information about what you're looking for. The whole process takes just a few minutes.
+            </p>
           </div>
-          <p
-            class="text-[#4A5565] text-[14px] md:text-[16px] mt-1 leading-5 md:leading-7"
-          >
-            Yes! We use industry-leading security measures including identity
-            verification, photo verification, encrypted communications, and
-            strict community guidelines. Our dedicated moderation team reviews
-            all content and responds to reports within 24 hours.
-          </p>
-        </div>
 
-        <!-- faq 4 -->
-        <div
-          class="md:w-[896px] flex-col bg-white w-[90%] rounded-xl flex md:gap-[40px] gap-[20px] p-[32px] border-2 border-[#E5E7EB]"
-        >
-          <div>
-            <h1 class="md:text-2xl text-[#101828] text-[18px]">
-              Is swingers place safe and secure?
-            </h1>
+          <!-- FAQ 3 -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500 transition-all shadow-sm">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              <i class="ri-search-line text-[#9810FA]"></i>
+              How does matching work?
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+              Our smart matching algorithm learns from your preferences, interests, and behavior to suggest compatible members. You can also browse profiles manually using advanced filters for location, age, interests, and more. The more complete your profile, the better your matches will be!
+            </p>
           </div>
-          <p
-            class="text-[#4A5565] text-[14px] md:text-[16px] mt-1 leading-5 md:leading-7"
-          >
-            Yes! We use industry-leading security measures including identity
-            verification, photo verification, encrypted communications, and
-            strict community guidelines. Our dedicated moderation team reviews
-            all content and responds to reports within 24 hours.
-          </p>
-        </div>
 
-        <!-- faq 5 -->
-        <div
-          class="md:w-[896px] flex-col bg-white w-[90%] rounded-xl flex md:gap-[40px] gap-[20px] p-[32px] border-2 border-[#E5E7EB]"
-        >
-          <div>
-            <h1 class="md:text-2xl text-[#101828] text-[18px]">
-              Is swingers place safe and secure?
-            </h1>
+          <!-- FAQ 4 -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500 transition-all shadow-sm">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              <i class="ri-money-dollar-circle-line text-[#9810FA]"></i>
+              Is it really free to join?
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+              Yes! Basic membership is completely free forever. You can create a profile, browse members, send messages, and attend public events at no cost. We also offer premium memberships with additional features like advanced search filters, priority in search results, and exclusive event access.
+            </p>
           </div>
-          <p
-            class="text-[#4A5565] text-[14px] md:text-[16px] mt-1 leading-5 md:leading-7"
-          >
-            Yes! We use industry-leading security measures including identity
-            verification, photo verification, encrypted communications, and
-            strict community guidelines. Our dedicated moderation team reviews
-            all content and responds to reports within 24 hours.
-          </p>
-        </div>
 
-        <!-- faq 6 -->
-        <div
-          class="md:w-[896px] flex-col bg-white w-[90%] rounded-xl flex md:gap-[40px] gap-[20px] p-[32px] border-2 border-[#E5E7EB]"
-        >
-          <div>
-            <h1 class="md:text-2xl text-[#101828] text-[18px]">
-              Is swingers place safe and secure?
-            </h1>
+          <!-- FAQ 5 -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500 transition-all shadow-sm">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              <i class="ri-calendar-event-line text-[#9810FA]"></i>
+              What kind of events are available?
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+              We host a variety of events including local meetups, parties, travel adventures, and exclusive gatherings. Events range from casual social mixers to themed parties and international travel meetups. Premium members get early access to exclusive events and special pricing.
+            </p>
           </div>
-          <p
-            class="text-[#4A5565] text-[14px] md:text-[16px] mt-1 leading-5 md:leading-7"
-          >
-            Yes! We use industry-leading security measures including identity
-            verification, photo verification, encrypted communications, and
-            strict community guidelines. Our dedicated moderation team reviews
-            all content and responds to reports within 24 hours.
-          </p>
+
+          <!-- FAQ 6 -->
+          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500 transition-all shadow-sm">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+              <i class="ri-eye-off-line text-[#9810FA]"></i>
+              Can I keep my profile private?
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+              Yes! You have full control over your privacy settings. You can choose who can see your profile, photos, and information. You can also block users, control who can message you, and adjust visibility settings for different aspects of your profile. Your privacy is in your hands.
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- SECTION: CTA -->
-    <section class="px-5 sm:px-0 md:py-[80px] py-10 flex flex-col md:gap-8 gap-4 items-center bg-gradient-to-r from-[#9810FA] to-[#E60076]">
-      <h1 class="text-white text-2xl md:text-[48px]">Ready to Start Your Journey?</h1>
-      <p
-        class="max-w-[637px] text-center text-[#F3E8FF] text-[11px] md:text-[20px] text-white font-normal"
-      >
-        Join thousands of members who have found meaningful connections on swingers place
-      </p>
-      <div class="flex gap-5">
-        <button class="bg-[#FFFFFF] text-xs md:text-base text-[#9810FA] px-3 py-3 rounded-full md:py-4 md:px-3">
-          Create Free Account <i class="ri-arrow-right-line"></i>
-        </button>
-        <button class="bg-white text-[#484747] text-xs md:text-base rounded-full px-4 py-3 md:px-7 md:py-4">Learn More</button>
+    <section class="relative px-5 sm:px-0 py-16 md:py-24 overflow-hidden">
+      <!-- Background with gradient -->
+      <div class="absolute inset-0 bg-gradient-to-r from-[#9810FA] via-[#E60076] to-[#9810FA]"></div>
+      <!-- Decorative elements -->
+      <div class="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+      
+      <div class="relative max-w-4xl mx-auto text-center">
+        <h1 class="text-white text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+          Ready to Find Your<br class="hidden md:block"> Perfect Match?
+        </h1>
+        <p class="text-white/90 text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed">
+          Join thousands of verified members who are already making meaningful connections. Your journey to exciting new experiences starts here.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <a href="{{ route('register') }}" class="group bg-white text-[#9810FA] px-8 py-4 rounded-full font-semibold text-base md:text-lg hover:bg-gray-100 hover:scale-105 transition-all duration-200 shadow-xl flex items-center gap-2">
+            <span>Create Free Account</span>
+            <i class="ri-arrow-right-line group-hover:translate-x-1 transition-transform"></i>
+          </a>
+          <a href="#features" class="bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 px-8 py-4 rounded-full font-semibold text-base md:text-lg hover:bg-white/20 hover:scale-105 transition-all duration-200">
+            Learn More
+          </a>
+        </div>
+        <p class="text-white/80 text-sm mt-6">
+          <i class="ri-checkbox-circle-line"></i> Free to join • No credit card required • Cancel anytime
+        </p>
       </div>
     </section>
 

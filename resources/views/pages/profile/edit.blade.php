@@ -308,11 +308,32 @@
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Eye Color</label>
-                                                    <input type="text" name="eye_color_her" value="{{ old('eye_color_her', $coupleData['eye_color_her'] ?? '') }}" placeholder="brown, blue, green, gray" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <select name="eye_color_her" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                        <option value="">Select Eye Color</option>
+                                                        <option value="Brown" {{ old('eye_color_her', $coupleData['eye_color_her'] ?? '') === 'Brown' ? 'selected' : '' }}>Brown</option>
+                                                        <option value="Blue" {{ old('eye_color_her', $coupleData['eye_color_her'] ?? '') === 'Blue' ? 'selected' : '' }}>Blue</option>
+                                                        <option value="Green" {{ old('eye_color_her', $coupleData['eye_color_her'] ?? '') === 'Green' ? 'selected' : '' }}>Green</option>
+                                                        <option value="Gray" {{ old('eye_color_her', $coupleData['eye_color_her'] ?? '') === 'Gray' ? 'selected' : '' }}>Gray</option>
+                                                        <option value="Hazel" {{ old('eye_color_her', $coupleData['eye_color_her'] ?? '') === 'Hazel' ? 'selected' : '' }}>Hazel</option>
+                                                        <option value="Amber" {{ old('eye_color_her', $coupleData['eye_color_her'] ?? '') === 'Amber' ? 'selected' : '' }}>Amber</option>
+                                                        <option value="Black" {{ old('eye_color_her', $coupleData['eye_color_her'] ?? '') === 'Black' ? 'selected' : '' }}>Black</option>
+                                                        <option value="Other" {{ old('eye_color_her', $coupleData['eye_color_her'] ?? '') === 'Other' ? 'selected' : '' }}>Other</option>
+                                                    </select>
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Hair Color</label>
-                                                    <input type="text" name="hair_color_her" value="{{ old('hair_color_her', $coupleData['hair_color_her'] ?? '') }}" placeholder="black, brown, blond, red" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <select name="hair_color_her" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                        <option value="">Select Hair Color</option>
+                                                        <option value="Black" {{ old('hair_color_her', $coupleData['hair_color_her'] ?? '') === 'Black' ? 'selected' : '' }}>Black</option>
+                                                        <option value="Brown" {{ old('hair_color_her', $coupleData['hair_color_her'] ?? '') === 'Brown' ? 'selected' : '' }}>Brown</option>
+                                                        <option value="Blonde" {{ old('hair_color_her', $coupleData['hair_color_her'] ?? '') === 'Blonde' ? 'selected' : '' }}>Blonde</option>
+                                                        <option value="Red" {{ old('hair_color_her', $coupleData['hair_color_her'] ?? '') === 'Red' ? 'selected' : '' }}>Red</option>
+                                                        <option value="Gray" {{ old('hair_color_her', $coupleData['hair_color_her'] ?? '') === 'Gray' ? 'selected' : '' }}>Gray</option>
+                                                        <option value="White" {{ old('hair_color_her', $coupleData['hair_color_her'] ?? '') === 'White' ? 'selected' : '' }}>White</option>
+                                                        <option value="Auburn" {{ old('hair_color_her', $coupleData['hair_color_her'] ?? '') === 'Auburn' ? 'selected' : '' }}>Auburn</option>
+                                                        <option value="Chestnut" {{ old('hair_color_her', $coupleData['hair_color_her'] ?? '') === 'Chestnut' ? 'selected' : '' }}>Chestnut</option>
+                                                        <option value="Other" {{ old('hair_color_her', $coupleData['hair_color_her'] ?? '') === 'Other' ? 'selected' : '' }}>Other</option>
+                                                    </select>
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tattoos</label>
@@ -324,7 +345,11 @@
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Piercings</label>
-                                                    <input type="text" name="piercings_her" value="{{ old('piercings_her', $coupleData['piercings_her'] ?? '') }}" placeholder="Type Here" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <select name="piercings_her" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                        <option value="">Select...</option>
+                                                        <option value="yes" {{ old('piercings_her', $coupleData['piercings_her'] ?? '') === 'yes' ? 'selected' : '' }}>Yes</option>
+                                                        <option value="no" {{ old('piercings_her', $coupleData['piercings_her'] ?? '') === 'no' ? 'selected' : '' }}>No</option>
+                                                    </select>
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Boob Size</label>
@@ -361,11 +386,32 @@
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Eye Color</label>
-                                                    <input type="text" name="eye_color_him" value="{{ old('eye_color_him', $coupleData['eye_color_him'] ?? '') }}" placeholder="brown, blue, green, gray" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <select name="eye_color_him" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                        <option value="">Select Eye Color</option>
+                                                        <option value="Brown" {{ old('eye_color_him', $coupleData['eye_color_him'] ?? '') === 'Brown' ? 'selected' : '' }}>Brown</option>
+                                                        <option value="Blue" {{ old('eye_color_him', $coupleData['eye_color_him'] ?? '') === 'Blue' ? 'selected' : '' }}>Blue</option>
+                                                        <option value="Green" {{ old('eye_color_him', $coupleData['eye_color_him'] ?? '') === 'Green' ? 'selected' : '' }}>Green</option>
+                                                        <option value="Gray" {{ old('eye_color_him', $coupleData['eye_color_him'] ?? '') === 'Gray' ? 'selected' : '' }}>Gray</option>
+                                                        <option value="Hazel" {{ old('eye_color_him', $coupleData['eye_color_him'] ?? '') === 'Hazel' ? 'selected' : '' }}>Hazel</option>
+                                                        <option value="Amber" {{ old('eye_color_him', $coupleData['eye_color_him'] ?? '') === 'Amber' ? 'selected' : '' }}>Amber</option>
+                                                        <option value="Black" {{ old('eye_color_him', $coupleData['eye_color_him'] ?? '') === 'Black' ? 'selected' : '' }}>Black</option>
+                                                        <option value="Other" {{ old('eye_color_him', $coupleData['eye_color_him'] ?? '') === 'Other' ? 'selected' : '' }}>Other</option>
+                                                    </select>
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Hair Color</label>
-                                                    <input type="text" name="hair_color_him" value="{{ old('hair_color_him', $coupleData['hair_color_him'] ?? '') }}" placeholder="black, brown, blond, red" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <select name="hair_color_him" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                        <option value="">Select Hair Color</option>
+                                                        <option value="Black" {{ old('hair_color_him', $coupleData['hair_color_him'] ?? '') === 'Black' ? 'selected' : '' }}>Black</option>
+                                                        <option value="Brown" {{ old('hair_color_him', $coupleData['hair_color_him'] ?? '') === 'Brown' ? 'selected' : '' }}>Brown</option>
+                                                        <option value="Blonde" {{ old('hair_color_him', $coupleData['hair_color_him'] ?? '') === 'Blonde' ? 'selected' : '' }}>Blonde</option>
+                                                        <option value="Red" {{ old('hair_color_him', $coupleData['hair_color_him'] ?? '') === 'Red' ? 'selected' : '' }}>Red</option>
+                                                        <option value="Gray" {{ old('hair_color_him', $coupleData['hair_color_him'] ?? '') === 'Gray' ? 'selected' : '' }}>Gray</option>
+                                                        <option value="White" {{ old('hair_color_him', $coupleData['hair_color_him'] ?? '') === 'White' ? 'selected' : '' }}>White</option>
+                                                        <option value="Auburn" {{ old('hair_color_him', $coupleData['hair_color_him'] ?? '') === 'Auburn' ? 'selected' : '' }}>Auburn</option>
+                                                        <option value="Chestnut" {{ old('hair_color_him', $coupleData['hair_color_him'] ?? '') === 'Chestnut' ? 'selected' : '' }}>Chestnut</option>
+                                                        <option value="Other" {{ old('hair_color_him', $coupleData['hair_color_him'] ?? '') === 'Other' ? 'selected' : '' }}>Other</option>
+                                                    </select>
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tattoos</label>
@@ -377,7 +423,11 @@
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Piercings</label>
-                                                    <input type="text" name="piercings_him" value="{{ old('piercings_him', $coupleData['piercings_him'] ?? '') }}" placeholder="Type Here" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <select name="piercings_him" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                        <option value="">Select...</option>
+                                                        <option value="yes" {{ old('piercings_him', $coupleData['piercings_him'] ?? '') === 'yes' ? 'selected' : '' }}>Yes</option>
+                                                        <option value="no" {{ old('piercings_him', $coupleData['piercings_him'] ?? '') === 'no' ? 'selected' : '' }}>No</option>
+                                                    </select>
                                                 </div>
                                                 <div>
                                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Dick Size</label>

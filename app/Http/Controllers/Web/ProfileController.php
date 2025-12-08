@@ -119,14 +119,14 @@ class ProfileController extends Controller
             $rules['height_him'] = ['nullable', 'integer'];
             $rules['body_type_her'] = ['nullable', 'string', 'max:255'];
             $rules['body_type_him'] = ['nullable', 'string', 'max:255'];
-            $rules['eye_color_her'] = ['nullable', 'string', 'max:255'];
-            $rules['eye_color_him'] = ['nullable', 'string', 'max:255'];
-            $rules['hair_color_her'] = ['nullable', 'string', 'max:255'];
-            $rules['hair_color_him'] = ['nullable', 'string', 'max:255'];
+            $rules['eye_color_her'] = ['nullable', 'string', 'in:Brown,Blue,Green,Gray,Hazel,Amber,Black,Other'];
+            $rules['eye_color_him'] = ['nullable', 'string', 'in:Brown,Blue,Green,Gray,Hazel,Amber,Black,Other'];
+            $rules['hair_color_her'] = ['nullable', 'string', 'in:Black,Brown,Blonde,Red,Gray,White,Auburn,Chestnut,Other'];
+            $rules['hair_color_him'] = ['nullable', 'string', 'in:Black,Brown,Blonde,Red,Gray,White,Auburn,Chestnut,Other'];
             $rules['tattoos_her'] = ['nullable', 'string'];
             $rules['tattoos_him'] = ['nullable', 'string'];
-            $rules['piercings_her'] = ['nullable', 'string', 'max:255'];
-            $rules['piercings_him'] = ['nullable', 'string', 'max:255'];
+            $rules['piercings_her'] = ['nullable', 'string', 'in:yes,no'];
+            $rules['piercings_him'] = ['nullable', 'string', 'in:yes,no'];
             $rules['boob_size_her'] = ['nullable', 'string', 'max:255'];
             $rules['dick_size_him'] = ['nullable', 'string', 'max:255'];
         } else {

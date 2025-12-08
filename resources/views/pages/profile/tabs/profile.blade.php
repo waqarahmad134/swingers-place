@@ -3,7 +3,7 @@
     <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <!-- Top Bar with Username, Age, Location & Edit Button -->
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 ">
                 <!-- Left: User Info -->
                 <div class="flex flex-col md:flex-row md:items-center gap-4">
                     <div class="flex items-center gap-3">
@@ -52,29 +52,13 @@
                     <!-- Gender Preference Icons -->
                     <div class="flex items-center gap-2">
                         @if($profile && $profile->category === 'couple')
-                            <div class="flex items-center gap-1">
-                                <div class="w-6 h-6 rounded-full bg-pink-400 border-2 border-white shadow-md"></div>
-                                <div class="w-6 h-6 rounded-full bg-pink-400 border-2 border-white shadow-md"></div>
-                            </div>
-                            <div class="flex items-center gap-1">
-                                <div class="w-6 h-6 rounded-full bg-blue-400 border-2 border-white shadow-md"></div>
-                                <div class="w-6 h-6 rounded-full bg-blue-400 border-2 border-white shadow-md"></div>
-                            </div>
+                            <img src="{{ asset('assets/couple_icon.svg') }}" alt="Couple" class="w-8 h-8">
                         @elseif($profile && $profile->category === 'single_female')
-                            <div class="flex items-center gap-1">
-                                <div class="w-6 h-6 rounded-full bg-pink-400 border-2 border-white shadow-md"></div>
-                                <div class="w-6 h-6 rounded-full bg-pink-400 border-2 border-white shadow-md"></div>
-                    </div>
+                            <img src="{{ asset('assets/female.svg') }}" alt="Female" class="w-8 h-8">
                         @elseif($profile && $profile->category === 'single_male')
-                            <div class="flex items-center gap-1">
-                                <div class="w-6 h-6 rounded-full bg-blue-400 border-2 border-white shadow-md"></div>
-                                <div class="w-6 h-6 rounded-full bg-blue-400 border-2 border-white shadow-md"></div>
-                            </div>
+                            <img src="{{ asset('assets/male.svg') }}" alt="Male" class="w-8 h-8">
                         @else
-                            <div class="flex items-center gap-1">
-                                <div class="w-6 h-6 rounded-full bg-pink-400 border-2 border-white shadow-md"></div>
-                                <div class="w-6 h-6 rounded-full bg-blue-400 border-2 border-white shadow-md"></div>
-                            </div>
+                            <img src="{{ asset('assets/transgender.svg') }}" alt="Transgender" class="w-8 h-8">
                         @endif
                     </div>
                 </div>
@@ -454,10 +438,10 @@
                                     </tr>
                                     <tr>
                                         <td class="py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Piercings</td>
-                                        <td class="py-3 px-4 text-sm text-gray-900 dark:text-white text-center">
+                                        <td class="py-3 px-4 text-sm text-gray-900 dark:text-white text-center capitalize">
                                             {{ $coupleData['piercings_her'] ?? 'Not provided' }}
                                         </td>
-                                        <td class="py-3 px-4 text-sm text-gray-900 dark:text-white text-center">
+                                        <td class="py-3 px-4 text-sm text-gray-900 dark:text-white text-center capitalize">
                                             {{ $coupleData['piercings_him'] ?? 'Not provided' }}
                                         </td>
                                     </tr>

@@ -102,8 +102,18 @@
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Eye Color
                                 </label>
-                                <input type="text" name="eye_color_her" placeholder="EXP: brown, blue, green, gray" 
-                                       class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <select name="eye_color_her" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select Eye Color</option>
+                                    <option value="Brown">Brown</option>
+                                    <option value="Blue">Blue</option>
+                                    <option value="Green">Green</option>
+                                    <option value="Gray">Gray</option>
+                                    <option value="Hazel">Hazel</option>
+                                    <option value="Amber">Amber</option>
+                                    <option value="Black">Black</option>
+                                    <option value="Other">Other</option>
+                                </select>
                             </div>
                         </div>
 
@@ -113,8 +123,19 @@
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Hair Color
                                 </label>
-                                <input type="text" name="hair_color_her" placeholder="EXP: black, brown, blond, and red" 
-                                       class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <select name="hair_color_her" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select Hair Color</option>
+                                    <option value="Black">Black</option>
+                                    <option value="Brown">Brown</option>
+                                    <option value="Blonde">Blonde</option>
+                                    <option value="Red">Red</option>
+                                    <option value="Gray">Gray</option>
+                                    <option value="White">White</option>
+                                    <option value="Auburn">Auburn</option>
+                                    <option value="Chestnut">Chestnut</option>
+                                    <option value="Other">Other</option>
+                                </select>
                             </div>
 
                             <!-- Tattoos - Her -->
@@ -137,8 +158,12 @@
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Piercings
                                 </label>
-                                <input type="text" name="piercings_her" placeholder="Type Here" 
-                                       class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <select name="piercings_her" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select...</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
                             </div>
 
                             <!-- Boob Size - Her -->
@@ -203,8 +228,18 @@
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Eye Color
                                 </label>
-                                <input type="text" name="eye_color_him" placeholder="EXP: brown, blue, green, gray" 
-                                       class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <select name="eye_color_him" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select Eye Color</option>
+                                    <option value="Brown">Brown</option>
+                                    <option value="Blue">Blue</option>
+                                    <option value="Green">Green</option>
+                                    <option value="Gray">Gray</option>
+                                    <option value="Hazel">Hazel</option>
+                                    <option value="Amber">Amber</option>
+                                    <option value="Black">Black</option>
+                                    <option value="Other">Other</option>
+                                </select>
                             </div>
                         </div>
 
@@ -214,8 +249,19 @@
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Hair Color
                                 </label>
-                                <input type="text" name="hair_color_him" placeholder="EXP: black, brown, blond, and red" 
-                                       class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <select name="hair_color_him" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select Hair Color</option>
+                                    <option value="Black">Black</option>
+                                    <option value="Brown">Brown</option>
+                                    <option value="Blonde">Blonde</option>
+                                    <option value="Red">Red</option>
+                                    <option value="Gray">Gray</option>
+                                    <option value="White">White</option>
+                                    <option value="Auburn">Auburn</option>
+                                    <option value="Chestnut">Chestnut</option>
+                                    <option value="Other">Other</option>
+                                </select>
                             </div>
 
                             <!-- Tattoos - Him -->
@@ -238,8 +284,12 @@
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                     Piercings
                                 </label>
-                                <input type="text" name="piercings_him" placeholder="Type Here" 
-                                       class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <select name="piercings_him" 
+                                        class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                    <option value="">Select...</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
                             </div>
 
                             <!-- Dick Size - Him -->
@@ -299,8 +349,18 @@
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Eye Color
                             </label>
-                            <input type="text" name="eye_color" placeholder="EXP: brown, blue, green, gray" 
-                                   class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                            <select name="eye_color" 
+                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <option value="">Select Eye Color</option>
+                                <option value="Brown">Brown</option>
+                                <option value="Blue">Blue</option>
+                                <option value="Green">Green</option>
+                                <option value="Gray">Gray</option>
+                                <option value="Hazel">Hazel</option>
+                                <option value="Amber">Amber</option>
+                                <option value="Black">Black</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
                     </div>
 
@@ -310,8 +370,19 @@
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Hair Color
                             </label>
-                            <input type="text" name="hair_color" placeholder="EXP: black, brown, blond, and red" 
-                                   class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                            <select name="hair_color" 
+                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <option value="">Select Hair Color</option>
+                                <option value="Black">Black</option>
+                                <option value="Brown">Brown</option>
+                                <option value="Blonde">Blonde</option>
+                                <option value="Red">Red</option>
+                                <option value="Gray">Gray</option>
+                                <option value="White">White</option>
+                                <option value="Auburn">Auburn</option>
+                                <option value="Chestnut">Chestnut</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
 
                         <!-- Tattoos -->
@@ -334,8 +405,12 @@
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Piercings
                             </label>
-                            <input type="text" name="piercings" placeholder="Type Here" 
-                                   class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                            <select name="piercings" 
+                                    class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                                <option value="">Select...</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No</option>
+                            </select>
                         </div>
 
                         <!-- Boob Size / Dick Size (based on category) -->

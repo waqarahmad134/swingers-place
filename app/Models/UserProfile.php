@@ -35,7 +35,6 @@ class UserProfile extends Model
         'boob_size',
         'dick_size',
         'profile_photo',
-        'cover_photo',
         'album_photos',
         'bio',
         'looking_for',

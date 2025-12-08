@@ -197,10 +197,6 @@ class OnboardingController extends Controller
             $profile->update(['profile_photo' => $path]);
         }
 
-        if ($request->hasFile('cover_photo')) {
-            $path = $request->file('cover_photo')->store('covers', 'public');
-            $profile->update(['cover_photo' => $path]);
-        }
 
         if ($request->hasFile('album_photos')) {
             $albumPhotos = [];

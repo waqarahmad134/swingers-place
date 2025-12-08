@@ -32,7 +32,15 @@ class ProfileController extends Controller
         // Always own profile when viewing account profile
         $isOwnProfile = true;
         
-        return view('pages.profile.index', compact('user', 'profile', 'age', 'joinDate', 'isOwnProfile'));
+        // Decode JSON fields safely
+        $preferences = $profile && $profile->preferences 
+            ? (is_array($profile->preferences) ? $profile->preferences : json_decode($profile->preferences, true) ?? [])
+            : [];
+        $languages = $profile && $profile->languages 
+            ? (is_array($profile->languages) ? $profile->languages : json_decode($profile->languages, true) ?? [])
+            : [];
+        
+        return view('pages.profile.index', compact('user', 'profile', 'age', 'joinDate', 'isOwnProfile', 'preferences', 'languages'));
     }
 
     /**
@@ -74,7 +82,6 @@ class ProfileController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'gender' => ['nullable', 'in:male,female,other,prefer_not_to_say'],
             'profile_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'],
-            'cover_photo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'],
             'category' => ['nullable', 'string'],
             'home_location' => ['nullable', 'string', 'max:255'],
             'country' => ['nullable', 'string', 'max:255'],
@@ -148,17 +155,6 @@ class ProfileController extends Controller
             $profile->profile_photo = $imagePath; // Also save to profile for consistency
         }
 
-        // Handle cover photo upload
-        if ($request->hasFile('cover_photo')) {
-            // Delete old cover photo if exists
-            if ($profile->cover_photo && Storage::disk('public')->exists($profile->cover_photo)) {
-                Storage::disk('public')->delete($profile->cover_photo);
-            }
-            
-            // Store new cover photo
-            $coverPath = $request->file('cover_photo')->store('cover_photos', 'public');
-            $profile->cover_photo = $coverPath;
-        }
 
         // Update user data
         $user->name = $validated['name'];
@@ -277,9 +273,6 @@ class ProfileController extends Controller
                 Storage::disk('public')->delete($profile->profile_photo);
             }
             
-            if ($profile->cover_photo && Storage::disk('public')->exists($profile->cover_photo)) {
-                Storage::disk('public')->delete($profile->cover_photo);
-            }
 
             // Delete album photos if they exist
             if ($profile->album_photos) {

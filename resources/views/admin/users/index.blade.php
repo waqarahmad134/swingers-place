@@ -345,20 +345,6 @@
                         </div>
                     </div>
 
-                    <!-- Cover Page -->
-                    <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Cover Page</label>
-                        <div class="flex items-center gap-4">
-                            <div id="cover_photo_preview" class="w-24 h-24 rounded-lg bg-gradient-to-b from-[#FF8FA3] to-[#FF6F61] flex items-center justify-center text-white text-2xl font-bold">
-                                <span id="cover_initials">E</span>
-                            </div>
-                            <label class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
-                                <i class="ri-upload-cloud-line"></i>
-                                <span>Change Photo</span>
-                                <input type="file" id="edit_cover_photo" name="cover_photo" accept="image/*" class="hidden" onchange="previewImage(this, 'cover_photo_preview', 'cover_initials')">
-                            </label>
-                        </div>
-                    </div>
 
                     <!-- Action Buttons -->
                     <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
@@ -407,16 +393,6 @@
                         profileInitials.textContent = initials;
                     }
                     
-                    // Set cover photo
-                    const coverPreview = document.getElementById('cover_photo_preview');
-                    const coverInitials = document.getElementById('cover_initials');
-                    if (data.cover_photo) {
-                        coverPreview.innerHTML = `<img src="${data.cover_photo}" alt="Cover" class="w-full h-full rounded-lg object-cover">`;
-                    } else {
-                        const initials = (data.first_name ? data.first_name.charAt(0) : '') + (data.last_name ? data.last_name.charAt(0) : '') || 'U';
-                        coverPreview.innerHTML = `<span class="text-white text-2xl font-bold">${initials}</span>`;
-                        coverInitials.textContent = initials;
-                    }
                     
                     // Show modal
                     document.getElementById('editUserModal').classList.remove('hidden');

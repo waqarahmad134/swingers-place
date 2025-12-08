@@ -68,16 +68,6 @@
                             </div>
                         </div>
 
-                        <!-- Cover Photo - Her -->
-                        <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer mb-4" 
-                             onclick="document.getElementById('cover_photo_her').click()">
-                            <input type="file" id="cover_photo_her" name="cover_photo_her" accept="image/*" class="hidden" onchange="previewImage(this, 'cover-preview-her')">
-                            <div id="cover-preview-her">
-                                <i class="ri-image-line text-5xl text-gray-400 mb-3"></i>
-                                <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Cover Photo</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
-                            </div>
-                        </div>
 
                         <!-- Album Photos - Her -->
                         <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer" 
@@ -108,16 +98,6 @@
                             </div>
                         </div>
 
-                        <!-- Cover Photo - Him -->
-                        <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer mb-4" 
-                             onclick="document.getElementById('cover_photo_him').click()">
-                            <input type="file" id="cover_photo_him" name="cover_photo_him" accept="image/*" class="hidden" onchange="previewImage(this, 'cover-preview-him')">
-                            <div id="cover-preview-him">
-                                <i class="ri-image-line text-5xl text-gray-400 mb-3"></i>
-                                <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Cover Photo</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
-                            </div>
-                        </div>
 
                         <!-- Album Photos - Him -->
                         <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer" 
@@ -143,16 +123,6 @@
                         </div>
                     </div>
 
-                    <!-- Cover Photo -->
-                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer" 
-                         onclick="document.getElementById('cover_photo').click()">
-                        <input type="file" id="cover_photo" name="cover_photo" accept="image/*" class="hidden" onchange="previewImage(this, 'cover-preview')">
-                        <div id="cover-preview">
-                            <i class="ri-image-line text-5xl text-gray-400 mb-3"></i>
-                            <p class="font-semibold text-gray-900 dark:text-white mb-1">Upload Cover Photo</p>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Click to select or drag and drop</p>
-                        </div>
-                    </div>
 
                     <!-- Album Photos -->
                     <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-2xl p-8 text-center hover:border-[#9810FA] transition-all cursor-pointer" 

@@ -37,28 +37,6 @@
                                 </label>
                             </div>
                         </div>
-                        
-                        <!-- Cover Photo -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cover Photo</label>
-                            <div class="relative w-full h-32 rounded-lg overflow-hidden border-2 border-gray-200 dark:border-gray-700">
-                                @if($profile && $profile->cover_photo)
-                                    <img id="cover-preview" src="{{ asset('storage/' . $profile->cover_photo) }}" alt="Cover Photo" class="w-full h-full object-cover">
-                                @else
-                                    <div id="cover-preview" class="w-full h-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 flex items-center justify-center">
-                                        <span class="text-white text-sm font-medium">No cover photo</span>
-                                    </div>
-                                @endif
-                                <!-- Change Cover Photo Button -->
-                                <label for="cover_photo" class="absolute inset-0 flex items-center justify-center bg-black/40 hover:bg-black/60 transition-colors cursor-pointer">
-                                    <div class="text-white text-center">
-                                        <i class="ri-camera-line text-2xl mb-1 block"></i>
-                                        <span class="text-xs">Change Cover</span>
-                                    </div>
-                                    <input type="file" id="cover_photo" name="cover_photo" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" class="hidden">
-                                </label>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -71,14 +49,6 @@
                                 <button type="button" onclick="switchTab('account')" id="tab-account" class="tab-button active px-6 py-3 text-sm font-semibold rounded-lg transition-colors bg-gray-800 dark:bg-gray-700 text-white">
                                     <i class="ri-user-line mr-2"></i>
                                     Account
-                                </button>
-                                <button type="button" onclick="switchTab('preferences')" id="tab-preferences" class="tab-button px-6 py-3 text-sm font-semibold rounded-lg transition-colors text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <i class="ri-heart-line mr-2"></i>
-                                    Preferences
-                                </button>
-                                <button type="button" onclick="switchTab('privacy')" id="tab-privacy" class="tab-button px-6 py-3 text-sm font-semibold rounded-lg transition-colors text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <i class="ri-shield-line mr-2"></i>
-                                    Privacy
                                 </button>
                             </div>
                         </div>
@@ -485,200 +455,7 @@
                                 </div>
                             </div>
 
-                            <!-- Preferences Tab -->
-                            <div id="content-preferences" class="tab-content hidden">
-                                <!-- What Are You Looking For -->
-                                <div class="mb-8">
-                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">What Are You Looking For?</h3>
-                                    <div class="space-y-3">
-                                        @php
-                                            $preferenceOptions = ['full_swap', 'exhibitionist', 'still_exploring', 'others', 'soft_swap', 'voyeur', 'hotwife'];
-                                        @endphp
-                                        @foreach($preferenceOptions as $option)
-                                            <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                                                <label class="text-gray-900 dark:text-white font-medium capitalize">{{ str_replace('_', ' ', $option) }}</label>
-                                                <label class="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" name="preferences[]" value="{{ $option }}" {{ in_array($option, $preferences) ? 'checked' : '' }} class="sr-only peer">
-                                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
-                                                </label>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
 
-                                <!-- Languages -->
-                                <div class="mb-8">
-                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                        <i class="ri-global-line text-purple-600"></i>
-                                        Languages
-                                    </h3>
-                                    <div class="space-y-3">
-                                        @php
-                                            $languageOptions = ['english', 'spanish', 'french', 'german', 'italian', 'portuguese'];
-                                        @endphp
-                                        @foreach($languageOptions as $lang)
-                                            <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                                                <label class="text-gray-900 dark:text-white font-medium capitalize">{{ $lang }}</label>
-                                                <label class="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" name="languages[]" value="{{ $lang }}" {{ in_array($lang, $languages) ? 'checked' : '' }} class="sr-only peer">
-                                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
-                                                </label>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-
-                                <!-- Additional Details -->
-                                <div class="mb-8">
-                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Additional Details</h3>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sexuality</label>
-                                            <select name="sexuality" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
-                                                <option value="">Select</option>
-                                                <option value="straight" {{ ($profile && $profile->sexuality === 'straight') ? 'selected' : '' }}>Straight</option>
-                                                <option value="gay" {{ ($profile && $profile->sexuality === 'gay') ? 'selected' : '' }}>Gay</option>
-                                                <option value="bisexual" {{ ($profile && $profile->sexuality === 'bisexual') ? 'selected' : '' }}>Bisexual</option>
-                                                <option value="lesbian" {{ ($profile && $profile->sexuality === 'lesbian') ? 'selected' : '' }}>Lesbian</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Relationship Status</label>
-                                            <select name="relationship_status" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
-                                                <option value="">Select</option>
-                                                <option value="single" {{ ($profile && $profile->relationship_status === 'single') ? 'selected' : '' }}>Single</option>
-                                                <option value="in_relationship" {{ ($profile && $profile->relationship_status === 'in_relationship') ? 'selected' : '' }}>In a Relationship</option>
-                                                <option value="married" {{ ($profile && $profile->relationship_status === 'married') ? 'selected' : '' }}>Married</option>
-                                                <option value="open" {{ ($profile && $profile->relationship_status === 'open') ? 'selected' : '' }}>Open</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Danger Zone -->
-                                <div class="mb-8 border-2 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 rounded-lg p-6">
-                                    <h3 class="text-lg font-bold text-red-900 dark:text-red-300 mb-2 flex items-center gap-2">
-                                        <i class="ri-delete-bin-line"></i>
-                                        Danger Zone
-                                    </h3>
-                                    <p class="text-sm text-red-700 dark:text-red-400 mb-4">Once you delete your account, there is no going back. Please be certain.</p>
-                                    <div class="flex gap-2">
-                                        <input type="text" placeholder="Type DELETE to confirm" class="flex-1 rounded-lg border border-red-300 dark:border-red-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2">
-                                        <button type="button" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg flex items-center gap-2 transition-colors">
-                                            <i class="ri-delete-bin-line"></i>
-                                            Delete Account
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Privacy Tab -->
-                            <div id="content-privacy" class="tab-content hidden">
-                                <!-- Privacy Settings -->
-                                <div class="mb-8">
-                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Privacy Settings</h3>
-                                    <div class="space-y-4">
-                                        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                                            <div>
-                                                <label class="text-gray-900 dark:text-white font-medium">Show my profile to everyone</label>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400">Your profile will be visible to all members</p>
-                                            </div>
-                                            <label class="relative inline-flex items-center cursor-pointer">
-                                                <input type="checkbox" name="profile_visible" value="1" {{ ($profile && $profile->profile_visible) ? 'checked' : '' }} class="sr-only peer">
-                                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                                            <div>
-                                                <label class="text-gray-900 dark:text-white font-medium">Allow wall posts</label>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400">Let others post on your wall</p>
-                                            </div>
-                                            <label class="relative inline-flex items-center cursor-pointer">
-                                                <input type="checkbox" name="allow_wall_posts" value="1" {{ ($profile && $profile->allow_wall_posts) ? 'checked' : '' }} class="sr-only peer">
-                                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                                            <div>
-                                                <label class="text-gray-900 dark:text-white font-medium">Show online status</label>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400">Display when you're online</p>
-                                            </div>
-                                            <label class="relative inline-flex items-center cursor-pointer">
-                                                <input type="checkbox" name="show_online_status" value="1" {{ ($profile && $profile->show_online_status) ? 'checked' : '' }} class="sr-only peer">
-                                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                                            <div>
-                                                <label class="text-gray-900 dark:text-white font-medium">Show last active</label>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400">Display when you were last active</p>
-                                            </div>
-                                            <label class="relative inline-flex items-center cursor-pointer">
-                                                <input type="checkbox" name="show_last_active" value="1" {{ ($profile && $profile->show_last_active ?? true) ? 'checked' : '' }} class="sr-only peer">
-                                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Who Can See -->
-                                <div class="mb-8">
-                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                        <i class="ri-eye-line text-purple-600"></i>
-                                        Who Can See...
-                                    </h3>
-                                    <div class="space-y-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">My photos</label>
-                                            <select class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
-                                                <option value="everyone" selected>Everyone</option>
-                                                <option value="friends">Friends</option>
-                                                <option value="private">Private</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">My videos</label>
-                                            <select class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
-                                                <option value="everyone" selected>Everyone</option>
-                                                <option value="friends">Friends</option>
-                                                <option value="private">Private</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">My friends list</label>
-                                            <select class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
-                                                <option value="everyone" selected>Everyone</option>
-                                                <option value="friends">Friends</option>
-                                                <option value="private">Private</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">My events</label>
-                                            <select class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
-                                                <option value="everyone" selected>Everyone</option>
-                                                <option value="friends">Friends</option>
-                                                <option value="private">Private</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Danger Zone -->
-                                <div class="mb-8 border-2 border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 rounded-lg p-6">
-                                    <h3 class="text-lg font-bold text-red-900 dark:text-red-300 mb-2 flex items-center gap-2">
-                                        <i class="ri-delete-bin-line"></i>
-                                        Danger Zone
-                                    </h3>
-                                    <p class="text-sm text-red-700 dark:text-red-400 mb-4">Once you delete your account, there is no going back. Please be certain.</p>
-                                    <div class="flex gap-2">
-                                        <input type="text" placeholder="Type DELETE to confirm" class="flex-1 rounded-lg border border-red-300 dark:border-red-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2">
-                                        <button type="button" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg flex items-center gap-2 transition-colors">
-                                            <i class="ri-delete-bin-line"></i>
-                                            Delete Account
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- Action Buttons -->
                             <div class="flex items-center justify-end gap-3 border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
@@ -745,30 +522,6 @@
         }
     });
 
-    // Cover photo preview
-    document.getElementById('cover_photo')?.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.getElementById('cover-preview');
-                if (preview) {
-                    if (preview.tagName === 'IMG') {
-                        preview.src = e.target.result;
-                    } else {
-                        // Replace div with img
-                        const newImg = document.createElement('img');
-                        newImg.id = 'cover-preview';
-                        newImg.src = e.target.result;
-                        newImg.className = 'w-full h-full object-cover';
-                        newImg.alt = 'Cover Photo';
-                        preview.parentNode.replaceChild(newImg, preview);
-                    }
-                }
-            };
-            reader.readAsDataURL(file);
-        }
-    });
 
     // Google Maps Autocomplete for Location
     @php

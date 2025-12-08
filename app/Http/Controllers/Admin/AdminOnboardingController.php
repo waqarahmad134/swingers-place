@@ -262,10 +262,6 @@ class AdminOnboardingController extends Controller
             $user->update(['profile_image' => $path]);
         }
 
-        if ($request->hasFile('cover_photo')) {
-            $path = $request->file('cover_photo')->store('cover_photos', 'public');
-            $profile->update(['cover_photo' => $path]);
-        }
 
         if ($request->hasFile('album_photos')) {
             $albumPhotos = [];

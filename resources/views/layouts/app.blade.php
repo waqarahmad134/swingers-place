@@ -138,11 +138,12 @@
                 e.preventDefault();
                 e.stopPropagation();
                 
-                // Check if we're on the profile page
+                // Check if we're on the profile page (index or edit)
                 const isProfilePage = window.location.pathname.includes('/account/profile');
+                const isEditPage = window.location.pathname.includes('/account/profile/edit');
                 
-                if (isProfilePage) {
-                    // If on profile page, toggle sidebar
+                if (isProfilePage && !isEditPage) {
+                    // If on profile index page, toggle sidebar
                     const sidebar = document.getElementById('settings-sidebar');
                     if (sidebar) {
                         const isOpen = sidebar.style.width !== '0px' && sidebar.style.width !== '0';
@@ -164,7 +165,7 @@
                         }
                     }
                 } else {
-                    // If not on profile page, navigate to profile page and open sidebar
+                    // If on edit page or not on profile page, navigate to profile page and open sidebar
                     window.location.href = '{{ route("account.profile") }}?settings=true';
                 }
             });

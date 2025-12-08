@@ -199,7 +199,6 @@ class UserController extends Controller
             'email' => $user->email,
             'bio' => $profile->bio ?? '',
             'profile_image' => $user->profile_image ? asset('storage/' . $user->profile_image) : null,
-            'cover_photo' => $profile && $profile->cover_photo ? asset('storage/' . $profile->cover_photo) : null,
             'profile_photo' => $profile && $profile->profile_photo ? asset('storage/' . $profile->profile_photo) : null,
         ]);
     }
@@ -216,9 +215,7 @@ class UserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'bio' => ['nullable', 'string', 'max:1000'],
             'profile_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'],
-            'cover_photo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'],
             'remove_profile_image' => ['nullable', 'boolean'],
-            'remove_cover_photo' => ['nullable', 'boolean'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'phone' => ['nullable', 'string', 'max:255'],
             'profile_type' => ['nullable', 'in:normal,business'],
@@ -269,20 +266,6 @@ class UserController extends Controller
 
         // Update or create profile
         $profile = $user->profile ?? $user->profile()->create(['user_id' => $user->id]);
-        
-        // Handle cover photo upload
-        if ($request->hasFile('cover_photo')) {
-            if ($profile->cover_photo && Storage::disk('public')->exists($profile->cover_photo)) {
-                Storage::disk('public')->delete($profile->cover_photo);
-            }
-            $coverPath = $request->file('cover_photo')->store('covers', 'public');
-            $profile->cover_photo = $coverPath;
-        } elseif ($request->boolean('remove_cover_photo')) {
-            if ($profile->cover_photo && Storage::disk('public')->exists($profile->cover_photo)) {
-                Storage::disk('public')->delete($profile->cover_photo);
-            }
-            $profile->cover_photo = null;
-        }
         
         // Calculate date_of_birth from age if provided
         if (isset($validated['age']) && $validated['age']) {

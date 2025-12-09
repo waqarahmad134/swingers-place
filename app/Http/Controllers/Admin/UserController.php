@@ -88,24 +88,6 @@ class UserController extends Controller
         $profileType = session('admin_creating_profile_type', 'normal');
         return view('admin.users.create', compact('profileType'));
     }
-    
-    // Profile type selection (before user creation)
-    public function selectProfileType(): View
-    {
-        return view('admin.users.select-profile-type');
-    }
-    
-    public function storeProfileType(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'profile_type' => 'required|in:normal,business',
-        ]);
-        
-        // Store profile type in session
-        session(['admin_creating_profile_type' => $request->profile_type]);
-        
-        return redirect()->route('admin.users.create');
-    }
 
     public function store(Request $request): RedirectResponse
     {
@@ -208,8 +190,8 @@ class UserController extends Controller
             'couple_data' => $coupleData ? json_encode($coupleData) : null,
             'bio' => $validated['bio'] ?? null,
             'profile_photo' => $profilePhotoPath,
-            'onboarding_completed' => true, // All data collected
-            'onboarding_step' => 9, // Mark as completed
+            'onboarding_completed' => true,
+            'onboarding_step' => 9,
         ]);
 
         return redirect()->route('admin.users.index')

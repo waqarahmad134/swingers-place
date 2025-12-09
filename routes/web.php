@@ -82,45 +82,6 @@ Route::middleware('guest')->group(function () {
 
 Route::post('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Profile Type Selection (accessible to guests - BEFORE registration)
-Route::prefix('onboarding')->name('onboarding.')->group(function () {
-    Route::get('/profile-type', [\App\Http\Controllers\Web\OnboardingController::class, 'profileType'])->name('profile-type');
-    Route::post('/profile-type', [\App\Http\Controllers\Web\OnboardingController::class, 'storeProfileType'])->name('profile-type.store');
-});
-
-// Onboarding Routes (authenticated users only - for existing users who want to complete steps)
-Route::middleware('auth')->prefix('onboarding')->name('onboarding.')->group(function () {
-    Route::get('/step1', [\App\Http\Controllers\Web\OnboardingController::class, 'step1'])->name('step1');
-    Route::post('/step1', [\App\Http\Controllers\Web\OnboardingController::class, 'storeStep1'])->name('step1.store');
-    
-    Route::get('/step2', [\App\Http\Controllers\Web\OnboardingController::class, 'step2'])->name('step2');
-    Route::post('/step2', [\App\Http\Controllers\Web\OnboardingController::class, 'storeStep2'])->name('step2.store');
-    
-    Route::get('/step3', [\App\Http\Controllers\Web\OnboardingController::class, 'step3'])->name('step3');
-    Route::post('/step3', [\App\Http\Controllers\Web\OnboardingController::class, 'storeStep3'])->name('step3.store');
-    
-    Route::get('/step4', [\App\Http\Controllers\Web\OnboardingController::class, 'step4'])->name('step4');
-    Route::post('/step4', [\App\Http\Controllers\Web\OnboardingController::class, 'storeStep4'])->name('step4.store');
-    
-    Route::get('/step5', [\App\Http\Controllers\Web\OnboardingController::class, 'step5'])->name('step5');
-    Route::post('/step5', [\App\Http\Controllers\Web\OnboardingController::class, 'storeStep5'])->name('step5.store');
-    
-    Route::get('/step6', [\App\Http\Controllers\Web\OnboardingController::class, 'step6'])->name('step6');
-    Route::post('/step6', [\App\Http\Controllers\Web\OnboardingController::class, 'storeStep6'])->name('step6.store');
-    
-    Route::get('/step7', [\App\Http\Controllers\Web\OnboardingController::class, 'step7'])->name('step7');
-    Route::post('/step7', [\App\Http\Controllers\Web\OnboardingController::class, 'storeStep7'])->name('step7.store');
-    
-    Route::get('/step8', [\App\Http\Controllers\Web\OnboardingController::class, 'step8'])->name('step8');
-    Route::post('/step8', [\App\Http\Controllers\Web\OnboardingController::class, 'storeStep8'])->name('step8.store');
-    
-    Route::get('/step9', [\App\Http\Controllers\Web\OnboardingController::class, 'step9'])->name('step9');
-    Route::post('/step9', [\App\Http\Controllers\Web\OnboardingController::class, 'storeStep9'])->name('step9.store');
-    
-    Route::get('/complete', [\App\Http\Controllers\Web\OnboardingController::class, 'complete'])->name('complete');
-    Route::post('/skip/{step}', [\App\Http\Controllers\Web\OnboardingController::class, 'skip'])->name('skip');
-});
-
 // Account Routes (authenticated users)
 Route::middleware('auth')->prefix('account')->name('account.')->group(function () {
     Route::get('/profile', [\App\Http\Controllers\Web\ProfileController::class, 'index'])->name('profile');
@@ -141,34 +102,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/users/{user}/toggle-online-status', [\App\Http\Controllers\Admin\UserController::class, 'toggleOnlineStatus'])->name('users.toggle-online-status');
     Route::post('/users/{user}/set-scheduled-offline', [\App\Http\Controllers\Admin\UserController::class, 'setScheduledOffline'])->name('users.set-scheduled-offline');
     Route::post('/users/{user}/toggle-message-block', [\App\Http\Controllers\Admin\UserController::class, 'toggleMessageBlock'])->name('users.toggle-message-block');
-    Route::get('/users/create/select-profile-type', [\App\Http\Controllers\Admin\UserController::class, 'selectProfileType'])->name('users.select-profile-type');
-    Route::post('/users/create/select-profile-type', [\App\Http\Controllers\Admin\UserController::class, 'storeProfileType'])->name('users.store-profile-type');
-    
-    // Admin Onboarding (for creating users)
-    Route::prefix('users/onboarding')->name('users.onboarding.')->group(function () {
-        Route::get('/profile-type', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'profileType'])->name('profile-type');
-        Route::post('/profile-type', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'storeProfileType'])->name('profile-type.store');
-        Route::get('/step1', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'step1'])->name('step1');
-        Route::post('/step1', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'storeStep1'])->name('step1.store');
-        Route::get('/step2', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'step2'])->name('step2');
-        Route::post('/step2', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'storeStep2'])->name('step2.store');
-        Route::get('/step3', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'step3'])->name('step3');
-        Route::post('/step3', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'storeStep3'])->name('step3.store');
-        Route::get('/step4', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'step4'])->name('step4');
-        Route::post('/step4', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'storeStep4'])->name('step4.store');
-        Route::get('/step5', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'step5'])->name('step5');
-        Route::post('/step5', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'storeStep5'])->name('step5.store');
-        Route::get('/step6', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'step6'])->name('step6');
-        Route::post('/step6', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'storeStep6'])->name('step6.store');
-        Route::get('/step7', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'step7'])->name('step7');
-        Route::post('/step7', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'storeStep7'])->name('step7.store');
-        Route::get('/step8', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'step8'])->name('step8');
-        Route::post('/step8', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'storeStep8'])->name('step8.store');
-        Route::get('/step9', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'step9'])->name('step9');
-        Route::post('/step9', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'storeStep9'])->name('step9.store');
-        Route::get('/complete', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'complete'])->name('complete');
-        Route::post('/skip/{step}', [\App\Http\Controllers\Admin\AdminOnboardingController::class, 'skip'])->name('skip');
-    });
 
     // Verification
     Route::get('/verification', [\App\Http\Controllers\Admin\VerificationController::class, 'index'])->name('verification.index');

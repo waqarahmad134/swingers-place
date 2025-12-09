@@ -30,7 +30,13 @@
                             <span class="text-lg md:text-xl font-semibold text-gray-600 dark:text-gray-400">
                                 {{ $profile->city ?? explode(',', $profile->home_location)[0] ?? '' }}, {{ $profile->country ?? 'IND' }}
                             </span>
-            @endif
+                        @endif
+                        @if(!isset($isOwnProfile) || !$isOwnProfile)
+                            <a href="{{ auth()->check() ? route('messages.show', $user->id) : route('login') }}" class="flex items-center justify-center gap-2 bg-gradient-to-r from-[#9810FA] to-[#E60076] hover:from-[#8810EA] hover:to-[#D60066] text-white px-4 py-3 rounded-xl text-sm font-semibold transition-all hover:shadow-lg">
+                                <i class="ri-chat-1-line"></i>
+                                <span>Message</span>
+                            </a>
+                        @endif
                     </div>
                 </div>
 
@@ -83,8 +89,8 @@
             <!-- Left Column: Profile Picture & Bio -->
             <div class="lg:col-span-1 space-y-6">
                 <!-- Profile Picture Card -->
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-                    <div class="relative">
+                <div class="bg-gray-900 dark:bg-gray-900 flex rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="w-[400px] relative">
                         @if($profile && $profile->profile_photo)
                             <img src="{{ asset('storage/' . $profile->profile_photo) }}" alt="{{ $user->name }}" class="w-full h-96 object-cover">
                         @elseif($user->profile_image)
@@ -94,54 +100,126 @@
                                 <div class="text-white text-6xl font-bold">
                                     {{ strtoupper(substr($user->first_name ?? $user->name, 0, 1)) }}{{ strtoupper(substr($user->last_name ?? '', 0, 1)) }}
                                 </div>
-                </div>
+                            </div>
                         @endif
                 
                         <!-- Photo Count Badge -->
-                    @php
-                        $photoCount = 0;
-                        if ($profile && $profile->album_photos) {
-                            $photos = is_array($profile->album_photos) ? $profile->album_photos : json_decode($profile->album_photos, true) ?? [];
-                            $photoCount = is_array($photos) ? count($photos) : 0;
-                        }
-                            $totalPhotos = $photoCount + (($profile && $profile->profile_photo) || $user->profile_image ? 1 : 0);
-                    @endphp
+                        @php
+                            $photoCount = 0;
+                            if ($profile && $profile->album_photos) {
+                                $photos = is_array($profile->album_photos) ? $profile->album_photos : json_decode($profile->album_photos, true) ?? [];
+                                $photoCount = is_array($photos) ? count($photos) : 0;
+                            }
+                                $totalPhotos = $photoCount + (($profile && $profile->profile_photo) || $user->profile_image ? 1 : 0);
+                        @endphp
                         <div class="absolute top-4 right-4 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-full flex items-center gap-2 text-sm font-semibold">
                             <i class="ri-camera-line"></i>
                             <span>{{ $totalPhotos }}</span>
-                </div>
+                        </div>
                 
-                        <!-- Online Status Indicator -->
-                        <div class="absolute bottom-4 left-4 flex items-center gap-2 bg-black/70 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-medium">
-                            <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                            <span>Online</span>
-                </div>
-                
-                        <!-- Verified Badge -->
-                        @if($user->email_verified_at)
-                            <div class="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold shadow-lg">
-                                <i class="ri-checkbox-circle-fill"></i>
-                                <span>Verified</span>
-                            </div>
-                        @endif
-                </div>
-                
+                    <!-- Online Status Indicator -->
+                    <div class="absolute bottom-4 left-4 flex items-center gap-2 bg-black/70 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-medium">
+                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span>Online</span>
+                    </div>
+                    <!-- Verified Badge -->
+                    @if($user->email_verified_at)
+                        <div class="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold shadow-lg">
+                            <i class="ri-checkbox-circle-fill"></i>
+                            <span>Verified</span>
+                        </div>
+                    @endif
                     <!-- Action Buttons -->
-                    <div class="p-4 bg-gray-50 dark:bg-gray-700/50">
-                        <div class="grid grid-cols-2 gap-2">
-                            @if(!isset($isOwnProfile) || !$isOwnProfile)
-                                <button class="flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white px-4 py-3 rounded-xl text-sm font-semibold transition-all hover:shadow-lg">
-                                    <i class="ri-heart-fill"></i>
-                                    <span>Like</span>
+                    @if(!isset($isOwnProfile) || !$isOwnProfile)
+                    <!-- bottom bar profile img  -->
+                    <div class="bg-gray-900/95 dark:bg-gray-950/95 backdrop-blur-sm border-t border-gray-700 px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <!-- Left: Social Actions -->
+                            <div class="flex items-center gap-6">
+                                <!-- Friend Request -->
+                                <button class="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group">
+                                    <div class="relative">
+                                        <i class="ri-group-line text-2xl"></i>
+                                        <span class="absolute -top-2 -right-2 bg-[#9810FA] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">9</span>
+                                    </div>
                                 </button>
-                                <a href="{{ auth()->check() ? route('messages.show', $user->id) : route('login') }}" class="flex items-center justify-center gap-2 bg-gradient-to-r from-[#9810FA] to-[#E60076] hover:from-[#8810EA] hover:to-[#D60066] text-white px-4 py-3 rounded-xl text-sm font-semibold transition-all hover:shadow-lg">
-                                    <i class="ri-chat-1-line"></i>
-                                    <span>Message</span>
-                                </a>
-                            @endif
+                                
+                                <!-- Like -->
+                                <button class="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group">
+                                    <div class="relative">
+                                        <i class="ri-thumb-up-line text-2xl"></i>
+                                        <span class="absolute -top-2 -right-2 bg-[#9810FA] text-white text-xs font-bold rounded-full px-1.5 py-0.5 flex items-center justify-center">141</span>
+                                    </div>
+                                </button>
+                                
+                                <!-- Validation/Checkmark -->
+                                <button class="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group">
+                                    <div class="relative">
+                                        <i class="ri-checkbox-circle-line text-2xl"></i>
+                                        <span class="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">2</span>
+                                    </div>
+                                </button>
+                            </div>
+                            
+                            <!-- Right: Additional Actions -->
+                            <div class="flex items-center gap-4">
+                                <!-- Share -->
+                                <button class="text-gray-300 hover:text-white transition-colors p-2" title="Share">
+                                    <i class="ri-share-line text-xl"></i>
+                                </button>
+                                
+                                <!-- Pin -->
+                                <button class="text-gray-300 hover:text-white transition-colors p-2" title="Pin">
+                                    <i class="ri-pushpin-line text-xl"></i>
+                                </button>
+                                
+                                <!-- Notes -->
+                                <button class="text-gray-300 hover:text-white transition-colors p-2" title="Notes">
+                                    <i class="ri-file-text-line text-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                </div>
+                <!-- Right Sidebar: Photo Categories -->
+                <div class="w-24 h-96 bg-gray-900 dark:bg-gray-950  py-6 space-y-6 border-l border-gray-700">
+                    <!-- Non-adult -->
+                    <div class="flex flex-col items-center cursor-pointer hover:bg-gray-800 rounded-lg p-3 transition-colors group">
+                        <div class="relative">
+                            <i class="ri-camera-line text-2xl text-gray-400 group-hover:text-white transition-colors"></i>
+                            <span class="absolute -top-2 -right-2 bg-[#9810FA] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                        </div>
+                        <span class="text-xs text-gray-400 group-hover:text-white mt-2 text-center">Non-adult</span>
+                    </div>
+                    
+                    <!-- Adult -->
+                    <div class="flex flex-col items-center cursor-pointer hover:bg-gray-800 rounded-lg p-3 transition-colors group">
+                        <div class="relative">
+                            <i class="ri-camera-line text-2xl text-gray-400 group-hover:text-white transition-colors"></i>
+                            <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">2</span>
+                            <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[8px] font-bold text-red-500">XXX</span>
+                        </div>
+                        <span class="text-xs text-gray-400 group-hover:text-white mt-2 text-center">Adult</span>
+                    </div>
+                    
+                    <!-- Album -->
+                    <div class="flex flex-col items-center cursor-pointer hover:bg-gray-800 rounded-lg p-3 transition-colors group">
+                        <div class="relative">
+                            <i class="ri-folder-line text-2xl text-gray-400 group-hover:text-white transition-colors"></i>
+                            <span class="absolute -top-2 -right-2 bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">1</span>
+                        </div>
+                        <span class="text-xs text-gray-400 group-hover:text-white mt-2 text-center">Album</span>
+                    </div>
+                    
+                    <!-- Navigation Arrow -->
+                    <!-- <div class="mt-auto">
+                        <button class="text-gray-400 hover:text-white transition-colors p-2">
+                            <i class="ri-arrow-right-s-line text-2xl"></i>
+                        </button>
+                    </div> -->
                 </div>
             </div>
-        </div>
 
 
                 <!-- Quick Stats -->

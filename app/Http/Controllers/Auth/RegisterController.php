@@ -484,7 +484,7 @@ class RegisterController extends Controller
         $coupleData = null;
         
         if ($category === 'couple') {
-            // Store couple data in JSON (matching the structure used in AdminOnboardingController)
+            // Store couple data in JSON
             $coupleData = [
                 'date_of_birth_her' => $registrationData['date_of_birth_her'] ?? null,
                 'sexuality_her' => $registrationData['sexuality_her'] ?? null,
@@ -496,7 +496,7 @@ class RegisterController extends Controller
             $sexuality = $registrationData['sexuality'] ?? null;
         }
 
-        // Create profile with all data collected during registration (onboarding completed)
+        // Create profile with all data collected during registration
         UserProfile::create([
             'user_id' => $user->id,
             'profile_type' => $profileType,
@@ -512,8 +512,8 @@ class RegisterController extends Controller
             'couple_data' => $coupleData ? json_encode($coupleData) : null,
             'bio' => $bio,
             'profile_photo' => $profilePhoto,
-            'onboarding_completed' => true, // All data collected during registration
-            'onboarding_step' => 9, // Mark as completed
+            'onboarding_completed' => true,
+            'onboarding_step' => 9,
         ]);
 
         // Clear session data
@@ -525,7 +525,7 @@ class RegisterController extends Controller
             'otp_verified'
         ]);
 
-        // Redirect to profile page since all onboarding is done
+        // Redirect to profile page
         return redirect()->route('account.profile');
     }
 }

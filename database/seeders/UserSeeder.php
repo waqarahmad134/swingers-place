@@ -58,32 +58,7 @@ class UserSeeder extends Seeder
             'business_address' => '789 Corporate Plaza, City, State 11111',
         ]);
 
-        // Create additional normal users for homepage display
-        User::create([
-            'name' => 'John Smith',
-            'email' => 'john@example.com',
-            'password' => Hash::make('password'),
-            'is_admin' => false,
-            'phone' => '+1222333444',
-            'gender' => 'male',
-            'profile_type' => 'normal',
-            'company' => 'Tech Solutions Inc',
-            'website_url' => 'https://techsolutions.com',
-            'address' => '100 Tech Street, City, State 12345',
-        ]);
-
-        User::create([
-            'name' => 'Sarah Johnson',
-            'email' => 'sarah@example.com',
-            'password' => Hash::make('password'),
-            'is_admin' => false,
-            'phone' => '+1333444555',
-            'gender' => 'female',
-            'profile_type' => 'normal',
-            'company' => 'Creative Design Studio',
-            'website_url' => 'https://creativedesign.com',
-            'address' => '200 Design Ave, City, State 23456',
-        ]);
+        
 
         User::create([
             'name' => 'Mike Wilson',
@@ -96,19 +71,6 @@ class UserSeeder extends Seeder
             'company' => 'Business Consulting Group',
             'website_url' => 'https://businessconsulting.com',
             'address' => '300 Business Blvd, City, State 34567',
-        ]);
-
-        User::create([
-            'name' => 'Emily Davis',
-            'email' => 'emily@example.com',
-            'password' => Hash::make('password'),
-            'is_admin' => false,
-            'phone' => '+1555666777',
-            'gender' => 'female',
-            'profile_type' => 'normal',
-            'company' => 'Web Development Hub',
-            'website_url' => 'https://webdevhub.com',
-            'address' => '400 Web Street, City, State 45678',
         ]);
 
         $this->command->info('Users created successfully!');

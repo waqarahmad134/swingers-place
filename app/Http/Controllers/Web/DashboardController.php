@@ -14,10 +14,13 @@ class DashboardController extends Controller
      */
     public function members(Request $request): View
     {
+        $currentUserId = auth()->id();
+        
+        // Build query and always exclude current user
         $query = User::with('profile')
             ->where('is_active', true)
             ->where('is_admin', false)
-            ->where('id', '!=', auth()->id());
+            ->where('id', '!=', $currentUserId);
 
         // Search filter (general search - name, location, interests)
         if ($request->filled('search')) {

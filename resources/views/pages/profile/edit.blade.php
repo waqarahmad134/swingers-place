@@ -268,6 +268,103 @@
                                                 </select>
                                             </div>
                                             <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sexuality</label>
+                                                <select name="sexuality" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <option value="">Select...</option>
+                                                    <option value="straight" {{ old('sexuality', $profile && $profile->sexuality ? $profile->sexuality : '') === 'straight' ? 'selected' : '' }}>Straight</option>
+                                                    <option value="gay" {{ old('sexuality', $profile && $profile->sexuality ? $profile->sexuality : '') === 'gay' ? 'selected' : '' }}>Gay</option>
+                                                    <option value="bisexual" {{ old('sexuality', $profile && $profile->sexuality ? $profile->sexuality : '') === 'bisexual' ? 'selected' : '' }}>Bisexual</option>
+                                                    <option value="lesbian" {{ old('sexuality', $profile && $profile->sexuality ? $profile->sexuality : '') === 'lesbian' ? 'selected' : '' }}>Lesbian</option>
+                                                    <option value="prefer_not_to_say" {{ old('sexuality', $profile && $profile->sexuality ? $profile->sexuality : '') === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Relationship Status</label>
+                                                <select name="relationship_status" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <option value="">Select...</option>
+                                                    <option value="single" {{ old('relationship_status', $profile && $profile->relationship_status ? $profile->relationship_status : '') === 'single' ? 'selected' : '' }}>Single</option>
+                                                    <option value="in_relationship" {{ old('relationship_status', $profile && $profile->relationship_status ? $profile->relationship_status : '') === 'in_relationship' ? 'selected' : '' }}>In a Relationship</option>
+                                                    <option value="married" {{ old('relationship_status', $profile && $profile->relationship_status ? $profile->relationship_status : '') === 'married' ? 'selected' : '' }}>Married</option>
+                                                    <option value="open" {{ old('relationship_status', $profile && $profile->relationship_status ? $profile->relationship_status : '') === 'open' ? 'selected' : '' }}>Open</option>
+                                                    <option value="prefer_not_to_say" {{ old('relationship_status', $profile && $profile->relationship_status ? $profile->relationship_status : '') === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Relationship Orientation</label>
+                                                <select name="relationship_orientation" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <option value="">Select...</option>
+                                                    <option value="monogamous" {{ old('relationship_orientation', $profile && $profile->relationship_orientation ? $profile->relationship_orientation : '') === 'monogamous' ? 'selected' : '' }}>Monogamous</option>
+                                                    <option value="polyamorous" {{ old('relationship_orientation', $profile && $profile->relationship_orientation ? $profile->relationship_orientation : '') === 'polyamorous' ? 'selected' : '' }}>Polyamorous</option>
+                                                    <option value="swinger" {{ old('relationship_orientation', $profile && $profile->relationship_orientation ? $profile->relationship_orientation : '') === 'swinger' ? 'selected' : '' }}>Swinger</option>
+                                                    <option value="open" {{ old('relationship_orientation', $profile && $profile->relationship_orientation ? $profile->relationship_orientation : '') === 'open' ? 'selected' : '' }}>Open</option>
+                                                    <option value="prefer_not_to_say" {{ old('relationship_orientation', $profile && $profile->relationship_orientation ? $profile->relationship_orientation : '') === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Smoking</label>
+                                                <select name="smoking" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <option value="">Select...</option>
+                                                    <option value="no" {{ old('smoking', $profile && $profile->smoking ? $profile->smoking : '') === 'no' ? 'selected' : '' }}>No</option>
+                                                    <option value="yes" {{ old('smoking', $profile && $profile->smoking ? $profile->smoking : '') === 'yes' ? 'selected' : '' }}>Yes</option>
+                                                    <option value="prefer_not_to_say" {{ old('smoking', $profile && $profile->smoking ? $profile->smoking : '') === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Piercings</label>
+                                                <select name="piercings" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <option value="">Select...</option>
+                                                    <option value="no" {{ old('piercings', $profile && $profile->piercings ? $profile->piercings : '') === 'no' ? 'selected' : '' }}>No</option>
+                                                    <option value="yes" {{ old('piercings', $profile && $profile->piercings ? $profile->piercings : '') === 'yes' ? 'selected' : '' }}>Yes</option>
+                                                    <option value="prefer_not_to_say" {{ old('piercings', $profile && $profile->piercings ? $profile->piercings : '') === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Tattoos</label>
+                                                <select name="tattoos" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <option value="">Select...</option>
+                                                    <option value="no" {{ old('tattoos', $profile && $profile->tattoos ? $profile->tattoos : '') === 'no' ? 'selected' : '' }}>No</option>
+                                                    <option value="yes" {{ old('tattoos', $profile && $profile->tattoos ? $profile->tattoos : '') === 'yes' ? 'selected' : '' }}>Yes</option>
+                                                    <option value="prefer_not_to_say" {{ old('tattoos', $profile && $profile->tattoos ? $profile->tattoos : '') === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
+                                                </select>
+                                            </div>
+                                            @php
+                                                $languages = $profile && $profile->languages 
+                                                    ? (is_array($profile->languages) ? $profile->languages : json_decode($profile->languages, true) ?? [])
+                                                    : [];
+                                            @endphp
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Languages Spoken</label>
+                                                <div class="flex flex-wrap gap-2">
+                                                    @php
+                                                        $languageOptions = ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Chinese', 'Japanese', 'Korean', 'Arabic', 'Hindi', 'Russian', 'Other'];
+                                                    @endphp
+                                                    @foreach($languageOptions as $lang)
+                                                        <label class="flex items-center">
+                                                            <input type="checkbox" name="languages[]" value="{{ strtolower($lang) }}" {{ in_array(strtolower($lang), array_map('strtolower', $languages)) ? 'checked' : '' }} class="rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                                                            <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ $lang }}</span>
+                                                        </label>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Looks are important?</label>
+                                                <select name="looks_important" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <option value="">Select...</option>
+                                                    <option value="no" {{ old('looks_important', $profile && $profile->looks_important ? $profile->looks_important : '') === 'no' ? 'selected' : '' }}>No</option>
+                                                    <option value="yes" {{ old('looks_important', $profile && $profile->looks_important ? $profile->looks_important : '') === 'yes' ? 'selected' : '' }}>Yes</option>
+                                                    <option value="prefer_not_to_say" {{ old('looks_important', $profile && $profile->looks_important ? $profile->looks_important : '') === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Intelligence is important?</label>
+                                                <select name="intelligence_important" class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">
+                                                    <option value="">Select...</option>
+                                                    <option value="no" {{ old('intelligence_important', $profile && $profile->intelligence_important ? $profile->intelligence_important : '') === 'no' ? 'selected' : '' }}>No</option>
+                                                    <option value="yes" {{ old('intelligence_important', $profile && $profile->intelligence_important ? $profile->intelligence_important : '') === 'yes' ? 'selected' : '' }}>Yes</option>
+                                                    <option value="prefer_not_to_say" {{ old('intelligence_important', $profile && $profile->intelligence_important ? $profile->intelligence_important : '') === 'prefer_not_to_say' ? 'selected' : '' }}>Prefer not to say</option>
+                                                </select>
+                                            </div>
+                                            <div>
                                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Bio</label>
                                                 <textarea name="bio" rows="4" placeholder="Tell us about yourself..." class="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 focus:border-purple-500 focus:ring-purple-500">{{ old('bio', $profile && $profile->bio ? $profile->bio : '') }}</textarea>
                                             </div>

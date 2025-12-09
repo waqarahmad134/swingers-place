@@ -10,14 +10,25 @@
                         <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
                             {{ strtoupper($user->username ?? $user->name) }}
                         </h1>
-                        @if($age)
+                        @if($isCouple && ($ageHer || $ageHim))
+                            <span class="text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300">|</span>
+                            <span class="text-xl md:text-2xl font-bold text-[#9810FA] dark:text-purple-400">
+                                @if($ageHer && $ageHim)
+                                    {{ $ageHer }} | {{ $ageHim }}
+                                @elseif($ageHer)
+                                    {{ $ageHer }}
+                                @elseif($ageHim)
+                                    {{ $ageHim }}
+                                @endif
+                            </span>
+                        @elseif(!$isCouple && $age)
                             <span class="text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300">|</span>
                             <span class="text-xl md:text-2xl font-bold text-[#9810FA] dark:text-purple-400">{{ $age }}</span>
                         @endif
                         @if($profile && $profile->home_location)
                             <span class="text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300">|</span>
                             <span class="text-lg md:text-xl font-semibold text-gray-600 dark:text-gray-400">
-                                {{ $profile->city ?? explode(',', $profile->home_location)[0] ?? '' }}, {{ $profile->country ?? 'IND' }} | 0 mi
+                                {{ $profile->city ?? explode(',', $profile->home_location)[0] ?? '' }}, {{ $profile->country ?? 'IND' }}
                             </span>
             @endif
                     </div>
@@ -34,20 +45,20 @@
 
             <!-- Looking For Section -->
             @php
-                $preferences = $profile && $profile->preferences 
+                $preferences = $preferences ?? ($profile && $profile->preferences 
                     ? (is_array($profile->preferences) ? $profile->preferences : json_decode($profile->preferences, true) ?? [])
-                    : [];
-                // Couple data logic
-                $isCouple = ($profile && $profile->category === 'couple');
+                    : []);
+                // Couple data logic - use from controller if available, otherwise calculate here
+                $isCouple = $isCouple ?? ($profile && $profile->category === 'couple');
                 $coupleData = $coupleData ?? ($profile && $profile->couple_data ? (is_array($profile->couple_data) ? $profile->couple_data : json_decode($profile->couple_data, true) ?? []) : []);
             @endphp
             @if(!empty($preferences))
                 <div class="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                     <div class="flex items-center gap-3">
                         <span class="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide">Looking For:</span>
-                        <span class="text-base font-semibold text-[#9810FA] dark:text-purple-400 capitalize">
+                        <!-- <span class="text-base font-semibold text-[#9810FA] dark:text-purple-400 capitalize">
                             {{ str_replace('_', ' ', $preferences[0] ?? '') }}
-                        </span>
+                        </span> -->
                     </div>
                     <!-- Gender Preference Icons -->
                     <div class="flex items-center gap-2">
@@ -132,16 +143,6 @@
             </div>
         </div>
 
-                <!-- Bio Section -->
-                @if($profile && $profile->bio)
-                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
-                        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                            <i class="ri-file-text-line text-[#9810FA]"></i>
-                            <span>BIO</span>
-                        </h2>
-                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-base">{{ $profile->bio }}</p>
-                    </div>
-                @endif
 
                 <!-- Quick Stats -->
                 <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
@@ -223,7 +224,7 @@
                                     <span>Sexuality</span>
                                 </div>
                                 <span class="inline-flex items-center px-4 py-2 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full text-sm font-semibold capitalize">
-                                    {{ $profile->sexuality }}
+                                    {{ str_replace('_', ' ', ucfirst($profile->sexuality)) }}
                                 </span>
                             </div>
                         @endif
@@ -237,6 +238,84 @@
                                 </div>
                                 <span class="inline-flex items-center px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-sm font-semibold capitalize">
                                     {{ str_replace('_', ' ', $profile->relationship_status) }}
+                                    </span>
+                            </div>
+                        @endif
+
+                        <!-- Relationship Orientation -->
+                        @if($profile && $profile->relationship_orientation)
+                            <div>
+                                <div class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                                    <i class="ri-hearts-line text-[#9810FA]"></i>
+                                    <span>Relationship Orientation</span>
+                                </div>
+                                <span class="inline-flex items-center px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-sm font-semibold capitalize">
+                                    {{ str_replace('_', ' ', ucfirst($profile->relationship_orientation)) }}
+                                    </span>
+                            </div>
+                        @endif
+
+                        <!-- Smoking -->
+                        @if($profile && $profile->smoking)
+                            <div>
+                                <div class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                                    <i class="ri-fire-line text-[#9810FA]"></i>
+                                    <span>Smoking</span>
+                                </div>
+                                <span class="inline-flex items-center px-4 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-full text-sm font-semibold capitalize">
+                                    {{ ucfirst($profile->smoking === 'no' ? 'No' : ($profile->smoking === 'yes' ? 'Yes' : 'Prefer not to say')) }}
+                                    </span>
+                            </div>
+                        @endif
+
+                        <!-- Piercings -->
+                        @if($profile && $profile->piercings)
+                            <div>
+                                <div class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                                    <i class="ri-star-line text-[#9810FA]"></i>
+                                    <span>Piercings</span>
+                                </div>
+                                <span class="inline-flex items-center px-4 py-2 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full text-sm font-semibold capitalize">
+                                    {{ ucfirst($profile->piercings === 'no' ? 'No' : ($profile->piercings === 'yes' ? 'Yes' : 'Prefer not to say')) }}
+                                    </span>
+                            </div>
+                        @endif
+
+                        <!-- Tattoos -->
+                        @if($profile && $profile->tattoos)
+                            <div>
+                                <div class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                                    <i class="ri-artboard-line text-[#9810FA]"></i>
+                                    <span>Tattoos</span>
+                                </div>
+                                <span class="inline-flex items-center px-4 py-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 rounded-full text-sm font-semibold capitalize">
+                                    {{ ucfirst($profile->tattoos === 'no' ? 'No' : ($profile->tattoos === 'yes' ? 'Yes' : 'Prefer not to say')) }}
+                                    </span>
+                            </div>
+                        @endif
+
+                        <!-- Looks Important -->
+                        @if($profile && $profile->looks_important)
+                            <div>
+                                <div class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                                    <i class="ri-eye-line text-[#9810FA]"></i>
+                                    <span>Looks are important?</span>
+                                </div>
+                                <span class="inline-flex items-center px-4 py-2 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 rounded-full text-sm font-semibold capitalize">
+                                    {{ ucfirst($profile->looks_important === 'no' ? 'No' : ($profile->looks_important === 'yes' ? 'Yes' : 'Prefer not to say')) }}
+                                    </span>
+                            </div>
+                        @endif
+
+                        <!-- Intelligence Important -->
+                        @if($profile && $profile->intelligence_important)
+                            <div>
+                                <div class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                                    <i class="ri-brain-line text-[#9810FA]"></i>
+                                    <span>Intelligence is important?</span>
+                                </div>
+                                <span class="inline-flex items-center px-4 py-2 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 rounded-full text-sm font-semibold capitalize">
+                                    {{ ucfirst($profile->intelligence_important === 'no' ? 'No' : ($profile->intelligence_important === 'yes' ? 'Yes' : 'Prefer not to say')) }}
                                     </span>
                             </div>
                         @endif
@@ -278,6 +357,18 @@
                                 </span>
                             @endforeach
                         </div>
+                    </div>
+                @endif
+
+                
+                <!-- Bio Section -->
+                @if($profile && $profile->bio)
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+                        <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                            <i class="ri-file-text-line text-[#9810FA]"></i>
+                            <span>BIO</span>
+                        </h2>
+                        <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-base">{{ $profile->bio }}</p>
                     </div>
                 @endif
 
@@ -493,6 +584,42 @@
                                         </td>
                                     </tr>
                                     @endif
+                                    <tr>
+                                        <td class="py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Relationship Orientation</td>
+                                        <td class="py-3 px-4 text-sm text-gray-900 dark:text-white capitalize">
+                                            {{ $profile->relationship_orientation ? str_replace('_', ' ', ucfirst($profile->relationship_orientation)) : 'Not provided' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Smoking</td>
+                                        <td class="py-3 px-4 text-sm text-gray-900 dark:text-white capitalize">
+                                            {{ $profile->smoking ? ucfirst($profile->smoking === 'no' ? 'No' : ($profile->smoking === 'yes' ? 'Yes' : 'Prefer not to say')) : 'Not provided' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Piercings</td>
+                                        <td class="py-3 px-4 text-sm text-gray-900 dark:text-white capitalize">
+                                            {{ $profile->piercings ? ucfirst($profile->piercings === 'no' ? 'No' : ($profile->piercings === 'yes' ? 'Yes' : 'Prefer not to say')) : 'Not provided' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Tattoos</td>
+                                        <td class="py-3 px-4 text-sm text-gray-900 dark:text-white capitalize">
+                                            {{ $profile->tattoos ? ucfirst($profile->tattoos === 'no' ? 'No' : ($profile->tattoos === 'yes' ? 'Yes' : 'Prefer not to say')) : 'Not provided' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Looks are important?</td>
+                                        <td class="py-3 px-4 text-sm text-gray-900 dark:text-white capitalize">
+                                            {{ $profile->looks_important ? ucfirst($profile->looks_important === 'no' ? 'No' : ($profile->looks_important === 'yes' ? 'Yes' : 'Prefer not to say')) : 'Not provided' }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 px-4 text-sm font-semibold text-gray-700 dark:text-gray-300">Intelligence is important?</td>
+                                        <td class="py-3 px-4 text-sm text-gray-900 dark:text-white capitalize">
+                                            {{ $profile->intelligence_important ? ucfirst($profile->intelligence_important === 'no' ? 'No' : ($profile->intelligence_important === 'yes' ? 'Yes' : 'Prefer not to say')) : 'Not provided' }}
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

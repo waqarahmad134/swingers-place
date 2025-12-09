@@ -97,10 +97,30 @@ class HomeController extends Controller
 
         $profile = $user->profile;
         
-        // Calculate age from date_of_birth if available
+        // Check if it's a couple profile
+        $isCouple = $profile && $profile->category === 'couple';
+        $coupleData = $profile && $profile->couple_data 
+            ? (is_array($profile->couple_data) ? $profile->couple_data : json_decode($profile->couple_data, true) ?? [])
+            : [];
+        
+        // Calculate age(s) based on profile type
         $age = null;
-        if ($profile && $profile->date_of_birth) {
-            $age = \Carbon\Carbon::parse($profile->date_of_birth)->age;
+        $ageHer = null;
+        $ageHim = null;
+        
+        if ($isCouple && !empty($coupleData)) {
+            // Couple profile - calculate both ages
+            if (!empty($coupleData['date_of_birth_her'])) {
+                $ageHer = \Carbon\Carbon::parse($coupleData['date_of_birth_her'])->age;
+            }
+            if (!empty($coupleData['date_of_birth_him'])) {
+                $ageHim = \Carbon\Carbon::parse($coupleData['date_of_birth_him'])->age;
+            }
+        } else {
+            // Single profile - calculate single age
+            if ($profile && $profile->date_of_birth) {
+                $age = \Carbon\Carbon::parse($profile->date_of_birth)->age;
+            }
         }
         
         // Get join date
@@ -109,7 +129,15 @@ class HomeController extends Controller
         // Check if viewing own profile
         $isOwnProfile = auth()->check() && auth()->id() == $user->id;
         
-        return view('pages.profile.index', compact('user', 'profile', 'age', 'joinDate', 'isOwnProfile'));
+        // Decode JSON fields safely
+        $preferences = $profile && $profile->preferences 
+            ? (is_array($profile->preferences) ? $profile->preferences : json_decode($profile->preferences, true) ?? [])
+            : [];
+        $languages = $profile && $profile->languages 
+            ? (is_array($profile->languages) ? $profile->languages : json_decode($profile->languages, true) ?? [])
+            : [];
+        
+        return view('pages.profile.index', compact('user', 'profile', 'age', 'ageHer', 'ageHim', 'isCouple', 'coupleData', 'joinDate', 'isOwnProfile', 'preferences', 'languages'));
     }
 }
 

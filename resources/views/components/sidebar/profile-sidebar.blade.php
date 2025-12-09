@@ -118,16 +118,7 @@
                     </div>
                 </div>
 
-                <!-- Task 3: Verify identity -->
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-gray-700 dark:text-gray-300 text-sm font-normal">Verify identity</span>
-                        <span class="text-gray-600 dark:text-gray-400 text-sm font-medium">0%</span>
-                    </div>
-                    <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                        <div class="h-full bg-gradient-to-r from-purple-600 via-purple-500 to-pink-600 rounded-full transition-all duration-300" style="width: 0%"></div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>

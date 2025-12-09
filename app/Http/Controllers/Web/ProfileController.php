@@ -20,10 +20,30 @@ class ProfileController extends Controller
         $user = Auth::user();
         $profile = $user->profile;
         
-        // Calculate age from date_of_birth if available
+        // Check if it's a couple profile
+        $isCouple = $profile && $profile->category === 'couple';
+        $coupleData = $profile && $profile->couple_data 
+            ? (is_array($profile->couple_data) ? $profile->couple_data : json_decode($profile->couple_data, true) ?? [])
+            : [];
+        
+        // Calculate age(s) based on profile type
         $age = null;
-        if ($profile && $profile->date_of_birth) {
-            $age = \Carbon\Carbon::parse($profile->date_of_birth)->age;
+        $ageHer = null;
+        $ageHim = null;
+        
+        if ($isCouple && !empty($coupleData)) {
+            // Couple profile - calculate both ages
+            if (!empty($coupleData['date_of_birth_her'])) {
+                $ageHer = \Carbon\Carbon::parse($coupleData['date_of_birth_her'])->age;
+            }
+            if (!empty($coupleData['date_of_birth_him'])) {
+                $ageHim = \Carbon\Carbon::parse($coupleData['date_of_birth_him'])->age;
+            }
+        } else {
+            // Single profile - calculate single age
+            if ($profile && $profile->date_of_birth) {
+                $age = \Carbon\Carbon::parse($profile->date_of_birth)->age;
+            }
         }
         
         // Get join date
@@ -40,7 +60,7 @@ class ProfileController extends Controller
             ? (is_array($profile->languages) ? $profile->languages : json_decode($profile->languages, true) ?? [])
             : [];
         
-        return view('pages.profile.index', compact('user', 'profile', 'age', 'joinDate', 'isOwnProfile', 'preferences', 'languages'));
+        return view('pages.profile.index', compact('user', 'profile', 'age', 'ageHer', 'ageHim', 'isCouple', 'coupleData', 'joinDate', 'isOwnProfile', 'preferences', 'languages'));
     }
 
     /**
@@ -75,69 +95,122 @@ class ProfileController extends Controller
         $user = Auth::user();
         $profile = $user->profile ?? \App\Models\UserProfile::create(['user_id' => $user->id]);
 
-        $isCouple = $request->category === 'couple';
+        // Determine if this is a couple profile - check request first, then existing profile
+        $isCouple = $request->has('category') ? $request->category === 'couple' : ($profile->category === 'couple');
         
-        $rules = [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'gender' => ['nullable', 'in:male,female,other,prefer_not_to_say'],
-            'profile_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'],
-            'category' => ['nullable', 'string'],
-            'home_location' => ['nullable', 'string', 'max:255'],
-            'country' => ['nullable', 'string', 'max:255'],
-            'city' => ['nullable', 'string', 'max:255'],
-            'preferences' => ['nullable', 'array'],
-            'languages' => ['nullable', 'array'],
-            'profile_visible' => ['nullable', 'boolean'],
-            'allow_wall_posts' => ['nullable', 'boolean'],
-            'show_online_status' => ['nullable', 'boolean'],
-            'show_last_active' => ['nullable', 'boolean'],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'current_password' => ['nullable', 'required_with:password', 'string'],
-        ];
-
-        // Add validation rules based on category
-        if ($isCouple) {
-            // Couple fields
-            $rules['date_of_birth_her'] = ['nullable', 'date'];
-            $rules['date_of_birth_him'] = ['nullable', 'date'];
-            $rules['sexuality_her'] = ['nullable', 'string'];
-            $rules['sexuality_him'] = ['nullable', 'string'];
-            $rules['relationship_status_her'] = ['nullable', 'string'];
-            $rules['relationship_status_him'] = ['nullable', 'string'];
-            $rules['smoking_her'] = ['nullable', 'string'];
-            $rules['smoking_him'] = ['nullable', 'string'];
-            $rules['experience_her'] = ['nullable', 'string'];
-            $rules['experience_him'] = ['nullable', 'string'];
-            $rules['travel_options_her'] = ['nullable', 'string'];
-            $rules['travel_options_him'] = ['nullable', 'string'];
-            $rules['bio_her'] = ['nullable', 'string'];
-            $rules['bio_him'] = ['nullable', 'string'];
-            $rules['weight_her'] = ['nullable', 'integer'];
-            $rules['weight_him'] = ['nullable', 'integer'];
-            $rules['height_her'] = ['nullable', 'integer'];
-            $rules['height_him'] = ['nullable', 'integer'];
-            $rules['body_type_her'] = ['nullable', 'string', 'max:255'];
-            $rules['body_type_him'] = ['nullable', 'string', 'max:255'];
-            $rules['eye_color_her'] = ['nullable', 'string', 'in:Brown,Blue,Green,Gray,Hazel,Amber,Black,Other'];
-            $rules['eye_color_him'] = ['nullable', 'string', 'in:Brown,Blue,Green,Gray,Hazel,Amber,Black,Other'];
-            $rules['hair_color_her'] = ['nullable', 'string', 'in:Black,Brown,Blonde,Red,Gray,White,Auburn,Chestnut,Other'];
-            $rules['hair_color_him'] = ['nullable', 'string', 'in:Black,Brown,Blonde,Red,Gray,White,Auburn,Chestnut,Other'];
-            $rules['tattoos_her'] = ['nullable', 'string'];
-            $rules['tattoos_him'] = ['nullable', 'string'];
-            $rules['piercings_her'] = ['nullable', 'string', 'in:yes,no'];
-            $rules['piercings_him'] = ['nullable', 'string', 'in:yes,no'];
-            $rules['boob_size_her'] = ['nullable', 'string', 'max:255'];
-            $rules['dick_size_him'] = ['nullable', 'string', 'max:255'];
-        } else {
-            // Single fields
-            $rules['date_of_birth'] = ['nullable', 'date'];
-            $rules['bio'] = ['nullable', 'string'];
-            $rules['sexuality'] = ['nullable', 'string'];
-            $rules['relationship_status'] = ['nullable', 'string'];
+        // Build validation rules only for fields that are present in the request (PATCH-like behavior)
+        $rules = [];
+        
+        // Always validate name and email if they're present (location form sends them as hidden fields)
+        if ($request->has('name') && $request->filled('name')) {
+            $rules['name'] = ['required', 'string', 'max:255'];
+        }
+        if ($request->has('email') && $request->filled('email')) {
+            $rules['email'] = ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id];
+        }
+        
+        // Validate only fields that are present in the request
+        if ($request->has('gender')) {
+            $rules['gender'] = ['nullable', 'in:male,female,other,prefer_not_to_say'];
+        }
+        if ($request->hasFile('profile_image')) {
+            $rules['profile_image'] = ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'];
+        }
+        if ($request->has('category')) {
+            $rules['category'] = ['nullable', 'string'];
+        }
+        if ($request->has('home_location')) {
+            $rules['home_location'] = ['nullable', 'string', 'max:255'];
+        }
+        if ($request->has('country')) {
+            $rules['country'] = ['nullable', 'string', 'max:255'];
+        }
+        if ($request->has('city')) {
+            $rules['city'] = ['nullable', 'string', 'max:255'];
+        }
+        if ($request->has('latitude')) {
+            $rules['latitude'] = ['nullable', 'numeric'];
+        }
+        if ($request->has('longitude')) {
+            $rules['longitude'] = ['nullable', 'numeric'];
+        }
+        if ($request->has('preferences')) {
+            $rules['preferences'] = ['nullable', 'array'];
+        }
+        if ($request->has('languages')) {
+            $rules['languages'] = ['nullable', 'array'];
+        }
+        if ($request->has('profile_visible')) {
+            $rules['profile_visible'] = ['nullable', 'boolean'];
+        }
+        if ($request->has('allow_wall_posts')) {
+            $rules['allow_wall_posts'] = ['nullable', 'boolean'];
+        }
+        if ($request->has('show_online_status')) {
+            $rules['show_online_status'] = ['nullable', 'boolean'];
+        }
+        if ($request->has('show_last_active')) {
+            $rules['show_last_active'] = ['nullable', 'boolean'];
+        }
+        if ($request->has('password')) {
+            $rules['password'] = ['nullable', 'string', 'min:8', 'confirmed'];
+            $rules['current_password'] = ['nullable', 'required_with:password', 'string'];
         }
 
-        $validated = $request->validate($rules);
+        // Add validation rules for couple fields only if they're present in request
+        if ($isCouple) {
+            $coupleFields = [
+                'date_of_birth_her', 'date_of_birth_him', 'sexuality_her', 'sexuality_him',
+                'relationship_status_her', 'relationship_status_him', 'smoking_her', 'smoking_him',
+                'experience_her', 'experience_him', 'travel_options_her', 'travel_options_him',
+                'bio_her', 'bio_him', 'weight_her', 'weight_him', 'height_her', 'height_him',
+                'body_type_her', 'body_type_him', 'eye_color_her', 'eye_color_him',
+                'hair_color_her', 'hair_color_him', 'tattoos_her', 'tattoos_him',
+                'piercings_her', 'piercings_him', 'boob_size_her', 'dick_size_him'
+            ];
+            
+            foreach ($coupleFields as $field) {
+                if ($request->has($field)) {
+                    if (in_array($field, ['date_of_birth_her', 'date_of_birth_him'])) {
+                        $rules[$field] = ['nullable', 'date'];
+                    } elseif (in_array($field, ['weight_her', 'weight_him', 'height_her', 'height_him'])) {
+                        $rules[$field] = ['nullable', 'integer'];
+                    } elseif (in_array($field, ['eye_color_her', 'eye_color_him'])) {
+                        $rules[$field] = ['nullable', 'string', 'in:Brown,Blue,Green,Gray,Hazel,Amber,Black,Other'];
+                    } elseif (in_array($field, ['hair_color_her', 'hair_color_him'])) {
+                        $rules[$field] = ['nullable', 'string', 'in:Black,Brown,Blonde,Red,Gray,White,Auburn,Chestnut,Other'];
+                    } elseif (in_array($field, ['piercings_her', 'piercings_him'])) {
+                        $rules[$field] = ['nullable', 'string', 'in:yes,no,prefer_not_to_say'];
+                    } elseif (in_array($field, ['body_type_her', 'body_type_him', 'boob_size_her', 'dick_size_him'])) {
+                        $rules[$field] = ['nullable', 'string', 'max:255'];
+                    } else {
+                        $rules[$field] = ['nullable', 'string'];
+                    }
+                }
+            }
+        } else {
+            // Single fields - only validate if present in request
+            $singleFields = [
+                'date_of_birth' => ['nullable', 'date'],
+                'bio' => ['nullable', 'string'],
+                'sexuality' => ['nullable', 'string', 'in:straight,gay,bisexual,lesbian,prefer_not_to_say'],
+                'relationship_status' => ['nullable', 'string', 'in:single,in_relationship,married,open,prefer_not_to_say'],
+                'relationship_orientation' => ['nullable', 'string', 'in:monogamous,polyamorous,swinger,open,prefer_not_to_say'],
+                'smoking' => ['nullable', 'string', 'in:no,yes,prefer_not_to_say'],
+                'piercings' => ['nullable', 'string', 'in:no,yes,prefer_not_to_say'],
+                'tattoos' => ['nullable', 'string', 'in:no,yes,prefer_not_to_say'],
+                'looks_important' => ['nullable', 'string', 'in:no,yes,prefer_not_to_say'],
+                'intelligence_important' => ['nullable', 'string', 'in:no,yes,prefer_not_to_say'],
+            ];
+            
+            foreach ($singleFields as $field => $rule) {
+                if ($request->has($field)) {
+                    $rules[$field] = $rule;
+                }
+            }
+        }
+
+        $validated = !empty($rules) ? $request->validate($rules) : [];
 
         // Handle profile image upload
         if ($request->hasFile('profile_image')) {
@@ -155,79 +228,127 @@ class ProfileController extends Controller
             $profile->profile_photo = $imagePath; // Also save to profile for consistency
         }
 
-
-        // Update user data
-        $user->name = $validated['name'];
-        $user->email = $validated['email'];
-        $user->gender = $validated['gender'] ?? null;
+        // Update user data - only if fields are present in request
+        if (isset($validated['name'])) {
+            $user->name = $validated['name'];
+        }
+        if (isset($validated['email'])) {
+            $user->email = $validated['email'];
+        }
+        if (isset($validated['gender'])) {
+            $user->gender = $validated['gender'];
+        }
         $user->save();
 
-        // Update profile data
-        $profile->category = $validated['category'] ?? null;
-        $profile->home_location = $validated['home_location'] ?? null;
-        $profile->country = $validated['country'] ?? null;
-        $profile->city = $validated['city'] ?? null;
-        $profile->latitude = $validated['latitude'] ?? null;
-        $profile->longitude = $validated['longitude'] ?? null;
+        // Update profile data - only update fields that are present in request
+        if (isset($validated['category'])) {
+            $profile->category = $validated['category'];
+        }
+        if (isset($validated['home_location'])) {
+            $profile->home_location = $validated['home_location'];
+        }
+        if (isset($validated['country'])) {
+            $profile->country = $validated['country'];
+        }
+        if (isset($validated['city'])) {
+            $profile->city = $validated['city'];
+        }
+        if (isset($validated['latitude'])) {
+            $profile->latitude = $validated['latitude'];
+        }
+        if (isset($validated['longitude'])) {
+            $profile->longitude = $validated['longitude'];
+        }
         
-        // Handle preferences array - use null coalescing to avoid undefined key error
-        $preferences = $validated['preferences'] ?? [];
-        $profile->preferences = !empty($preferences) ? json_encode($preferences) : null;
+        // Handle preferences array - only update if present
+        if (isset($validated['preferences'])) {
+            $preferences = $validated['preferences'];
+            $profile->preferences = !empty($preferences) ? json_encode($preferences) : null;
+        }
         
-        // Handle languages array - use null coalescing to avoid undefined key error
-        $languages = $validated['languages'] ?? [];
-        $profile->languages = !empty($languages) ? json_encode($languages) : null;
+        // Handle languages array - only update if present
+        if (isset($validated['languages'])) {
+            $languages = $validated['languages'];
+            $profile->languages = !empty($languages) ? json_encode($languages) : null;
+        }
         
-        $profile->profile_visible = $request->has('profile_visible') ? true : false;
-        $profile->allow_wall_posts = $request->has('allow_wall_posts') ? true : false;
-        $profile->show_online_status = $request->has('show_online_status') ? true : false;
-        $profile->show_last_active = $request->has('show_last_active') ? true : false;
+        // Handle boolean fields - only update if present
+        if ($request->has('profile_visible')) {
+            $profile->profile_visible = $request->boolean('profile_visible');
+        }
+        if ($request->has('allow_wall_posts')) {
+            $profile->allow_wall_posts = $request->boolean('allow_wall_posts');
+        }
+        if ($request->has('show_online_status')) {
+            $profile->show_online_status = $request->boolean('show_online_status');
+        }
+        if ($request->has('show_last_active')) {
+            $profile->show_last_active = $request->boolean('show_last_active');
+        }
 
-        // Handle couple vs single data
+        // Handle couple vs single data - merge with existing data instead of replacing
         if ($isCouple) {
-            // Store couple data in JSON format
-            $coupleData = [
-                'date_of_birth_her' => $validated['date_of_birth_her'] ?? null,
-                'date_of_birth_him' => $validated['date_of_birth_him'] ?? null,
-                'sexuality_her' => $validated['sexuality_her'] ?? null,
-                'sexuality_him' => $validated['sexuality_him'] ?? null,
-                'relationship_status_her' => $validated['relationship_status_her'] ?? null,
-                'relationship_status_him' => $validated['relationship_status_him'] ?? null,
-                'smoking_her' => $validated['smoking_her'] ?? null,
-                'smoking_him' => $validated['smoking_him'] ?? null,
-                'experience_her' => $validated['experience_her'] ?? null,
-                'experience_him' => $validated['experience_him'] ?? null,
-                'travel_options_her' => $validated['travel_options_her'] ?? null,
-                'travel_options_him' => $validated['travel_options_him'] ?? null,
-                'bio_her' => $validated['bio_her'] ?? null,
-                'bio_him' => $validated['bio_him'] ?? null,
-                'weight_her' => $validated['weight_her'] ?? null,
-                'weight_him' => $validated['weight_him'] ?? null,
-                'height_her' => $validated['height_her'] ?? null,
-                'height_him' => $validated['height_him'] ?? null,
-                'body_type_her' => $validated['body_type_her'] ?? null,
-                'body_type_him' => $validated['body_type_him'] ?? null,
-                'eye_color_her' => $validated['eye_color_her'] ?? null,
-                'eye_color_him' => $validated['eye_color_him'] ?? null,
-                'hair_color_her' => $validated['hair_color_her'] ?? null,
-                'hair_color_him' => $validated['hair_color_him'] ?? null,
-                'tattoos_her' => $validated['tattoos_her'] ?? null,
-                'tattoos_him' => $validated['tattoos_him'] ?? null,
-                'piercings_her' => $validated['piercings_her'] ?? null,
-                'piercings_him' => $validated['piercings_him'] ?? null,
-                'boob_size_her' => $validated['boob_size_her'] ?? null,
-                'dick_size_him' => $validated['dick_size_him'] ?? null,
+            // Get existing couple data
+            $existingCoupleData = $profile->couple_data 
+                ? (is_array($profile->couple_data) ? $profile->couple_data : json_decode($profile->couple_data, true) ?? [])
+                : [];
+            
+            // Merge only fields that are present in the request
+            $coupleFields = [
+                'date_of_birth_her', 'date_of_birth_him', 'sexuality_her', 'sexuality_him',
+                'relationship_status_her', 'relationship_status_him', 'smoking_her', 'smoking_him',
+                'experience_her', 'experience_him', 'travel_options_her', 'travel_options_him',
+                'bio_her', 'bio_him', 'weight_her', 'weight_him', 'height_her', 'height_him',
+                'body_type_her', 'body_type_him', 'eye_color_her', 'eye_color_him',
+                'hair_color_her', 'hair_color_him', 'tattoos_her', 'tattoos_him',
+                'piercings_her', 'piercings_him', 'boob_size_her', 'dick_size_him'
             ];
-            // Store couple data in JSON format
-            $profile->couple_data = $coupleData;
-            // Also set main bio to combined or first person's bio
-            $profile->bio = $validated['bio_her'] ?? $validated['bio_him'] ?? null;
+            
+            foreach ($coupleFields as $field) {
+                if (isset($validated[$field])) {
+                    $existingCoupleData[$field] = $validated[$field];
+                }
+            }
+            
+            // Store merged couple data
+            $profile->couple_data = $existingCoupleData;
+            
+            // Update main bio only if bio_her or bio_him is being updated
+            if (isset($validated['bio_her']) || isset($validated['bio_him'])) {
+                $profile->bio = $validated['bio_her'] ?? $validated['bio_him'] ?? $profile->bio;
+            }
         } else {
-            // Single mode - use regular fields
-            $profile->date_of_birth = $validated['date_of_birth'] ?? null;
-            $profile->bio = $validated['bio'] ?? null;
-            $profile->sexuality = $validated['sexuality'] ?? null;
-            $profile->relationship_status = $validated['relationship_status'] ?? null;
+            // Single mode - only update fields that are present
+            if (isset($validated['date_of_birth'])) {
+                $profile->date_of_birth = $validated['date_of_birth'];
+            }
+            if (isset($validated['bio'])) {
+                $profile->bio = $validated['bio'];
+            }
+            if (isset($validated['sexuality'])) {
+                $profile->sexuality = $validated['sexuality'];
+            }
+            if (isset($validated['relationship_status'])) {
+                $profile->relationship_status = $validated['relationship_status'];
+            }
+            if (isset($validated['relationship_orientation'])) {
+                $profile->relationship_orientation = $validated['relationship_orientation'];
+            }
+            if (isset($validated['smoking'])) {
+                $profile->smoking = $validated['smoking'];
+            }
+            if (isset($validated['piercings'])) {
+                $profile->piercings = $validated['piercings'];
+            }
+            if (isset($validated['tattoos'])) {
+                $profile->tattoos = $validated['tattoos'];
+            }
+            if (isset($validated['looks_important'])) {
+                $profile->looks_important = $validated['looks_important'];
+            }
+            if (isset($validated['intelligence_important'])) {
+                $profile->intelligence_important = $validated['intelligence_important'];
+            }
         }
         
         $profile->save();

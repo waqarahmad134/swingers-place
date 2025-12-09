@@ -110,34 +110,42 @@ class UserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $rules = [
-            'name' => ['nullable', 'string', 'max:255'],
-            'first_name' => ['nullable', 'string', 'max:255'],
-            'last_name' => ['nullable', 'string', 'max:255'],
-            'phone' => ['nullable', 'string', 'max:20'],
-            'password' => ['nullable', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
-            'profile_type' => ['nullable', 'in:normal,business'],
-            'is_admin' => ['nullable', 'boolean'],
-            'is_active' => ['nullable', 'boolean'],
             'username' => ['required', 'string', 'max:255', 'unique:users,username'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['nullable', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
             'terms_accepted' => ['required', 'accepted'],
+            'category' => ['required', 'in:couple,single_female,single_male,transsexual'],
+            'preferences' => ['nullable', 'array'],
+            'home_location' => ['nullable', 'string', 'max:255'],
+            'country' => ['nullable', 'string', 'max:255'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'home_location_lat' => ['nullable', 'numeric'],
+            'home_location_lng' => ['nullable', 'numeric'],
+            'bio' => ['nullable', 'string'],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'],
+            'is_admin' => ['nullable', 'boolean'],
+            'is_active' => ['nullable', 'boolean'],
         ];
+
+        // Add category-specific validation
+        $category = $request->input('category');
+        if ($category === 'couple') {
+            $rules['date_of_birth_her'] = ['nullable', 'date'];
+            $rules['sexuality_her'] = ['nullable', 'string'];
+            $rules['date_of_birth_him'] = ['nullable', 'date'];
+            $rules['sexuality_him'] = ['nullable', 'string'];
+        } else {
+            $rules['date_of_birth'] = ['nullable', 'date'];
+            $rules['sexuality'] = ['nullable', 'string'];
+        }
 
         $validated = $request->validate($rules);
 
-        // Get profile type from session or request
-        $profileType = $validated['profile_type'] ?? session('admin_creating_profile_type', 'normal');
+        // Get profile type - always normal for admin created users
+        $profileType = 'normal';
 
-        // Handle name - use 'name' field if provided, otherwise construct from first_name/last_name, or use username
-        if (!empty($validated['name'])) {
-            $fullName = $validated['name'];
-        } elseif (!empty($validated['first_name']) || !empty($validated['last_name'])) {
-            $fullName = trim(($validated['first_name'] ?? '') . ' ' . ($validated['last_name'] ?? ''));
-        } elseif (!empty($validated['username'])) {
-            $fullName = $validated['username'];
-        } else {
-            $fullName = 'User';
-        }
+        // Auto-set name from username
+        $fullName = $validated['username'] ?? 'User';
 
         // Generate a password if not provided (required for authentication)
         $password = isset($validated['password']) && !empty($validated['password']) 
@@ -145,34 +153,67 @@ class UserController extends Controller
             : \Illuminate\Support\Facades\Hash::make(uniqid('user_', true));
 
         $user = User::create([
-            'name' => trim($fullName) ?: 'User',
+            'name' => $fullName,
             'username' => $validated['username'] ?? null,
-            'first_name' => $validated['first_name'] ?? null,
-            'last_name' => $validated['last_name'] ?? null,
             'email' => $validated['email'] ?? null,
-            'phone' => $validated['phone'] ?? null,
             'password' => $password,
             'profile_type' => $profileType,
             'is_admin' => $request->boolean('is_admin', false),
             'is_active' => $request->boolean('is_active', true),
+            'email_verified_at' => now(), // Auto-verify for admin-created users
         ]);
 
-        // Store user_id in session for onboarding
-        session(['admin_creating_user_id' => $user->id]);
+        // Handle profile photo upload
+        $profilePhotoPath = null;
+        if ($request->hasFile('profile_photo')) {
+            $profilePhotoPath = $request->file('profile_photo')->store('profiles', 'public');
+            $user->profile_image = $profilePhotoPath;
+            $user->save();
+        }
+
+        // Get preferences
+        $preferences = $validated['preferences'] ?? [];
+
+        // Get basic info based on category
+        $dateOfBirth = null;
+        $sexuality = null;
+        $coupleData = null;
         
-        // Clear profile type from session
-        session()->forget('admin_creating_profile_type');
-        
-        // Create basic profile (not completed) - same as registration
+        if ($category === 'couple') {
+            // Store couple data in JSON
+            $coupleData = [
+                'date_of_birth_her' => $validated['date_of_birth_her'] ?? null,
+                'sexuality_her' => $validated['sexuality_her'] ?? null,
+                'date_of_birth_him' => $validated['date_of_birth_him'] ?? null,
+                'sexuality_him' => $validated['sexuality_him'] ?? null,
+            ];
+        } else {
+            $dateOfBirth = $validated['date_of_birth'] ?? null;
+            $sexuality = $validated['sexuality'] ?? null;
+        }
+
+        // Create profile with all data (onboarding completed)
         \App\Models\UserProfile::create([
             'user_id' => $user->id,
             'profile_type' => $profileType,
-            'onboarding_completed' => false,
-            'onboarding_step' => 1, // Will start at step 1 (category selection)
+            'category' => $category,
+            'preferences' => !empty($preferences) ? json_encode($preferences) : null,
+            'home_location' => $validated['home_location'] ?? null,
+            'country' => $validated['country'] ?? null,
+            'city' => $validated['city'] ?? null,
+            'latitude' => $validated['home_location_lat'] ?? null,
+            'longitude' => $validated['home_location_lng'] ?? null,
+            'date_of_birth' => $dateOfBirth,
+            'sexuality' => $sexuality,
+            'couple_data' => $coupleData ? json_encode($coupleData) : null,
+            'bio' => $validated['bio'] ?? null,
+            'profile_photo' => $profilePhotoPath,
+            'onboarding_completed' => true, // All data collected
+            'onboarding_step' => 9, // Mark as completed
         ]);
 
-        // Redirect to admin onboarding - start with step 1 (category selection)
-        return redirect()->route('admin.users.onboarding.step1');
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User created successfully.');
     }
 
     public function edit(User $user): View

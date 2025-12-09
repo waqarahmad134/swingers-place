@@ -25,23 +25,6 @@
                         />
                     </div>
 
-                    <!-- Gender -->
-                    <div>
-                        <label for="filter_gender" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="ri-user-line mr-1"></i> Gender
-                        </label>
-                        <select 
-                            name="filter_gender"
-                            id="filter_gender"
-                            class="w-full text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                        >
-                            <option value="">All Genders</option>
-                            <option value="male" {{ request('filter_gender') == 'male' ? 'selected' : '' }}>Male</option>
-                            <option value="female" {{ request('filter_gender') == 'female' ? 'selected' : '' }}>Female</option>
-                            <option value="other" {{ request('filter_gender') == 'other' ? 'selected' : '' }}>Other</option>
-                            <option value="prefer_not_to_say" {{ request('filter_gender') == 'prefer_not_to_say' ? 'selected' : '' }}>Prefer Not to Say</option>
-                        </select>
-                    </div>
 
                     <!-- Category -->
                     <div>
@@ -76,35 +59,7 @@
                         />
                     </div>
 
-                    <!-- Country -->
-                    <div>
-                        <label for="filter_country" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="ri-global-line mr-1"></i> Country
-                        </label>
-                        <input 
-                            type="text" 
-                            name="filter_country"
-                            id="filter_country"
-                            value="{{ request('filter_country') }}"
-                            placeholder="Enter country..." 
-                            class="w-full text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                        />
-                    </div>
-
-                    <!-- City -->
-                    <div>
-                        <label for="filter_city" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            <i class="ri-building-line mr-1"></i> City
-                        </label>
-                        <input 
-                            type="text" 
-                            name="filter_city"
-                            id="filter_city"
-                            value="{{ request('filter_city') }}"
-                            placeholder="Enter city..." 
-                            class="w-full text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                        />
-                    </div>
+                  
                 </div>
 
                 <!-- Search Button and Online Toggle -->
@@ -211,17 +166,30 @@
                     $age = \Carbon\Carbon::parse($profile->date_of_birth)->age;
                 }
                 $location = $profile && $profile->home_location ? $profile->home_location : 'Location not set';
-                // Get profile photo with proper fallback
-                $profilePhoto = null;
+                
+                // Get display name and initials first
+                $category = $profile && $profile->category ? $profile->category : 'single_male';
+                $displayName = $member->name ?: ($member->first_name . ' ' . $member->last_name) ?: 'User #' . $member->id;
+                
+                // Get initials for placeholder
+                $initials = strtoupper(substr($displayName, 0, 1));
+                if ($member->first_name && $member->last_name) {
+                    $initials = strtoupper(substr($member->first_name, 0, 1) . substr($member->last_name, 0, 1));
+                } elseif ($member->first_name) {
+                    $initials = strtoupper(substr($member->first_name, 0, 1));
+                }
+                
+                // Create SVG data URI for placeholder (properly encoded)
+                $svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400"><rect fill="#6366f1" width="400" height="400"/><text fill="#ffffff" font-family="Arial, sans-serif" font-size="120" font-weight="bold" x="50%" y="50%" text-anchor="middle" dominant-baseline="middle">' . htmlspecialchars($initials, ENT_XML1, 'UTF-8') . '</text></svg>';
+                $placeholderSvg = 'data:image/svg+xml;charset=utf-8,' . rawurlencode($svgContent);
+                
+                // Get profile photo with proper fallback to SVG placeholder
+                $profilePhoto = $placeholderSvg; // Default to SVG placeholder
                 if ($profile && $profile->profile_photo && file_exists(public_path('storage/' . $profile->profile_photo))) {
                     $profilePhoto = asset('storage/' . $profile->profile_photo);
                 } elseif ($member->profile_image && file_exists(public_path('storage/' . $member->profile_image))) {
                     $profilePhoto = asset('storage/' . $member->profile_image);
-                } else {
-                    $profilePhoto = asset('assets/profileUser.png');
                 }
-                $category = $profile && $profile->category ? $profile->category : 'single_male';
-                $displayName = $member->name ?: ($member->first_name . ' ' . $member->last_name) ?: 'User #' . $member->id;
                 // Check online status - respect privacy setting
                 // Only hide online status if profile exists AND show_online_status is explicitly false
                 $hideOnlineStatus = $profile && $profile->show_online_status === false;
@@ -233,8 +201,8 @@
                     <img 
                         src="{{ $profilePhoto }}" 
                         alt="{{ $displayName }}"
-                        class="w-full h-64 object-cover"
-                        onerror="this.onerror=null; this.src='https://via.placeholder.com/400x400/6366f1/ffffff?text={{ urlencode(strtoupper(substr($displayName, 0, 1))) }}';"
+                        class="w-full h-64 object-cover bg-gray-200 dark:bg-gray-700"
+                        onerror="this.onerror=null; this.src='{{ $placeholderSvg }}';"
                     />
                     
                     <div class="absolute top-2 left-2 flex flex-col items-start gap-2">

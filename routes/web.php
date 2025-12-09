@@ -60,6 +60,10 @@ Route::get('/terms', [\App\Http\Controllers\Web\PageController::class, 'terms'])
 // Dynamic Pages (catch-all for custom pages)
 Route::get('/page/{slug}', [\App\Http\Controllers\Web\PageController::class, 'show'])->name('page.show');
 
+// Username and Email validation (accessible to all)
+Route::get('/check-username', [\App\Http\Controllers\Auth\RegisterController::class, 'checkUsername'])->name('check-username');
+Route::get('/check-email', [\App\Http\Controllers\Auth\RegisterController::class, 'checkEmail'])->name('check-email');
+
 // Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
@@ -70,8 +74,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/forgot-password', [\App\Http\Controllers\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     Route::get('/reset-password/{token}', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('/reset-password', [\App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.store');
-    Route::get('/check-username', [\App\Http\Controllers\Auth\RegisterController::class, 'checkUsername'])->name('check-username');
-    Route::get('/check-email', [\App\Http\Controllers\Auth\RegisterController::class, 'checkEmail'])->name('check-email');
     Route::post('/send-otp', [\App\Http\Controllers\Auth\RegisterController::class, 'sendOTP'])->name('send-otp');
     Route::post('/verify-otp', [\App\Http\Controllers\Auth\RegisterController::class, 'verifyOTP'])->name('verify-otp');
     Route::post('/resend-otp', [\App\Http\Controllers\Auth\RegisterController::class, 'resendOTP'])->name('resend-otp');

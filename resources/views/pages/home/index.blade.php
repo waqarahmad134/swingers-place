@@ -169,6 +169,105 @@
       </div>
     </section>--}}
 
+    <!-- SECTION: Featured Profiles Carousel -->
+    <section class="py-16 sm:py-20 px-5 bg-white dark:bg-gray-900">
+      <div class="max-w-7xl mx-auto">
+        <div class="relative" data-carousel data-carousel-autoplay="true" data-carousel-interval="5000">
+          <!-- Carousel Container -->
+          <div class="relative overflow-hidden min-h-[350px]">
+            <!-- Slide 1 - First 6 profiles -->
+            <div class="flex gap-4 md:gap-6 justify-center items-start flex-wrap px-4 relative" data-carousel-slide>
+              <!-- Profile 1 -->
+              <div class="flex flex-col items-center">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-3 hover:shadow-xl transition-shadow">
+                  <div class="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=400&fit=crop" alt="malaporednica82" class="w-full h-full object-cover">
+                    <div class="absolute bottom-3 right-3 w-7 h-7 bg-[#9810FA] rounded-full flex items-center justify-center shadow-lg">
+                      <i class="ri-team-line text-white text-sm"></i>
+                    </div>
+                  </div>
+                  <p class="mt-4 text-base md:text-lg font-medium text-gray-800 dark:text-gray-200 text-center">malaporednica82</p>
+                </div>
+              </div>
+              
+              <!-- Profile 2 -->
+              <div class="flex flex-col items-center">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-3 hover:shadow-xl transition-shadow">
+                  <div class="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=400&fit=crop" alt="Couple.swing.experience" class="w-full h-full object-cover">
+                    <div class="absolute bottom-3 right-3 w-7 h-7 bg-[#9810FA] rounded-full flex items-center justify-center shadow-lg">
+                      <i class="ri-team-line text-white text-sm"></i>
+                    </div>
+                  </div>
+                  <p class="mt-4 text-base md:text-lg font-medium text-gray-800 dark:text-gray-200 text-center">Couple.swing.experience</p>
+                </div>
+              </div>
+              
+              <!-- Profile 3 -->
+              <div class="flex flex-col items-center">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-3 hover:shadow-xl transition-shadow">
+                  <div class="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=400&fit=crop" alt="Par34" class="w-full h-full object-cover">
+                    <div class="absolute bottom-3 right-3 w-7 h-7 bg-[#9810FA] rounded-full flex items-center justify-center shadow-lg">
+                      <i class="ri-team-line text-white text-sm"></i>
+                    </div>
+                  </div>
+                  <p class="mt-4 text-base md:text-lg font-medium text-gray-800 dark:text-gray-200 text-center">Par34</p>
+                </div>
+              </div>
+              
+              <!-- Profile 4 -->
+              <div class="flex flex-col items-center">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-3 hover:shadow-xl transition-shadow">
+                  <div class="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=400&fit=crop" alt="MM2023" class="w-full h-full object-cover">
+                    <div class="absolute bottom-3 right-3 w-7 h-7 bg-[#9810FA] rounded-full flex items-center justify-center shadow-lg">
+                      <i class="ri-team-line text-white text-sm"></i>
+                    </div>
+                  </div>
+                  <p class="mt-4 text-base md:text-lg font-medium text-gray-800 dark:text-gray-200 text-center">MM2023</p>
+                </div>
+              </div>
+              
+              <!-- Profile 5 -->
+              <div class="flex flex-col items-center">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-3 hover:shadow-xl transition-shadow">
+                  <div class="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1521119989659-a83eee488004?w=400&h=400&fit=crop" alt="Kalancek" class="w-full h-full object-cover">
+                    <div class="absolute bottom-3 right-3 w-7 h-7 bg-[#9810FA] rounded-full flex items-center justify-center shadow-lg">
+                      <i class="ri-team-line text-white text-sm"></i>
+                    </div>
+                  </div>
+                  <p class="mt-4 text-base md:text-lg font-medium text-gray-800 dark:text-gray-200 text-center">Kalancek</p>
+                </div>
+              </div>
+              
+              <!-- Profile 6 -->
+              <div class="flex flex-col items-center">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-3 hover:shadow-xl transition-shadow">
+                  <div class="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop" alt="2passionate" class="w-full h-full object-cover">
+                    <div class="absolute bottom-3 right-3 w-7 h-7 bg-[#9810FA] rounded-full flex items-center justify-center shadow-lg">
+                      <i class="ri-team-line text-white text-sm"></i>
+                    </div>
+                  </div>
+                  <p class="mt-4 text-base md:text-lg font-medium text-gray-800 dark:text-gray-200 text-center">2passionate</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Pagination Dots -->
+          <div class="flex justify-center gap-2 mt-8">
+            <button data-carousel-indicator class="w-2 h-2 rounded-full bg-[#9810FA] transition-all"></button>
+            <button data-carousel-indicator class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600 transition-all"></button>
+            <button data-carousel-indicator class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600 transition-all"></button>
+            <button data-carousel-indicator class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600 transition-all"></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- SECTION: Why Choose Us -->
     <section class="py-16 sm:py-20 px-5 bg-gradient-to-b from-white to-[#F9FAFB]">
       <div class="max-w-7xl mx-auto">

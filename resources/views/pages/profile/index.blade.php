@@ -10,7 +10,19 @@
         <div id="main-content" class="flex-1 transition-all duration-300 ease-in-out min-w-0">
             <!-- Profile Tab Content -->
             <div id="tab-profile" class="tab-content">
-                @include('pages.profile.tabs.profile', ['user' => $user, 'profile' => $profile, 'age' => $age, 'joinDate' => $joinDate, 'isOwnProfile' => $isOwnProfile ?? false])
+                @include('pages.profile.tabs.profile', [
+                    'user' => $user, 
+                    'profile' => $profile, 
+                    'age' => $age ?? null, 
+                    'ageHer' => $ageHer ?? null,
+                    'ageHim' => $ageHim ?? null,
+                    'isCouple' => $isCouple ?? false,
+                    'coupleData' => $coupleData ?? [],
+                    'preferences' => $preferences ?? [],
+                    'languages' => $languages ?? [],
+                    'joinDate' => $joinDate, 
+                    'isOwnProfile' => $isOwnProfile ?? false
+                ])
             </div>
             
             <!-- Account Tab Content -->

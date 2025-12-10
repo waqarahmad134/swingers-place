@@ -68,14 +68,18 @@
                     </div>
                     <!-- Gender Preference Icons -->
                     <div class="flex items-center gap-2">
-                        @if($profile && $profile->category === 'couple')
-                            <img src="{{ asset('assets/couple_icon.svg') }}" alt="Couple" class="w-8 h-8">
-                        @elseif($profile && $profile->category === 'single_female')
-                            <img src="{{ asset('assets/female.svg') }}" alt="Female" class="w-8 h-8">
-                        @elseif($profile && $profile->category === 'single_male')
-                            <img src="{{ asset('assets/male.svg') }}" alt="Male" class="w-8 h-8">
-                        @else
-                            <img src="{{ asset('assets/transgender.svg') }}" alt="Transgender" class="w-8 h-8">
+                        @if(!empty($preferences))
+                            @foreach($preferences as $pref)
+                                @if($pref === 'full_swap')
+                                    <img src="{{ asset('assets/couple_icon.svg') }}" alt="Couple" class="w-8 h-8" title="Couple">
+                                @elseif($pref === 'soft_swap')
+                                    <img src="{{ asset('assets/female.svg') }}" alt="Female" class="w-8 h-8" title="Female">
+                                @elseif($pref === 'exhibitionist')
+                                    <img src="{{ asset('assets/male.svg') }}" alt="Male" class="w-8 h-8" title="Male">
+                                @elseif($pref === 'voyeur')
+                                    <img src="{{ asset('assets/transgender.svg') }}" alt="Transgender" class="w-8 h-8" title="Transgender">
+                                @endif
+                            @endforeach
                         @endif
                     </div>
                 </div>
@@ -218,6 +222,92 @@
                             <i class="ri-arrow-right-s-line text-2xl"></i>
                         </button>
                     </div> -->
+                </div>
+            </div>
+
+            <!-- Pending Tasks Section -->
+            @php
+                // Initialize languages variable
+                $languages = $profile && $profile->languages 
+                    ? (is_array($profile->languages) ? $profile->languages : json_decode($profile->languages, true) ?? [])
+                    : [];
+                
+                // Calculate Profile Completion Percentage
+                $profileFields = [
+                    'category' => $profile && $profile->category ? 1 : 0,
+                    'preferences' => $profile && $profile->preferences && !empty($preferences) ? 1 : 0,
+                    'date_of_birth' => $profile && $profile->date_of_birth ? 1 : 0,
+                    'sexuality' => $profile && $profile->sexuality ? 1 : 0,
+                    'relationship_status' => $profile && $profile->relationship_status ? 1 : 0,
+                    'relationship_orientation' => $profile && $profile->relationship_orientation ? 1 : 0,
+                    'home_location' => $profile && $profile->home_location ? 1 : 0,
+                    'country' => $profile && $profile->country ? 1 : 0,
+                    'city' => $profile && $profile->city ? 1 : 0,
+                    'languages' => !empty($languages) ? 1 : 0,
+                    'bio' => $profile && $profile->bio ? 1 : 0,
+                    'weight' => $profile && $profile->weight ? 1 : 0,
+                    'height' => $profile && $profile->height ? 1 : 0,
+                    'body_type' => $profile && $profile->body_type ? 1 : 0,
+                    'eye_color' => $profile && $profile->eye_color ? 1 : 0,
+                    'hair_color' => $profile && $profile->hair_color ? 1 : 0,
+                    'profile_photo' => ($profile && $profile->profile_photo) || ($user->profile_image) ? 1 : 0,
+                ];
+                
+                // For couple profiles, check couple_data fields
+                if ($isCouple && !empty($coupleData)) {
+                    $profileFields['date_of_birth'] = (!empty($coupleData['date_of_birth_her']) || !empty($coupleData['date_of_birth_him'])) ? 1 : $profileFields['date_of_birth'];
+                    $profileFields['sexuality'] = (!empty($coupleData['sexuality_her']) || !empty($coupleData['sexuality_him'])) ? 1 : $profileFields['sexuality'];
+                }
+                
+                $completedFields = array_sum($profileFields);
+                $totalFields = count($profileFields);
+                $profileCompletion = $totalFields > 0 ? round(($completedFields / $totalFields) * 100) : 0;
+                
+                // Calculate Photo Completion Percentage
+                $albumPhotoCount = 0;
+                if ($profile && $profile->album_photos) {
+                    $photos = is_array($profile->album_photos) ? $profile->album_photos : json_decode($profile->album_photos, true) ?? [];
+                    $albumPhotoCount = is_array($photos) ? count($photos) : 0;
+                }
+                
+                $hasProfilePhoto = ($profile && $profile->profile_photo) || ($user->profile_image);
+                
+                // Optimal: 1 profile photo + 5 album photos = 6 photos (100%)
+                $optimalPhotoCount = 6;
+                $currentPhotoCount = ($hasProfilePhoto ? 1 : 0) + min($albumPhotoCount, 5); // Cap album photos at 5 for calculation
+                $photoCompletion = round(($currentPhotoCount / $optimalPhotoCount) * 100);
+            @endphp
+            <div class="md:block hidden flex flex-col bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 md:w-full w-[50px] mt-5 mb-4 border-t border-gray-200 dark:border-gray-700 p-4">
+                <div>
+                    <!-- Title -->
+                    <h3 class="text-gray-900 dark:text-white text-base mb-6">Pending Tasks</h3>
+                    
+                    <!-- Tasks List -->
+                    <div class="space-y-4">
+                        <!-- Task 1: Complete profile -->
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-700 dark:text-gray-300 text-sm font-normal">Complete profile</span>
+                                <span class="text-gray-600 dark:text-gray-400 text-sm font-medium">{{ $profileCompletion }}%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-purple-600 via-purple-500 to-pink-600 rounded-full transition-all duration-300" style="width: {{ $profileCompletion }}%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Task 2: Add photos -->
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-700 dark:text-gray-300 text-sm font-normal">Add photos</span>
+                                <span class="text-gray-600 dark:text-gray-400 text-sm font-medium">{{ $photoCompletion }}%</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-purple-600 via-purple-500 to-pink-600 rounded-full transition-all duration-300" style="width: {{ $photoCompletion }}%"></div>
+                            </div>
+                        </div>
+
+                        
+                    </div>
                 </div>
             </div>
 

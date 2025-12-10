@@ -92,6 +92,10 @@
                                     <i id="eye-icon-password" class="ri-eye-off-line text-xl"></i>
                                 </button>
                             </div>
+                            <!-- Password validation message -->
+                            <div id="password-validation" class="mt-2 hidden">
+                                <p id="password-message" class="text-sm"></p>
+                            </div>
                             @error('password')
                                 <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
@@ -117,6 +121,10 @@
                                 >
                                     <i id="eye-icon-password_confirmation" class="ri-eye-off-line text-xl"></i>
                                 </button>
+                            </div>
+                            <!-- Confirm password validation message -->
+                            <div id="password-confirmation-validation" class="mt-2 hidden">
+                                <p id="password-confirmation-message" class="text-sm"></p>
                             </div>
                         </div>
                     </div>
@@ -766,6 +774,108 @@
                 });
         }
 
+        // Password validation with real-time check
+        const passwordInput = document.getElementById('password');
+        const passwordConfirmationInput = document.getElementById('password_confirmation');
+        const passwordValidation = document.getElementById('password-validation');
+        const passwordMessage = document.getElementById('password-message');
+        const passwordConfirmationValidation = document.getElementById('password-confirmation-validation');
+        const passwordConfirmationMessage = document.getElementById('password-confirmation-message');
+        const signupBtn = document.getElementById('signup-btn');
+        let isPasswordValid = false;
+        let doPasswordsMatch = false;
+
+        function validatePassword() {
+            const password = passwordInput.value;
+            const passwordConfirmation = passwordConfirmationInput.value;
+            
+            // Reset validation states
+            passwordValidation.classList.add('hidden');
+            passwordInput.classList.remove('border-red-500', 'border-green-500');
+            isPasswordValid = false;
+            
+            if (password.length === 0) {
+                return;
+            }
+            
+            // Check password length
+            if (password.length < 8) {
+                passwordValidation.classList.remove('hidden');
+                passwordMessage.textContent = 'Password must be at least 8 characters long';
+                passwordMessage.className = 'text-sm text-red-600 dark:text-red-400';
+                passwordInput.classList.add('border-red-500');
+                passwordInput.classList.remove('border-green-500');
+                isPasswordValid = false;
+            } else {
+                passwordValidation.classList.remove('hidden');
+                passwordMessage.textContent = 'Password is valid';
+                passwordMessage.className = 'text-sm text-green-600 dark:text-green-400';
+                passwordInput.classList.remove('border-red-500');
+                passwordInput.classList.add('border-green-500');
+                isPasswordValid = true;
+            }
+            
+            // Validate password match
+            validatePasswordMatch();
+        }
+
+        function validatePasswordMatch() {
+            const password = passwordInput.value;
+            const passwordConfirmation = passwordConfirmationInput.value;
+            
+            // Reset validation state
+            passwordConfirmationValidation.classList.add('hidden');
+            passwordConfirmationInput.classList.remove('border-red-500', 'border-green-500');
+            doPasswordsMatch = false;
+            
+            if (passwordConfirmation.length === 0) {
+                return;
+            }
+            
+            // Check if passwords match
+            if (password !== passwordConfirmation) {
+                passwordConfirmationValidation.classList.remove('hidden');
+                passwordConfirmationMessage.textContent = 'Passwords do not match';
+                passwordConfirmationMessage.className = 'text-sm text-red-600 dark:text-red-400';
+                passwordConfirmationInput.classList.add('border-red-500');
+                passwordConfirmationInput.classList.remove('border-green-500');
+                doPasswordsMatch = false;
+            } else if (password.length >= 8 && passwordConfirmation.length >= 8) {
+                passwordConfirmationValidation.classList.remove('hidden');
+                passwordConfirmationMessage.textContent = 'Passwords match';
+                passwordConfirmationMessage.className = 'text-sm text-green-600 dark:text-green-400';
+                passwordConfirmationInput.classList.remove('border-red-500');
+                passwordConfirmationInput.classList.add('border-green-500');
+                doPasswordsMatch = true;
+            }
+            
+            // Update sign-up button state
+            updateSignupButtonState();
+        }
+
+        function updateSignupButtonState() {
+            const password = passwordInput.value;
+            const passwordConfirmation = passwordConfirmationInput.value;
+            
+            // Only disable button if passwords have been entered and they don't match or password is less than 8 characters
+            // If fields are empty, keep button enabled (other validations will catch empty fields on submit)
+            if (password.length > 0 || passwordConfirmation.length > 0) {
+                if (password.length < 8 || (passwordConfirmation.length > 0 && password !== passwordConfirmation)) {
+                    signupBtn.disabled = true;
+                    signupBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    signupBtn.classList.remove('hover:shadow-lg', 'hover:scale-[1.02]');
+                } else if (password.length >= 8 && password === passwordConfirmation && passwordConfirmation.length > 0) {
+                    signupBtn.disabled = false;
+                    signupBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    signupBtn.classList.add('hover:shadow-lg', 'hover:scale-[1.02]');
+                }
+            }
+        }
+
+        // Add event listeners to password fields
+        passwordInput.addEventListener('input', validatePassword);
+        passwordConfirmationInput.addEventListener('input', validatePasswordMatch);
+
         // Handle Sign Up button click - show OTP instead of submitting
         document.getElementById('signup-btn').addEventListener('click', function(e) {
             e.preventDefault();
@@ -806,6 +916,35 @@
             if (!isUsernameValid) {
                 alert('Please choose an available username. You can select one of the suggestions if provided.');
                 document.getElementById('username').focus();
+                return false;
+            }
+            
+            // Validate password
+            if (!password) {
+                alert('Password is required. Please enter a password.');
+                passwordInput.focus();
+                validatePassword();
+                return false;
+            }
+            
+            if (password.length < 8) {
+                alert('Password must be at least 8 characters long.');
+                passwordInput.focus();
+                validatePassword();
+                return false;
+            }
+            
+            if (!passwordConfirmation) {
+                alert('Please confirm your password.');
+                passwordConfirmationInput.focus();
+                validatePasswordMatch();
+                return false;
+            }
+            
+            if (password !== passwordConfirmation) {
+                alert('Passwords do not match. Please check and try again.');
+                passwordConfirmationInput.focus();
+                validatePasswordMatch();
                 return false;
             }
             
@@ -896,6 +1035,9 @@
                     document.getElementById('location-section').classList.remove('hidden');
                     document.getElementById('describe-section').classList.remove('hidden');
                     document.getElementById('profile-photo-section').classList.remove('hidden');
+                    
+                    // Pre-select category if type parameter exists in URL
+                    setTimeout(preSelectCategory, 100);
                 } else {
                     otpValidation.classList.remove('hidden');
                     otpMessage.textContent = data.message || 'Invalid verification code. Please try again.';
@@ -986,6 +1128,62 @@
                 }
             });
         });
+
+        // Pre-select category based on URL parameter
+        function preSelectCategory() {
+            // Get type parameter from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('type');
+            
+            if (!type) return;
+            
+            // Map type parameter to category value
+            const typeToCategoryMap = {
+                'couple': 'couple',
+                'single_female': 'single_female',
+                'single_male': 'single_male',
+                'non_binary': 'transsexual'
+            };
+            
+            const categoryValue = typeToCategoryMap[type];
+            if (!categoryValue) return;
+            
+            // Find the category input and select it
+            const categoryInput = document.querySelector(`input[name="category"][value="${categoryValue}"]`);
+            if (categoryInput) {
+                categoryInput.checked = true;
+                // Trigger change event to update UI
+                categoryInput.dispatchEvent(new Event('change'));
+            }
+        }
+
+        // Pre-select category when category section becomes visible (after OTP verification)
+        const categorySectionObserver = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    const categorySection = document.getElementById('category-section');
+                    if (categorySection && !categorySection.classList.contains('hidden')) {
+                        // Category section is now visible, pre-select category
+                        setTimeout(preSelectCategory, 100);
+                        categorySectionObserver.disconnect(); // Stop observing once done
+                    }
+                }
+            });
+        });
+
+        // Start observing the category section
+        const categorySection = document.getElementById('category-section');
+        if (categorySection) {
+            categorySectionObserver.observe(categorySection, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+        }
+
+        // Also pre-select immediately if category section is already visible (in case page loads with it visible)
+        if (categorySection && !categorySection.classList.contains('hidden')) {
+            preSelectCategory();
+        }
 
         // Handle preference selection visual feedback
         document.querySelectorAll('.preference-input').forEach(input => {

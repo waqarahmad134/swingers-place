@@ -75,6 +75,11 @@
       <!-- Right Icons & Actions -->
       <div class="flex items-center gap-3 md:gap-4">
         @auth
+          <!-- Members Link -->
+          <a href="{{ route('dashboard.members') }}" class="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors" title="Members">
+            <i class="ri-group-line text-2xl"></i>
+          </a>
+          
           <!-- Notifications -->
           <a href="#" class="relative p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
             <i class="ri-notification-3-line text-2xl"></i>

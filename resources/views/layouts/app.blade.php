@@ -122,6 +122,170 @@
     @include('components.toast')
 
     @stack('modals')
+    
+    <!-- Complete Profile Modal -->
+    @auth
+        @php
+            $user = Auth::user();
+            $profile = $user->profile;
+            
+            // Calculate Profile Completion Percentage (same logic as profile page)
+            $languages = $profile && $profile->languages 
+                ? (is_array($profile->languages) ? $profile->languages : json_decode($profile->languages, true) ?? [])
+                : [];
+            
+            $preferences = $profile && $profile->preferences 
+                ? (is_array($profile->preferences) ? $profile->preferences : json_decode($profile->preferences, true) ?? [])
+                : [];
+            
+            $isCouple = $profile && $profile->category === 'couple';
+            $coupleData = $profile && $profile->couple_data ? (is_array($profile->couple_data) ? $profile->couple_data : json_decode($profile->couple_data, true) ?? []) : [];
+            
+            $profileFields = [
+                'category' => $profile && $profile->category ? 1 : 0,
+                'preferences' => $profile && $profile->preferences && !empty($preferences) ? 1 : 0,
+                'date_of_birth' => $profile && $profile->date_of_birth ? 1 : 0,
+                'sexuality' => $profile && $profile->sexuality ? 1 : 0,
+                'relationship_status' => $profile && $profile->relationship_status ? 1 : 0,
+                'relationship_orientation' => $profile && $profile->relationship_orientation ? 1 : 0,
+                'home_location' => $profile && $profile->home_location ? 1 : 0,
+                'country' => $profile && $profile->country ? 1 : 0,
+                'city' => $profile && $profile->city ? 1 : 0,
+                'languages' => !empty($languages) ? 1 : 0,
+                'bio' => $profile && $profile->bio ? 1 : 0,
+                'weight' => $profile && $profile->weight ? 1 : 0,
+                'height' => $profile && $profile->height ? 1 : 0,
+                'body_type' => $profile && $profile->body_type ? 1 : 0,
+                'eye_color' => $profile && $profile->eye_color ? 1 : 0,
+                'hair_color' => $profile && $profile->hair_color ? 1 : 0,
+                'profile_photo' => ($profile && $profile->profile_photo) || ($user->profile_image) ? 1 : 0,
+            ];
+            
+            // For couple profiles, check couple_data fields
+            if ($isCouple && !empty($coupleData)) {
+                $profileFields['date_of_birth'] = (!empty($coupleData['date_of_birth_her']) || !empty($coupleData['date_of_birth_him'])) ? 1 : $profileFields['date_of_birth'];
+                $profileFields['sexuality'] = (!empty($coupleData['sexuality_her']) || !empty($coupleData['sexuality_him'])) ? 1 : $profileFields['sexuality'];
+            }
+            
+            $completedFields = array_sum($profileFields);
+            $totalFields = count($profileFields);
+            $profileCompletion = $totalFields > 0 ? round(($completedFields / $totalFields) * 100) : 0;
+            
+            // Show modal ONLY if profile completion is less than 80%
+            // Modal will automatically stop showing once profile reaches 80% or more
+            // Don't show on auth pages or edit profile page
+            $excludedRoutes = ['account.profile.edit', 'login', 'register', 'password.request', 'password.reset'];
+            $isExcludedRoute = false;
+            foreach($excludedRoutes as $route) {
+                if(request()->routeIs($route)) {
+                    $isExcludedRoute = true;
+                    break;
+                }
+            }
+            
+            // Modal shows when completion < 80%, hides automatically when >= 80%
+            $showCompleteProfileModal = $profileCompletion < 80 && !$isExcludedRoute;
+        @endphp
+        
+        @if($showCompleteProfileModal)
+            <div id="complete-profile-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full transform transition-all">
+                    <!-- Modal Header -->
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Complete Your Profile</h3>
+                            <button id="close-complete-profile-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+                                <i class="ri-close-line text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal Body -->
+                    <div class="px-6 py-6">
+                        <div class="text-center mb-6">
+                            <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-full flex items-center justify-center">
+                                <i class="ri-user-settings-line text-4xl text-purple-600 dark:text-purple-400"></i>
+                            </div>
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                                Your profile is {{ $profileCompletion }}% complete
+                            </h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                                Complete your profile to get better matches and connect with more members. Add your photos, preferences, and personal details to stand out!
+                            </p>
+                            
+                            <!-- Progress Bar -->
+                            <div class="mt-4">
+                                <div class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-purple-600 via-purple-500 to-pink-600 rounded-full transition-all duration-300" style="width: {{ $profileCompletion }}%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">{{ $completedFields }} of {{ $totalFields }} fields completed</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Modal Footer -->
+                    <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex gap-3">
+                        <button id="continue-browsing-btn" class="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                            Continue Browsing
+                        </button>
+                        <a href="{{ route('account.profile.edit') }}" class="flex-1 px-4 py-2.5 bg-gradient-to-r from-[#9810FA] to-[#E60076] text-white rounded-xl font-semibold hover:shadow-lg transition-all text-center">
+                            Complete Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const modal = document.getElementById('complete-profile-modal');
+                    const closeBtn = document.getElementById('close-complete-profile-modal');
+                    const continueBtn = document.getElementById('continue-browsing-btn');
+                    
+                    // Show modal on page load (no persistence - will show again on next page visit)
+                    if (modal) {
+                        // Delay showing modal slightly for better UX
+                        setTimeout(function() {
+                            modal.classList.remove('hidden');
+                            document.body.style.overflow = 'hidden';
+                        }, 1000);
+                    }
+                    
+                    function closeModal() {
+                        if (modal) {
+                            modal.classList.add('hidden');
+                            document.body.style.overflow = '';
+                            // No persistence - when user navigates to a new page, modal will show again
+                        }
+                    }
+                    
+                    if (closeBtn) {
+                        closeBtn.addEventListener('click', closeModal);
+                    }
+                    
+                    if (continueBtn) {
+                        continueBtn.addEventListener('click', closeModal);
+                    }
+                    
+                    // Close modal when clicking outside
+                    if (modal) {
+                        modal.addEventListener('click', function(e) {
+                            if (e.target === modal) {
+                                closeModal();
+                            }
+                        });
+                    }
+                    
+                    // Close modal on Escape key
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+                            closeModal();
+                        }
+                    });
+                });
+            </script>
+        @endif
+    @endauth
+
     @stack('scripts')
     
     <!-- Global Settings Toggle Script -->

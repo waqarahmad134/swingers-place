@@ -156,6 +156,17 @@ class ProfileController extends Controller
             $rules['password'] = ['nullable', 'string', 'min:8', 'confirmed'];
             $rules['current_password'] = ['nullable', 'required_with:password', 'string'];
         }
+        
+        // Photo upload validation
+        if ($request->hasFile('non_adult_photos')) {
+            $rules['non_adult_photos.*'] = ['image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'];
+        }
+        if ($request->hasFile('adult_photos')) {
+            $rules['adult_photos.*'] = ['image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'];
+        }
+        if ($request->hasFile('album_photos')) {
+            $rules['album_photos.*'] = ['image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'];
+        }
 
         // Add validation rules for couple fields only if they're present in request
         if ($isCouple) {
@@ -350,6 +361,97 @@ class ProfileController extends Controller
                 $profile->intelligence_important = $validated['intelligence_important'];
             }
         }
+        
+        // Handle photo uploads (Adult, Non-Adult, Album)
+        $albumPhotos = $profile->album_photos 
+            ? (is_array($profile->album_photos) ? $profile->album_photos : json_decode($profile->album_photos, true) ?? [])
+            : [];
+        
+        // Initialize structure if needed
+        if (!isset($albumPhotos['adult'])) $albumPhotos['adult'] = [];
+        if (!isset($albumPhotos['non_adult'])) $albumPhotos['non_adult'] = [];
+        if (!isset($albumPhotos['album'])) $albumPhotos['album'] = [];
+        
+        // Handle Non-Adult Photos
+        $existingNonAdult = $request->input('existing_non_adult_photos', []);
+        $deletedNonAdult = $request->input('deleted_non_adult_photos', []);
+        
+        // Filter out deleted photos from existing
+        $albumPhotos['non_adult'] = array_filter($existingNonAdult, function($photo) use ($deletedNonAdult) {
+            return !in_array($photo, $deletedNonAdult);
+        });
+        
+        // Add new uploaded photos
+        if ($request->hasFile('non_adult_photos')) {
+            foreach ($request->file('non_adult_photos') as $file) {
+                $path = $file->store('photos/non-adult', 'public');
+                $albumPhotos['non_adult'][] = $path;
+            }
+        }
+        
+        // Delete removed non-adult photos from storage
+        foreach ($deletedNonAdult as $photoPath) {
+            if (Storage::disk('public')->exists($photoPath)) {
+                Storage::disk('public')->delete($photoPath);
+            }
+        }
+        
+        $albumPhotos['non_adult'] = array_values($albumPhotos['non_adult']); // Re-index
+        
+        // Handle Adult Photos
+        $existingAdult = $request->input('existing_adult_photos', []);
+        $deletedAdult = $request->input('deleted_adult_photos', []);
+        
+        // Filter out deleted photos from existing
+        $albumPhotos['adult'] = array_filter($existingAdult, function($photo) use ($deletedAdult) {
+            return !in_array($photo, $deletedAdult);
+        });
+        
+        // Add new uploaded photos
+        if ($request->hasFile('adult_photos')) {
+            foreach ($request->file('adult_photos') as $file) {
+                $path = $file->store('photos/adult', 'public');
+                $albumPhotos['adult'][] = $path;
+            }
+        }
+        
+        // Delete removed adult photos from storage
+        foreach ($deletedAdult as $photoPath) {
+            if (Storage::disk('public')->exists($photoPath)) {
+                Storage::disk('public')->delete($photoPath);
+            }
+        }
+        
+        $albumPhotos['adult'] = array_values($albumPhotos['adult']); // Re-index
+        
+        // Handle Album Photos
+        $existingAlbum = $request->input('existing_album_photos', []);
+        $deletedAlbum = $request->input('deleted_album_photos', []);
+        
+        // Filter out deleted photos from existing
+        $albumPhotos['album'] = array_filter($existingAlbum, function($photo) use ($deletedAlbum) {
+            return !in_array($photo, $deletedAlbum);
+        });
+        
+        // Add new uploaded photos
+        if ($request->hasFile('album_photos')) {
+            foreach ($request->file('album_photos') as $file) {
+                $path = $file->store('photos/album', 'public');
+                $albumPhotos['album'][] = $path;
+            }
+        }
+        
+        // Delete removed album photos from storage
+        foreach ($deletedAlbum as $photoPath) {
+            if (Storage::disk('public')->exists($photoPath)) {
+                Storage::disk('public')->delete($photoPath);
+            }
+        }
+        
+        $albumPhotos['album'] = array_values($albumPhotos['album']); // Re-index
+        
+        // Update album_photos in profile
+        $profile->album_photos = $albumPhotos;
         
         $profile->save();
 

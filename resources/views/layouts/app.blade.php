@@ -29,7 +29,21 @@
       rel="stylesheet"
     />
 
+    <!-- Google Font: Leckeri One -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Leckerli+One&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Google Font: Grand Hotel -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="{{ asset('public/style.css') }}">
+
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         /* Ensure user dropdown hover works */

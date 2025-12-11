@@ -81,10 +81,10 @@
           </a>
           
           <!-- Notifications -->
-          <a href="#" class="relative p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+          <!-- <a href="#" class="relative p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
             <i class="ri-notification-3-line text-2xl"></i>
             <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-          </a>
+          </a> -->
           
           <!-- Messages -->
           <a href="{{ route('messages.index') }}" class="relative p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
@@ -95,9 +95,9 @@
           </a>
           
           <!-- Friends/Requests -->
-          <a href="#" class="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
+          <!-- <a href="#" class="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
             <i class="ri-user-add-line text-2xl"></i>
-          </a>
+          </a> -->
           
           <!-- Theme Toggle -->
           <button id="theme-toggle" data-theme-toggle aria-label="Toggle theme" class="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
@@ -109,6 +109,13 @@
           <button id="settings-toggle-btn" class="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors" title="Settings">
             <i class="ri-settings-3-line text-2xl"></i>
           </button>
+
+        <form method="POST" action="{{ Route::has('logout') ? route('logout') : url('/logout') }}">
+            @csrf
+            <button type="submit" class="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors" title="Logout">
+                <i class="ri-logout-box-line text-2xl"></i>
+            </button>
+        </form>
           
           <!-- User Avatar Dropdown -->
           <div class="relative group">

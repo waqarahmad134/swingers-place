@@ -1,964 +1,594 @@
 @extends('layouts.app')
 @section('full-width')
     
-    <!-- hero section -->
-    <section class="hero relative overflow-hidden">
-      <div
-        class="flex flex-col md:flex-row items-center justify-between md:px-20 px-5 py-12 md:py-0 bg-gradient-to-br from-[#8B1538] via-[#A41F4D] to-[#8B1538] relative"
-        style="height: 650px; background-image: url('{{ asset('assets/banner.png') }}'); background-size: cover; background-position: right center; background-repeat: no-repeat;"
-      >
-        
-        <!-- Left Content -->
-        <div class="w-full md:w-1/2 z-10 relative">
-          <!-- heading -->
-          <div class="text-center md:text-left">
-            <h1 class="text-5xl md:text-7xl font-bold text-white mb-4" style="font-weight: 700; line-height: 1.2;">
-              Dating for Naughty<br>Adults
-            </h1>
-          </div>
 
-          <!-- paragraph -->
-          <p class="text-white text-base md:text-lg text-center md:text-left mb-6">
-            Meet real people nearby who are ready for genuine connections
-          </p>
+<!-- SECTION: Hero -->
+<section class="relative min-h-screen flex items-center justify-center pb-10 overflow-hidden">
 
-          <!-- Free Sign Up Label -->
-          <h3 class="text-white text-center md:text-left text-lg font-semibold mb-4">
-            Free Sign Up
-          </h3>
+    <!-- Background Video -->
+    <video class="absolute inset-0 w-full h-full object-cover z-0" autoplay muted loop playsinline>
+        <source src="{{ asset('assets/bg-video.mp4') }}" type="video/mp4">
+    </video>
 
-          <!-- Sign Up Buttons Grid -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-            <a
-              href="{{ route('register') }}?type=couple"
-              class="px-6 py-4 bg-white rounded-lg text-[#8B1538] font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
-            >
-              <i class="ri-team-line text-xl"></i> We are a Couple
-            </a>
-            <a
-              href="{{ route('register') }}?type=single_female"
-              class="px-6 py-4 bg-white rounded-lg text-[#E60076] font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
-            >
-              <i class="ri-women-line text-xl"></i> I'm a Single Female
-            </a>
-            <a
-              href="{{ route('register') }}?type=single_male"
-              class="px-6 py-4 bg-white rounded-lg text-[#8B1538] font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
-            >
-              <i class="ri-user-3-line text-xl"></i> I'm a Single Male
-            </a>
-            <a
-              href="{{ route('register') }}?type=non_binary"
-              class="px-6 py-4 bg-white rounded-lg text-[#E60076] font-semibold flex items-center justify-center gap-2 hover:bg-gray-100 transition"
-            >
-              <i class="ri-genderless-line text-xl"></i> Non-binary
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- Dark Overlay -->
+    <div class="absolute inset-0 bg-black/50 z-10"></div>
 
-    <!-- SECTION: Choose Your Path -->
-    {{--<section class="py-20 sm:px-0 px-5">
-      <div class="pb-[64px] mx-auto sm:max-w-[730px] max-w-full">
-        <h2
-          class="pb-6 text-[rgba(16,24,40,1)] font-arimo font-normal text-4xl leading-none tracking-normal text-center"
-        >
-          Choose Your Path
-        </h2>
+    <div class="relative z-10 mt-32 flex flex-col text-center px-4">
 
-        <p
-          class="font-arimo font-normal text-xl leading-7 tracking-normal text-center mx-auto text-[rgba(74,85,101,1)]"
-        >
-          Whether you're an individual, couple, or business, we have the perfect
-          profile type for you
-        </p>
-      </div>
-
-      <!-- CARDS -->
-      <div class="flex sm:flex-row flex-col gap-[34px] sm:max-w-[1024px] max-w-full mx-auto">
-        <div class="border-2 border-gray-200 rounded-3xl p-8">
-          <img class="size-[64px] mb-6" src="assets/person.png" alt="person" />
-          <h3 class="font-arimo font-normal text-3xl leading-9 tracking-normal">
-            Personal Profile
-          </h3>
-          <p class="mt-3 text-[rgba(74,85,101,1)] leading-[24px]">
-            Join as an individual or couple to connect with like-minded people.
-            Perfect for dating, friendships, and social connections.
-          </p>
-
-          <div class="mt-6 flex flex-col gap-4">
-            <div class="flex gap-2">
-              <i
-                class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"
-              ></i>
-              <p class="text-[rgba(54,65,83,1)]">Smart matchings</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i
-                class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"
-              ></i>
-              <p class="text-[rgba(54,65,83,1)]">Event access</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i
-                class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"
-              ></i>
-              <p class="text-[rgba(54,65,83,1)]">Private messaging</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i
-                class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"
-              ></i>
-              <p class="text-[rgba(54,65,83,1)]">Video calls</p>
-            </div>
-          </div>
-
-          <button
-            class="mt-8 flex items-center justify-center h-10 px-4 rounded-full w-full text-white font-arimo font-normal text-sm leading-5 tracking-normal text-center bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)]"
-          >
-            Create Personal Profile
-          </button>
-        </div>
-
-        <div class="border-2 border-gray-200 rounded-3xl p-8">
-          <img
-            class="size-[64px] mb-6"
-            src="assets/business.png"
-            alt="person"
-          />
-          <h3 class="font-arimo font-normal text-3xl leading-9 tracking-normal">
-            Business Profile
-          </h3>
-          <p class="mt-3 text-[rgba(74,85,101,1)] leading-[24px]">
-            Promote your venue, events, or services to our engaged community.
-            Perfect for clubs, resorts, and service providers.
-          </p>
-
-          <div class="mt-6 flex flex-col gap-4">
-            <div class="flex gap-2">
-              <i class="text-[rgba(230,0,118,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Event promotion</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(230,0,118,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Business analytics</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(230,0,118,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Direct bookings</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(230,0,118,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Featured listings</p>
-            </div>
-          </div>
-
-          <button
-            class="mt-8 flex items-center justify-center h-10 px-4 rounded-full w-full text-white font-arimo font-normal text-sm leading-5 tracking-normal text-center bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)]"
-          >
-            Create Business Profile
-          </button>
-        </div>
-      </div>
-    </section>--}}
-
-    <!-- SECTION: Featured Profiles Carousel -->
-    <section class="py-16 sm:py-20 px-5 bg-white dark:bg-gray-900">
-      <div class="max-w-7xl mx-auto">
-        <div class="relative" data-carousel data-carousel-autoplay="true" data-carousel-interval="5000">
-          <!-- Carousel Container -->
-          <div class="relative overflow-hidden min-h-[350px]">
-            <!-- Slide 1 - First 6 profiles -->
-            <div class="flex gap-4 md:gap-6 justify-center items-start flex-wrap px-4 relative" data-carousel-slide>
-              <!-- Profile 1 -->
-              <div class="flex flex-col items-center">
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-3 hover:shadow-xl transition-shadow">
-                  <div class="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-lg overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=400&fit=crop" alt="malaporednica82" class="w-full h-full object-cover">
-                    <div class="absolute bottom-3 right-3 w-7 h-7 bg-[#9810FA] rounded-full flex items-center justify-center shadow-lg">
-                      <i class="ri-team-line text-white text-sm"></i>
-                    </div>
-                  </div>
-                  <p class="mt-4 text-base md:text-lg font-medium text-gray-800 dark:text-gray-200 text-center">malaporednica82</p>
-                </div>
-              </div>
-              
-              <!-- Profile 2 -->
-              <div class="flex flex-col items-center">
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-3 hover:shadow-xl transition-shadow">
-                  <div class="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-lg overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=400&fit=crop" alt="Couple.swing.experience" class="w-full h-full object-cover">
-                    <div class="absolute bottom-3 right-3 w-7 h-7 bg-[#9810FA] rounded-full flex items-center justify-center shadow-lg">
-                      <i class="ri-team-line text-white text-sm"></i>
-                    </div>
-                  </div>
-                  <p class="mt-4 text-base md:text-lg font-medium text-gray-800 dark:text-gray-200 text-center">Couple.swing.experience</p>
-                </div>
-              </div>
-              
-              <!-- Profile 3 -->
-              <div class="flex flex-col items-center">
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-3 hover:shadow-xl transition-shadow">
-                  <div class="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-lg overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&h=400&fit=crop" alt="Par34" class="w-full h-full object-cover">
-                    <div class="absolute bottom-3 right-3 w-7 h-7 bg-[#9810FA] rounded-full flex items-center justify-center shadow-lg">
-                      <i class="ri-team-line text-white text-sm"></i>
-                    </div>
-                  </div>
-                  <p class="mt-4 text-base md:text-lg font-medium text-gray-800 dark:text-gray-200 text-center">Par34</p>
-                </div>
-              </div>
-              
-              <!-- Profile 4 -->
-              <div class="flex flex-col items-center">
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-3 hover:shadow-xl transition-shadow">
-                  <div class="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-lg overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=400&fit=crop" alt="MM2023" class="w-full h-full object-cover">
-                    <div class="absolute bottom-3 right-3 w-7 h-7 bg-[#9810FA] rounded-full flex items-center justify-center shadow-lg">
-                      <i class="ri-team-line text-white text-sm"></i>
-                    </div>
-                  </div>
-                  <p class="mt-4 text-base md:text-lg font-medium text-gray-800 dark:text-gray-200 text-center">MM2023</p>
-                </div>
-              </div>
-              
-              <!-- Profile 5 -->
-              <div class="flex flex-col items-center">
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-3 hover:shadow-xl transition-shadow">
-                  <div class="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-lg overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1521119989659-a83eee488004?w=400&h=400&fit=crop" alt="Kalancek" class="w-full h-full object-cover">
-                    <div class="absolute bottom-3 right-3 w-7 h-7 bg-[#9810FA] rounded-full flex items-center justify-center shadow-lg">
-                      <i class="ri-team-line text-white text-sm"></i>
-                    </div>
-                  </div>
-                  <p class="mt-4 text-base md:text-lg font-medium text-gray-800 dark:text-gray-200 text-center">Kalancek</p>
-                </div>
-              </div>
-              
-              <!-- Profile 6 -->
-              <div class="flex flex-col items-center">
-                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg p-3 hover:shadow-xl transition-shadow">
-                  <div class="relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-lg overflow-hidden">
-                    <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop" alt="2passionate" class="w-full h-full object-cover">
-                    <div class="absolute bottom-3 right-3 w-7 h-7 bg-[#9810FA] rounded-full flex items-center justify-center shadow-lg">
-                      <i class="ri-team-line text-white text-sm"></i>
-                    </div>
-                  </div>
-                  <p class="mt-4 text-base md:text-lg font-medium text-gray-800 dark:text-gray-200 text-center">2passionate</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Pagination Dots -->
-          <div class="flex justify-center gap-2 mt-8">
-            <button data-carousel-indicator class="w-2 h-2 rounded-full bg-[#9810FA] transition-all"></button>
-            <button data-carousel-indicator class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600 transition-all"></button>
-            <button data-carousel-indicator class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600 transition-all"></button>
-            <button data-carousel-indicator class="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600 transition-all"></button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION: Why Choose Us -->
-    <section class="py-16 sm:py-20 px-5 bg-gradient-to-b from-white to-[#F9FAFB]">
-      <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-12">
-          <div class="inline-block bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 px-4 py-1.5 rounded-full mb-4">
-            <span class="text-[#9810FA] dark:text-purple-400 text-sm font-semibold">Why Choose Us</span>
-          </div>
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Find Your Perfect Match
-          </h2>
-          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Join a community where genuine connections happen. Experience dating reimagined with safety, authenticity, and excitement.
-          </p>
-        </div>
-
-        <!-- Feature Cards Grid -->
-        <div class="grid md:grid-cols-3 grid-cols-1 gap-6 mb-12">
-          <!-- Card 1 -->
-          <div class="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-bl-3xl rounded-tr-2xl opacity-50"></div>
-            <div class="relative">
-              <div class="w-16 h-16 bg-gradient-to-br from-[#9810FA] to-[#E60076] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <i class="ri-heart-3-fill text-white text-2xl"></i>
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Smart Matching</h3>
-              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Our advanced algorithm learns your preferences and connects you with people who share your interests, values, and lifestyle.
-              </p>
-            </div>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 rounded-bl-3xl rounded-tr-2xl opacity-50"></div>
-            <div class="relative">
-              <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <i class="ri-shield-check-fill text-white text-2xl"></i>
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">100% Verified</h3>
-              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Every member is verified through identity and photo verification. Your safety and privacy are our top priorities.
-              </p>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-pink-100 to-rose-100 dark:from-pink-900/30 dark:to-rose-900/30 rounded-bl-3xl rounded-tr-2xl opacity-50"></div>
-            <div class="relative">
-              <div class="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <i class="ri-video-chat-fill text-white text-2xl"></i>
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Video Chat</h3>
-              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Connect face-to-face before meeting in person. Built-in video calls let you build trust and chemistry safely.
-              </p>
-            </div>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-orange-100 to-amber-100 dark:from-orange-900/30 dark:to-amber-900/30 rounded-bl-3xl rounded-tr-2xl opacity-50"></div>
-            <div class="relative">
-              <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <i class="ri-calendar-event-fill text-white text-2xl"></i>
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Exclusive Events</h3>
-              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Join curated events, parties, and meetups. Plan travel adventures and connect with members worldwide.
-              </p>
-            </div>
-          </div>
-
-          <!-- Card 5 -->
-          <div class="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-bl-3xl rounded-tr-2xl opacity-50"></div>
-            <div class="relative">
-              <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <i class="ri-message-3-fill text-white text-2xl"></i>
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Instant Messaging</h3>
-              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Real-time chat with photos, voice messages, and read receipts. Stay connected wherever you are.
-              </p>
-            </div>
-          </div>
-
-          <!-- Card 6 -->
-          <div class="group relative bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500">
-            <div class="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 rounded-bl-3xl rounded-tr-2xl opacity-50"></div>
-            <div class="relative">
-              <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <i class="ri-global-line text-white text-2xl"></i>
-              </div>
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3">Global Network</h3>
-              <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                Connect with thousands of verified members worldwide. Find local matches or plan international meetups.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- How it works -->
-    <section class="py-16 sm:py-20 px-5 bg-white dark:bg-gray-900">
-      <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-12">
-          <div class="inline-block bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 px-4 py-1.5 rounded-full mb-4">
-            <span class="text-[#9810FA] dark:text-purple-400 text-sm font-semibold">Simple Steps</span>
-          </div>
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            How It Works
-          </h2>
-          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            Start your journey to meaningful connections in just four easy steps
-          </p>
-        </div>
-
-        <!-- Steps Timeline -->
-        <div class="relative">
-          <!-- Connection Line (hidden on mobile) -->
-          <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#9810FA] via-[#E60076] to-[#9810FA] transform -translate-x-1/2" style="height: calc(100% - 80px); margin-top: 40px;"></div>
-
-          <div class="space-y-12 md:space-y-16">
-            <!-- Step 1 -->
-            <div class="relative flex flex-col md:flex-row items-center gap-6 md:gap-8">
-              <div class="flex-shrink-0 w-full md:w-auto">
-                <div class="bg-gradient-to-br from-[#9810FA] to-[#E60076] rounded-2xl p-6 md:p-8 shadow-xl w-full md:w-64 h-48 md:h-56 flex items-center justify-center group hover:scale-105 transition-transform">
-                  <div class="text-center">
-                    <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
-                      <i class="ri-user-add-line text-white text-3xl"></i>
-                    </div>
-                    <span class="text-white text-sm font-semibold">Step 1</span>
-                  </div>
-                </div>
-              </div>
-              <div class="flex-1 bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 dark:border-gray-700">
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="w-8 h-8 bg-gradient-to-br from-[#9810FA] to-[#E60076] rounded-full flex items-center justify-center text-white font-bold">1</span>
-                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Create Your Profile</h3>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Sign up in minutes with our simple onboarding process. Add your photos, share your interests, and tell us what you're looking for. Your profile is your first impression - make it count!
-                </p>
-              </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="relative flex flex-col md:flex-row-reverse items-center gap-6 md:gap-8">
-              <div class="flex-shrink-0 w-full md:w-auto">
-                <div class="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl p-6 md:p-8 shadow-xl w-full md:w-64 h-48 md:h-56 flex items-center justify-center group hover:scale-105 transition-transform">
-                  <div class="text-center">
-                    <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
-                      <i class="ri-shield-check-line text-white text-3xl"></i>
-                    </div>
-                    <span class="text-white text-sm font-semibold">Step 2</span>
-                  </div>
-                </div>
-              </div>
-              <div class="flex-1 bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 dark:border-gray-700">
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold">2</span>
-                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Get Verified</h3>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Complete our quick verification process to build trust with other members. Verified profiles get more matches and access to premium features. Safety first, always.
-                </p>
-              </div>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="relative flex flex-col md:flex-row items-center gap-6 md:gap-8">
-              <div class="flex-shrink-0 w-full md:w-auto">
-                <div class="bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl p-6 md:p-8 shadow-xl w-full md:w-64 h-48 md:h-56 flex items-center justify-center group hover:scale-105 transition-transform">
-                  <div class="text-center">
-                    <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
-                      <i class="ri-search-heart-line text-white text-3xl"></i>
-                    </div>
-                    <span class="text-white text-sm font-semibold">Step 3</span>
-                  </div>
-                </div>
-              </div>
-              <div class="flex-1 bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 dark:border-gray-700">
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="w-8 h-8 bg-gradient-to-br from-pink-500 to-rose-500 rounded-full flex items-center justify-center text-white font-bold">3</span>
-                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Discover Matches</h3>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Browse through verified profiles, receive personalized match suggestions, and use advanced filters to find exactly what you're looking for. Your perfect match is just a swipe away.
-                </p>
-              </div>
-            </div>
-
-            <!-- Step 4 -->
-            <div class="relative flex flex-col md:flex-row-reverse items-center gap-6 md:gap-8">
-              <div class="flex-shrink-0 w-full md:w-auto">
-                <div class="bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl p-6 md:p-8 shadow-xl w-full md:w-64 h-48 md:h-56 flex items-center justify-center group hover:scale-105 transition-transform">
-                  <div class="text-center">
-                    <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform">
-                      <i class="ri-hearts-line text-white text-3xl"></i>
-                    </div>
-                    <span class="text-white text-sm font-semibold">Step 4</span>
-                  </div>
-                </div>
-              </div>
-              <div class="flex-1 bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 dark:border-gray-700">
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="w-8 h-8 bg-gradient-to-br from-orange-500 to-amber-500 rounded-full flex items-center justify-center text-white font-bold">4</span>
-                  <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Connect & Meet</h3>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Start conversations, video chat to build chemistry, and arrange meetups at events or private locations. We provide the tools - you create the magic. Remember to always meet safely!
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION: Everything You Need to Connect -->
-    {{--<section class="bg-[linear-gradient(135deg,#FAF5FF_0%,#FDF2F8_100%)] py-[32px] sm:px-0 px-5 bg-[#F9FAFB]">
-      <div class="pb-[64px] mx-auto sm:max-w-[700px] max-w-full">
-        <div
-          class="bg-[rgba(243,232,255,1)] py-[2px] max-w-[62px] mx-auto mb-6 px-[7px] text-[rgba(130,0,219,1)] rounded-xl"
-        >
-          <h2 class="text-xs font-thin leading-[16px]">Testimonials</h2>
-        </div>
-        <h2
-          class="pb-6 text-[rgba(16,24,40,1)] font-arimo font-normal text-4xl leading-none tracking-normal text-center"
-        >
-          Loved by Our Community
-        </h2>
-
-        <p
-          class="font-arimo font-normal text-xl leading-7 tracking-normal text-center text-[rgba(74,85,101,1)]"
-        >
-          See what our members have to say about their experience
-        </p>
-      </div>
-
-      <div
-        class="sm:max-w-[1280px] max-w-full grid md:grid-cols-3 grid-cols-1 gap-8 mx-auto"
-      >
-        <div
-          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
-        >
-          <img src="assets/quote.png" class="size-[40px]" alt="heart" />
-          <p class="text-[#4A5565] leading-[24px]">
-            We've met amazing people through swingers place! The verification system
-            makes us feel safe, and the events are fantastic. Best platform
-            we've tried!
-          </p>
-          <img
-            src="assets/stars.png"
-            class="h-auto object-cover md:h-5"
-            alt="heart"
-          />
-
-          <div class="flex gap-4 items-center">
-            <img src="assets/sm-name.png" class="size-[48px]" alt="heart" />
-            <div>
-              <h6 class="text-[#101828] leading-[24px]">Sarah & Mike</h6>
-              <p class="text-[#4A5565] text-sm">Couple Member</p>
-            </div>
-          </div>
-        </div>
-
-        <div
-          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
-        >
-          <img src="assets/quote.png" class="size-[40px]" alt="heart" />
-          <p class="text-[#4A5565] leading-[24px]">
-            The community here is genuine and respectful. I love the travel
-            planning features - I've made connections in 5 different countries!
-          </p>
-          <img
-            src="assets/stars.png"
-            class="h-auto object-cover md:h-5"
-            alt="heart"
-          />
-
-          <div class="flex gap-4 items-center">
-            <img src="assets/jm name.png" class="size-[48px]" alt="heart" />
-            <div>
-              <h6 class="text-[#101828] leading-[24px]">Jessica Moore</h6>
-              <p class="text-[#4A5565] text-sm">Premium Member</p>
-            </div>
-          </div>
-        </div>
-
-        <div
-          class="bg-white flex flex-col gap-[48px] p-8 border-[#E5E7EB] border rounded-2xl"
-        >
-          <img src="assets/quote.png" class="size-[40px]" alt="heart" />
-          <p class="text-[#4A5565] leading-[24px]">
-            swingers place has been incredible for our business. We host monthly
-            events and the platform makes it easy to reach engaged members.
-          </p>
-          <img
-            src="assets/stars.png"
-            class="h-auto object-cover md:h-5"
-            alt="heart"
-          />
-
-          <div class="flex gap-4 items-center">
-            <img src="assets/bp name.png" class="size-[48px]" alt="heart" />
-            <div>
-              <h6 class="text-[#101828] leading-[24px]">
-                Beach Paradise Resort
-              </h6>
-              <p class="text-[#4A5565] text-sm">Business Member</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>--}}
-
-    {{--<section class="py-20 sm:px-0 px-5">
-      <div class="pb-[64px] mx-auto sm:max-w-[700px] max-w-full">
-        <div class="bg-[rgba(243,232,255,1)] py-[2px] max-w-[62px] mx-auto mb-6 px-[7px] text-[rgba(130,0,219,1)] rounded-xl">
-          <h2 class="text-xs font-thin leading-[16px] text-center">Pricing</h2>
-        </div>
-        <h2 class="pb-6 text-[rgba(16,24,40,1)] font-arimo font-normal text-4xl leading-none tracking-normal text-center">
-          Choose Your Plan
-        </h2>
-
-        <p class="font-arimo font-normal text-xl leading-7 tracking-normal text-center text-[rgba(74,85,101,1)]">
-          Start free, upgrade when you're ready. Cancel anytime.
-        </p>
-      </div>
-
-      <!-- CARDS -->
-      <div class="sm:max-w-[1280px] max-w-full grid md:grid-cols-3 grid-cols-1 gap-8 mx-auto">
-        <!-- free -->
-        <div class="bg-white flex flex-col p-8 border-[#E5E7EB] border rounded-2xl">
-          <h3 class="text-[#101828] text-center text-xl pb-2">Basic</h3>
-          <p class="text-[#4A5565] text-center leading-[24px]">
-            Perfect for getting started
-          </p>
-
-          <p class="text-[#101828] text-center pb-2 text-[48px]">Free</p>
-          <p class="text-[#4A5565] text-center leading-[24px]">forever</p>
-
-          <div class="flex flex-col gap-4 pt-[56px]">
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Smart matchings</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Create profile</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Create profile</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Join public events</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Basic search filters</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Community forum access</p>
-            </div>
-          </div>
-
-          <button class="bg-[#F3F4F6] h-[48px] rounded-full mt-[56px] text-black">
-            Get Started
-          </button>
-        </div>
-
-        <!-- Premium -->
-        <div class="scale-[1.05] relatives border-2 border-[#9810FA] bg-white flex flex-col p-8 rounded-2xl shadow-[0px_25px_50px_-12px_#00000040]">
-          <span class="-mt-[41px] mb-[21px] text-white bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)] py-0.5 text-xs w-[96px] rounded-xl text-center mx-auto">Most Popular</span>
-          <h3 class="text-[#101828] text-center text-xl pb-2">Premium</h3>
-          <p class="text-[#4A5565] text-center leading-[D24px]">
-            Most popular choice
-          </p>
-
-          <p class="text-[#101828] text-center pb-2 text-[48px]">$29</p>
-          <p class="text-[#4A5565] text-center leading-[24px]">per month</p>
-
-          <div class="flex flex-col gap-4 pt-[56px]">
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Everything in Basic</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Unlimited messaging</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Advanced search filters</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">See who viewed you</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Priority in search results</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Video calls included</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Exclusive events access</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Verified badge</p>
-            </div>
-          </div>
-
-          <button class="bg-[linear-gradient(90deg,#9810FA_0%,#E60076_100%)] h-[48px] rounded-full mt-[56px] text-white">
-            Upgrade Now
-          </button>
-        </div>
-
-        <!-- VIP -->
-        <div class="bg-white flex flex-col p-8 border-[#E5E7EB] border rounded-2xl">
-          <h3 class="text-[#101828] text-center text-xl pb-2">VIP</h3>
-          <p class="text-[#4A5565] text-center leading-[24px]">
-            The ultimate experience
-          </p>
-
-          <p class="text-[#101828] text-center pb-2 text-[48px]">$99</p>
-          <p class="text-[#4A5565] text-center leading-[24px]">per month</p>
-
-          <div class="flex flex-col gap-4 pt-[56px]">
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Smart matchings</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Create profile</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Create profile</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Join public events</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Basic search filters</p>
-            </div>
-
-            <div class="flex gap-2">
-              <i class="text-[rgba(152,16,250,1)] text-normal ri-check-fill"></i>
-              <p class="text-[rgba(54,65,83,1)]">Community forum access</p>
-            </div>
-          </div>
-
-          <button class="bg-[#F3F4F6] h-[48px] rounded-full mt-[56px] text-black">
-            Upgrade Now
-          </button>
-        </div>
-      </div>
-    </section>--}}
-
-    <!-- Section: Success Stories / Testimonials -->
-    <section class="py-16 sm:py-20 px-5 bg-gradient-to-b from-[#F9FAFB] to-white dark:from-gray-900 dark:to-gray-800">
-      <div class="max-w-7xl mx-auto">
-        <div class="text-center mb-12">
-          <div class="inline-block bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 px-4 py-1.5 rounded-full mb-4">
-            <span class="text-[#9810FA] dark:text-purple-400 text-sm font-semibold">Success Stories</span>
-          </div>
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Real Connections, Real Stories
-          </h2>
-          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            See how our members are finding meaningful relationships and unforgettable experiences
-          </p>
-        </div>
-
-        <div class="grid md:grid-cols-3 grid-cols-1 gap-6">
-          <!-- Testimonial 1 -->
-          <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-2xl transition-all">
-            <div class="flex items-center gap-1 mb-4">
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-            </div>
-            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
-              "We've met incredible people through this platform! The verification system gives us confidence, and the events are always amazing. Best decision we made!"
-            </p>
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-rose-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                SM
-              </div>
-              <div>
-                <h4 class="font-semibold text-gray-900 dark:text-white">Sarah & Mike</h4>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Verified Couple</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Testimonial 2 -->
-          <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-2xl transition-all">
-            <div class="flex items-center gap-1 mb-4">
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-            </div>
-            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
-              "The community here is genuine and respectful. I love how easy it is to connect with people who share my interests. Made friends in 5 different countries!"
-            </p>
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                JM
-              </div>
-              <div>
-                <h4 class="font-semibold text-gray-900 dark:text-white">Jessica M.</h4>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Premium Member</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Testimonial 3 -->
-          <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-2xl transition-all">
-            <div class="flex items-center gap-1 mb-4">
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-              <i class="ri-star-fill text-yellow-400"></i>
-            </div>
-            <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
-              "As someone new to this lifestyle, I was nervous at first. But the platform made it so easy to meet like-minded people. The video chat feature helped me feel comfortable before meeting in person."
-            </p>
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                AL
-              </div>
-              <div>
-                <h4 class="font-semibold text-gray-900 dark:text-white">Alex L.</h4>
-                <p class="text-sm text-gray-500 dark:text-gray-400">New Member</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section: FAQ -->
-    <section class="py-16 sm:py-20 px-5 bg-white dark:bg-gray-900">
-      <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-12">
-          <div class="inline-block bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 px-4 py-1.5 rounded-full mb-4">
-            <span class="text-[#9810FA] dark:text-purple-400 text-sm font-semibold">Got Questions?</span>
-          </div>
-          <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-            Frequently Asked Questions
-          </h2>
-          <p class="text-lg text-gray-600 dark:text-gray-400">
-            Everything you need to know to get started
-          </p>
-        </div>
-
-        <div class="space-y-4">
-          <!-- FAQ 1 -->
-          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500 transition-all shadow-sm">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-              <i class="ri-shield-check-line text-[#9810FA]"></i>
-              Is the platform safe and secure?
-            </h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Absolutely! We use industry-leading security measures including identity verification, photo verification, encrypted communications, and strict community guidelines. Our dedicated moderation team reviews all content and responds to reports within 24 hours. Your privacy and safety are our top priorities.
-            </p>
-          </div>
-
-          <!-- FAQ 2 -->
-          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500 transition-all shadow-sm">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-              <i class="ri-user-line text-[#9810FA]"></i>
-              How do I create a profile?
-            </h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Creating a profile is quick and easy! Simply click "Sign Up" and choose your profile type (Couple, Single Female, Single Male, or Non-binary). Follow our guided 9-step onboarding process to add photos, preferences, and information about what you're looking for. The whole process takes just a few minutes.
-            </p>
-          </div>
-
-          <!-- FAQ 3 -->
-          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500 transition-all shadow-sm">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-              <i class="ri-search-line text-[#9810FA]"></i>
-              How does matching work?
-            </h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Our smart matching algorithm learns from your preferences, interests, and behavior to suggest compatible members. You can also browse profiles manually using advanced filters for location, age, interests, and more. The more complete your profile, the better your matches will be!
-            </p>
-          </div>
-
-          <!-- FAQ 4 -->
-          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500 transition-all shadow-sm">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-              <i class="ri-money-dollar-circle-line text-[#9810FA]"></i>
-              Is it really free to join?
-            </h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Yes! Basic membership is completely free forever. You can create a profile, browse members, send messages, and attend public events at no cost. We also offer premium memberships with additional features like advanced search filters, priority in search results, and exclusive event access.
-            </p>
-          </div>
-
-          <!-- FAQ 5 -->
-          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500 transition-all shadow-sm">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-              <i class="ri-calendar-event-line text-[#9810FA]"></i>
-              What kind of events are available?
-            </h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              We host a variety of events including local meetups, parties, travel adventures, and exclusive gatherings. Events range from casual social mixers to themed parties and international travel meetups. Premium members get early access to exclusive events and special pricing.
-            </p>
-          </div>
-
-          <!-- FAQ 6 -->
-          <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border-2 border-gray-100 dark:border-gray-700 hover:border-[#9810FA] dark:hover:border-purple-500 transition-all shadow-sm">
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-              <i class="ri-eye-off-line text-[#9810FA]"></i>
-              Can I keep my profile private?
-            </h3>
-            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
-              Yes! You have full control over your privacy settings. You can choose who can see your profile, photos, and information. You can also block users, control who can message you, and adjust visibility settings for different aspects of your profile. Your privacy is in your hands.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION: CTA -->
-    <section class="relative px-5 sm:px-0 py-16 md:py-24 overflow-hidden">
-      <!-- Background with gradient -->
-      <div class="absolute inset-0 bg-gradient-to-r from-[#9810FA] via-[#E60076] to-[#9810FA]"></div>
-      <!-- Decorative elements -->
-      <div class="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-      
-      <div class="relative max-w-4xl mx-auto text-center">
-        <h1 class="text-white text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-          Ready to Find Your<br class="hidden md:block"> Perfect Match?
+        <h1 class="text-6xl font-['Leckerli_One'] text-white font-thin mb-4 leading-tight">
+            Dating for <br />
+            <span class="text-[#FB4F7B]">Naughty</span> Adults
         </h1>
-        <p class="text-white/90 text-lg md:text-xl mb-8 max-w-2xl mx-auto leading-relaxed">
-          Join thousands of verified members who are already making meaningful connections. Your journey to exciting new experiences starts here.
+
+        <p class="md:text-lg text-sm text-white mb-10">
+            Meet real people nearby who are ready for genuine connections
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <a href="{{ route('register') }}" class="group bg-white text-[#9810FA] px-8 py-4 rounded-full font-semibold text-base md:text-lg hover:bg-gray-100 hover:scale-105 transition-all duration-200 shadow-xl flex items-center gap-2">
-            <span>Create Free Account</span>
-            <i class="ri-arrow-right-line group-hover:translate-x-1 transition-transform"></i>
-          </a>
-          <a href="#features" class="bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 px-8 py-4 rounded-full font-semibold text-base md:text-lg hover:bg-white/20 hover:scale-105 transition-all duration-200">
-            Learn More
-          </a>
+
+        <p class="md:text-xl mt-7 text-white font-normal mb-6">Free Sign Up</p>
+
+        <div class="grid md:grid-cols-2 gap-4 mx-auto">
+            <a href="{{ route('register') }}?type=couple">
+                <button
+                    class="flex  w-full items-center justify-center gap-2 border-2 border-white bg-black/50 hover:bg-black/70 text-gray-200 hover:text-white px-20 py-4 rounded-lg shadow-xl backdrop-blur-sm transition duration-300">
+                    <i class="ri-group-line"></i>
+                    <span>We are a Couple</span>
+                </button>
+            </a>
+
+            <a href="{{ route('register') }}?type=single_female">
+                <button
+                    class="flex w-full items-center justify-center gap-2 border-2 border-white bg-black/50 hover:bg-black/70 text-gray-200 hover:text-white px-10 py-4 rounded-lg shadow-xl backdrop-blur-sm transition duration-300">
+                    <i class="ri-heart-line"></i>
+                    <span>I'm a Single Female</span>
+                </button>
+            </a>
+
+            <a href="{{ route('register') }}?type=single_male">
+                <button
+                    class="flex w-full items-center justify-center gap-2 border-2 border-white bg-black/50 hover:bg-black/70 text-gray-200 hover:text-white px-10 py-4 rounded-lg shadow-xl backdrop-blur-sm transition duration-300">
+                    <i class="ri-group-line"></i>
+                    <span>I'm a Single Male</span>
+                </button>
+            </a>
+
+            <a href="{{ route('register') }}?type=non_binary">
+                <button
+                    class="flex w-full items-center justify-center gap-2 border border-white bg-black/50 hover:bg-black/70 text-gray-200 hover:text-white px-10 py-4 rounded-lg shadow-xl backdrop-blur-sm transition duration-300">
+                    <i class="ri-flashlight-line"></i>
+                    <span>Non-binary</span>
+                </button>
+            </a>
+
         </div>
-        <p class="text-white/80 text-sm mt-6">
-          <i class="ri-checkbox-circle-line"></i> Free to join • No credit card required • Cancel anytime
+
+        <p class="md:mt-8 mt-5 text-gray-200 hover:text-white transition duration-300 cursor-pointer">
+            More...
         </p>
-      </div>
-    </section>
+    </div>
+</section>
+
+<!-- Second Find the Best Option for You -->
+<!-- <section class="w-full max-w-[1180px] mx-auto flex flex-col items-center py-20 px-6">
+    <div class="text-center mb-10">
+        <h2 class="text-4xl font-['Grand_Hotel'] text-[#FB4F7B] mb-3 font-medium">
+            Find the Best Option for You
+        </h2>
+        <p class="text-lg dark">
+            Search through categories to discover exactly what you need
+        </p>
+    </div>
+
+    <form class="space-y-8 w-full">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label for="search_input" class="flex items-center space-x-2 dark font-semibold mb-2">
+                    <i class="ri-search-line"></i>
+                    <span>Search</span>
+                </label>
+                <input type="text" id="search_input" placeholder="What are you looking for?"
+                    class="px-4 py-3 w-full rounded-lg dark border border-[#FB4F7B]" />
+            </div>
+
+            <div>
+                <label for="category_main" class="flex dark items-center space-x-2 font-semibold mb-2">
+                    <i class="ri-filter-line"></i>
+                    <span>Category</span>
+                </label>
+                <div class="relative">
+                    <select id="category_main"
+                        class="w-full px-4 py-3 rounded-lg bg-form-bg dark border border-[#FB4F7B] appearance-none">
+                        <option>All Categories</option>
+                        <option>Singles</option>
+                        <option>Couples</option>
+                        <option>Non-binary</option>
+                    </select>
+                    <i
+                        class="ri-arrow-down-s-line absolute right-3 top-[40px] transform -translate-y-1/2 dark pointer-events-none text-xl"></i>
+                </div>
+            </div>
+
+            <div>
+                <label for="location_input" class="flex items-center space-x-2 dark font-semibold mb-2">
+                    <i class="ri-map-pin-line"></i>
+                    <span>Location</span>
+                </label>
+                <input type="text" id="location_input" placeholder="Enter location"
+                    class="w-full px-4 py-3 rounded-lg bg-form-bg dark border border-[#FB4F7B]" />
+            </div>
+        </div>
+
+        <div class="pt-4">
+            <h3 class="text-xl font-bold dark">Advanced Filters</h3>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div>
+                <label for="sort_by" class="block dark font-semibold mb-2">
+                    Sort By
+                </label>
+                <div class="relative">
+                    <select id="sort_by"
+                        class="w-full px-4 py-3 rounded-lg bg-form-bg dark border border-[#FB4F7B] appearance-none">
+                        <option>Best Match</option>
+                        <option>Newest</option>
+                        <option>Nearest</option>
+                    </select>
+                    <i
+                        class="ri-arrow-down-s-line absolute right-3 top-[40px] transform -translate-y-1/2 dark pointer-events-none text-xl"></i>
+                </div>
+            </div>
+
+            <div>
+                <label for="category_adv" class="block dark font-semibold mb-2">
+                    Category
+                </label>
+                <div class="relative">
+                    <select id="category_adv"
+                        class="w-full px-4 py-3 rounded-lg bg-form-bg dark border border-[#FB4F7B] appearance-none">
+                        <option>All Categories</option>
+                        <option>Fetishes</option>
+                        <option>Lifestyle</option>
+                    </select>
+                    <i
+                        class="ri-arrow-down-s-line absolute right-3 top-[40px] transform -translate-y-1/2 dark pointer-events-none text-xl"></i>
+                </div>
+            </div>
+
+            <div>
+                <label for="distance" class="block dark font-semibold mb-2">
+                    Distance
+                </label>
+                <div class="relative">
+                    <select id="distance"
+                        class="w-full px-4 py-3 rounded-lg bg-form-bg dark border border-[#FB4F7B] appearance-none">
+                        <option>Any Distance</option>
+                        <option>Within 10 miles</option>
+                        <option>Within 50 miles</option>
+                    </select>
+                    <i
+                        class="ri-arrow-down-s-line absolute right-3 top-[40px] transform -translate-y-1/2 dark pointer-events-none text-xl"></i>
+                </div>
+            </div>
+
+            <div>
+                <label for="age" class="block dark font-semibold mb-2">
+                    Age
+                </label>
+                <div class="relative">
+                    <select id="age"
+                        class="w-full px-4 py-3 rounded-lg bg-form-bg dark border border-[#FB4F7B] appearance-none">
+                        <option>Any Age</option>
+                        <option>18-25</option>
+                        <option>26-35</option>
+                        <option>36+</option>
+                    </select>
+                    <i
+                        class="ri-arrow-down-s-line absolute right-3 top-[40px] transform -translate-y-1/2 dark pointer-events-none text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-6 pt-6">
+            <button type="submit"
+                class="flex items-center space-x-2 px-8 py-3 bg-[#FB4F7B] hover:bg-fuchsia-700 text-white rounded-lg font-semibold transition duration-300 shadow-xl">
+                <i class="ri-search-line"></i>
+                <span>Search</span>
+            </button>
+
+            <div class="flex items-center space-x-3">
+                <label for="online_toggle" class="flex items-center cursor-pointer">
+                    <div class="relative">
+                        <input type="checkbox" id="online_toggle" class="sr-only peer" />
+                        <div
+                            class="block bg-[#FB4F7B] w-10 h-6 rounded-full transition duration-300 peer-checked:bg-gray-600">
+                        </div>
+                        <div
+                            class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition transform duration-300 peer-checked:translate-x-4">
+                        </div>
+                    </div>
+                </label>
+                <label for="online_toggle" class="dark select-none">
+                    Show only online users
+                </label>
+            </div>
+        </div>
+    </form>
+</section> -->
+
+<!-- SECTION: Second Want to Become a Member? -->
+<section class="w-full max-w-6xl mx-auto px-6 py-16">
+    <div class="text-center mb-12">
+        <h2 class="text-4xl font-['Grand_Hotel'] text-[#FB4F7B] mb-6 font-medium">
+            Want to Become a Member?
+        </h2>
+        <p class="text-lg dark max-w-3xl mx-auto leading-relaxed">
+            Why pay to use a dating app if you could use our platform? Lorem ipsum
+            dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-20 mt-16">
+        <div class="text-center">
+            <div class="w-48 h-48 mx-auto rounded-full overflow-hidden mb-6 shadow-2xl">
+                <img src="./assets/want1.jpg" alt="Couple being affectionate in the woods"
+                    class="w-full h-full object-cover" />
+            </div>
+
+            <h3 class="dark mb-3">100% for FREE</h3>
+            <p class="text-base dark mb-6">
+                Create your profile and start connecting with singles in your area
+                without paying a dime.
+            </p>
+            <button
+                class="px-8 py-3 text-sm font-semibold bg-[#FB4F7B] text-white rounded-lg transition duration-300 shadow-xl">
+                Learn More
+            </button>
+        </div>
+
+        <div class="text-center">
+            <div class="w-48 h-48 mx-auto rounded-full overflow-hidden mb-6 shadow-2xl">
+                <img src="./assets/want2.jpg" alt="Couple silhouette under a sunset sky"
+                    class="w-full h-full object-cover" />
+            </div>
+
+            <h3 class="dark mb-3">Matching compatible partner</h3>
+            <p class="text-base dark mb-6">
+                Our advanced algorithm helps you find the perfect match based on
+                your interests and preferences.
+            </p>
+            <button
+                class="px-8 py-3 text-sm font-semibold bg-[#FB4F7B] text-white rounded-lg transition duration-300 shadow-xl">
+                Learn More
+            </button>
+        </div>
+
+        <div class="text-center">
+            <div class="w-48 h-48 mx-auto rounded-full overflow-hidden mb-6 shadow-2xl">
+                <img src="./assets/want3.jpg" alt="A group of people talking and laughing"
+                    class="w-full h-full object-cover" />
+            </div>
+
+            <h3 class="dark mb-3">Share experiences</h3>
+            <p class="text-base dark mb-6">
+                Connect with people who share your passions and create meaningful
+                memories together.
+            </p>
+            <button
+                class="px-8 py-3 text-sm font-semibold bg-[#FB4F7B] text-white rounded-lg transition duration-300 shadow-xl">
+                Learn More
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- SEECTION:  Your Journey Starts Here -->
+<section class="w-full max-w-[890px] mx-auto flex flex-col items-center py-16 mx-auto sm:px-0 px-4">
+    <div class="text-center mb-12">
+        <h2 class="text-4xl font-['Grand_Hotel'] text-[#FB4F7B] mb-3 font-medium">
+            Your Journey Starts Here
+        </h2>
+    </div>
+
+    <div class="space-y-6 w-full">
+        <div
+            class="bg-white text-gray-800 px-6 py-5 rounded-xl shadow-xl flex items-start space-x-6 border border-gray-200">
+            <div
+                class="w-16 h-16 bg-[linear-gradient(180deg,#EC003F_0%,#C70036_100%)] text-white flex-shrink-0 flex items-center justify-center rounded-full">
+                <i class="ri-user-add-line text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="font-bold mb-1">Sign Up For Free</h3>
+                <p class="text-gray-600">
+                    Create your account in seconds and start your journey to finding
+                    love. It's completely free to join.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-white text-gray-800 p-6 rounded-xl shadow-xl flex items-start space-x-6 border border-gray-200">
+            <div
+                class="w-16 h-16 bg-[linear-gradient(180deg,#EC003F_0%,#C70036_100%)] text-white flex-shrink-0 flex items-center justify-center rounded-full">
+                <i class="ri-sparkling-line text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="font-bold mb-1">Get Matches</h3>
+                <p class="text-gray-600">
+                    Our smart matching algorithm will connect you with compatible
+                    singles who share your interests and values.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-white text-gray-800 p-6 rounded-xl shadow-xl flex items-start space-x-6 border border-gray-200">
+            <div
+                class="w-16 h-16 bg-[linear-gradient(180deg,#EC003F_0%,#C70036_100%)] text-white flex-shrink-0 flex items-center justify-center rounded-full bg-custom-pink/10 text-custom-pink">
+                <i class="ri-heart-line text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="font-bold mb-1">Start Dating</h3>
+                <p class="text-gray-600">
+                    Connect with your matches, start conversations, and begin your
+                    journey to finding meaningful relationships.
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-white text-gray-800 p-6 rounded-xl shadow-xl flex items-start space-x-6 border border-gray-200">
+            <div
+                class="w-16 h-16 bg-[linear-gradient(180deg,#EC003F_0%,#C70036_100%)] text-white flex-shrink-0 flex items-center justify-center rounded-full bg-custom-pink/10 text-custom-pink">
+                <i class="ri-checkbox-circle-line text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="font-bold mb-1">Find Love</h3>
+                <p class="text-gray-600">
+                    Build lasting connections and discover the relationship you've
+                    been searching for with someone special.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Fifth section -->
+<section class="w-full max-w-6xl mx-auto px-6 py-12 text-center">
+    <h2 class="text-4xl font-['Grand_Hotel'] text-[#FB4F7B] mb-6 font-medium">
+        It all starts with a Date
+    </h2>
+
+    <p class="text-lg dark max-w-4xl mx-auto mb-10">
+        You find us, finally, and you are already in love. More than 5,000,000
+        around the world already shared the same experience and uses our system.
+        Joining us today just got easier!
+    </p>
+
+    <div class="flex flex-col md:flex-row md:gap-5 gap-4 justify-center items-center mb-20">
+        <button
+            class="px-8 py-3 text-lg font-semibold bg-[linear-gradient(180deg,#EC003F_0%,#C70036_100%)] hover:bg-[#D94269] text-white rounded-lg transition duration-300 shadow-xl">
+            Join Us FREE
+        </button>
+        <button
+            class="px-8 py-3 text-lg font-semibold text-blue-400 bg-white border border-blue-400 rounded-lg transition duration-300">
+            Try 7+ membership £9
+        </button>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="flex flex-col items-center">
+            <div class="w-16 h-16 flex items-center justify-center rounded-full mb-4">
+                <img src="./assets/Container (1).png" width="50" alt="" />
+            </div>
+            <p class="md:text-3xl text-xl font-bold mb-1 text-[#FB4F7B]">5 MILLION</p>
+            <p class="text-sm font-medium text-gray-500">Users in total</p>
+        </div>
+
+        <div class="flex flex-col items-center">
+            <div class="w-16 h-16 flex items-center justify-center mb-4">
+                <i class="ri-group-line text-5xl text-[#FB4F7B]"></i>
+            </div>
+            <p class="text-3xl font-bold mb-1 text-[#FB4F7B]">947</p>
+            <p class="text-sm font-medium text-gray-500">Verified online</p>
+        </div>
+
+        <div class="flex flex-col items-center">
+            <div
+                class="w-16 h-16 flex items-center justify-center rounded-full bg-[linear-gradient(180deg,#EC003F_0%,#C70036_100%)] mb-4">
+                <i class="ri-women-line text-3xl text-black"></i>
+            </div>
+            <p class="text-3xl font-bold mb-1 text-[#FB4F7B]">530</p>
+            <p class="text-sm font-medium text-gray-500">Female users</p>
+        </div>
+
+        <div class="flex flex-col items-center">
+            <div class="w-16 h-16 flex items-center justify-center rounded-full bg-blue-500 mb-4">
+                <i class="ri-men-line text-3xl text-white"></i>
+            </div>
+            <p class="text-3xl font-bold mb-1 text-blue-500">417</p>
+            <p class="text-sm font-medium text-gray-500">Male users</p>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION: Grid Layout -->
+<section class="w-full max-w-6xl mx-auto px-6 py-12">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div
+            class="relative col-span-2 row-span-2 rounded-lg overflow-hidden bg-gray-700 min-h-[300px] sm:min-h-[400px] md:min-h-[400px] lg:min-h-[580px]">
+            <img src="./assets/grid1.jpg" alt="Swingers Partner Program"
+                class="w-full h-full object-cover absolute inset-0" />
+
+            <div
+                class="absolute inset-x-0 bottom-0 p-4 sm:p-6 bg-gradient-to-t from-black/80 to-transparent h-full flex flex-col justify-end text-left">
+                <h3 class="text-xl text-white sm:text-3xl font-bold mb-2">
+                    Swingers Partner Program
+                </h3>
+                <p class="text-xs sm:text-sm dark">
+                    It's now easier than ever for you to make money... and grow your
+                    business with Swingers - all in one.
+                </p>
+            </div>
+        </div>
+
+        <div class="relative col-span-1 rounded-lg overflow-hidden bg-gray-700 min-h-[150px]">
+            <img src="./assets/grid2.jpg" alt="Dealing With Love" class="w-full h-full object-cover absolute inset-0" />
+            <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <h3 class="text-sm sm:text-lg font-bold text-white">
+                    Dealing With Love
+                </h3>
+                <p class="text-[10px] sm:text-xs text-gray-300">
+                    It's now easier than ever for you to make money...
+                </p>
+            </div>
+        </div>
+
+        <div class="relative col-span-1 rounded-lg overflow-hidden bg-gray-700 min-h-[150px]">
+            <img src="./assets/grid3.jpg" alt="Dealing With Love" class="w-full h-full object-cover absolute inset-0" />
+            <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <h3 class="text-sm sm:text-lg font-bold text-white">
+                    Dealing With Love
+                </h3>
+                <p class="text-[10px] sm:text-xs text-gray-300">
+                    It's now easier than ever for you to make money...
+                </p>
+            </div>
+        </div>
+
+        <div class="relative col-span-1 rounded-lg overflow-hidden bg-gray-700 min-h-[150px]">
+            <img src="./assets/grid4.jpg" alt="Dealing with loneliness"
+                class="w-full h-full object-cover absolute inset-0" />
+            <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <h3 class="text-sm sm:text-lg font-bold text-white">
+                    Dealing With loneliness
+                </h3>
+                <p class="text-[10px] sm:text-xs text-gray-300">
+                    It's now easier than ever for you to make money...
+                </p>
+            </div>
+        </div>
+
+        <div class="relative col-span-1 rounded-lg overflow-hidden bg-gray-700 min-h-[150px]">
+            <img src="./assets/grid5.jpg" alt="Dealing with loneliness"
+                class="w-full h-full object-cover absolute inset-0" />
+            <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <h3 class="text-sm sm:text-lg font-bold text-white">
+                    Dealing With loneliness
+                </h3>
+                <p class="text-[10px] sm:text-xs text-gray-300">
+                    It's now easier than ever for you to make money...
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 grid grid-cols-1 gap-5 
+                md:grid-cols-4 md:grid-rows-2">
+
+        <!-- Big Left Image -->
+        <div class=" [background:linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.356901)_46.35%,rgba(0,0,0,0.77)_100%)] min-h-[250px] md:min-h-[580px] rounded-lg relative
+                    md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-3">
+            <img src="./assets/grid6.jpg" alt="Dealing with loneliness"
+                class="absolute rounded-lg inset-0 w-full h-full object-cover" />
+
+            <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <h3 class="text-sm sm:text-lg font-bold text-white">
+                    Dealing With loneliness
+                </h3>
+                <p class="text-[10px] sm:text-xs text-gray-300">
+                    It's now easier than ever for you to make money...
+                </p>
+            </div>
+        </div>
+
+        <!-- Top Middle -->
+        <div class="min-h-[200px] rounded-lg relative md:col-start-2 md:col-end-4 md:row-start-1 md:row-end-2">
+            <img src="./assets/card-image.jpg" alt="Dealing with loneliness"
+                class="absolute rounded-lg inset-0 w-full h-full object-cover" />
+
+            <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <h3 class="text-sm sm:text-lg font-bold text-white">
+                    Swingers Partner Program
+                </h3>
+                <p class="text-[10px] sm:text-xs text-gray-300">
+                    It's now easier than ever for you to make money... and grow your
+                    business with Swingers - all in one.
+                </p>
+            </div>
+        </div>
+
+        <!-- Top Right -->
+        <div class="relative rounded-lg min-h-[200px] md:col-start-4 md:col-end-5 md:row-start-1 md:row-end-2">
+            <img src="./assets/grid8.jpg" alt="Dealing with loneliness"
+                class="absolute rounded-lg inset-0 w-full h-full object-cover" />
+
+            <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <h3 class="text-sm sm:text-lg font-bold text-white">
+                    Super Sexperience..
+                </h3>
+                <p class="text-[10px] sm:text-xs text-gray-300">
+                    It’s now easier than ever for you to make money…
+                </p>
+            </div>
+        </div>
+
+        <!-- Bottom Middle Left -->
+        <div class="relative rounded-lg min-h-[200px] md:col-start-2 md:col-end-3  md:row-start-2 md:row-end-3">
+            <img src="./assets/grid9.jpg" alt="Dealing with loneliness"
+                class="absolute rounded-lg inset-0 w-full h-full object-cover" />
+
+            <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <h3 class="text-sm sm:text-lg font-bold text-white">
+                    Travel Journey
+                </h3>
+                <p class="text-[10px] sm:text-xs text-gray-300">
+                    It's now easier than ever for you to make money...
+                </p>
+            </div>
+        </div>
+
+        <!-- Bottom Middle Right -->
+        <div class="relative rounded-lg min-h-[200px] md:col-start-3 md:col-end-4 md:row-start-2 md:row-end-3">
+            <img src="./assets/grid11.jpg" alt="Dealing with loneliness"
+                class="absolute rounded-lg inset-0 w-full h-full object-cover" />
+
+            <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <h3 class="text-sm sm:text-lg font-bold text-white">
+                    Travel Journey
+                </h3>
+                <p class="text-[10px] sm:text-xs text-gray-300">
+                    It's now easier than ever for you to make money...
+                </p>
+            </div>
+        </div>
+
+        <!-- Bottom Right -->
+        <div class="relative rounded-lg min-h-[200px] md:col-start-4 md:col-end-5 md:row-start-2 md:row-end-3">
+            <img src="./assets/grid10.jpg" alt="Dealing with loneliness"
+                class="absolute rounded-lg inset-0 w-full h-full object-cover" />
+
+            <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <h3 class="text-sm sm:text-lg font-bold text-white">
+                    Super Fitness
+                </h3>
+                <p class="text-[10px] sm:text-xs text-gray-300">
+                    It's now easier than ever for you to make money...
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="text-center mt-12">
+        <button
+            class="px-8 py-3 text-lg font-semibold bg-[#FB4F7B] hover:bg-[#D94269] text-white rounded-lg transition duration-300 shadow-xl">
+            Start Your Love Story Today
+        </button>
+        <p class="text-sm dark mt-4">
+            Over 2,000 success stories this month
+        </p>
+    </div>
+</section>
+
 
 @endsection
 

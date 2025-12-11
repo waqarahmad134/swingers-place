@@ -105,7 +105,7 @@
 
         <!-- Filter Bar -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 shadow-sm dark:shadow-none border border-gray-200 dark:border-gray-700">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <!-- Sort By -->
                 <div>
                     <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">Sort By</label>
@@ -115,18 +115,6 @@
                         <option value="Newest" {{ request('sort_by') == 'Newest' ? 'selected' : '' }}>Newest</option>
                         <option value="Distance" {{ request('sort_by') == 'Distance' ? 'selected' : '' }}>Distance</option>
                         <option value="Popularity" {{ request('sort_by') == 'Popularity' ? 'selected' : '' }}>Popularity</option>
-                    </select>
-                </div>
-
-                <!-- Category -->
-                <div>
-                    <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">Category</label>
-                    <select name="category" onchange="document.getElementById('filterForm').submit();" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-2xl px-3 py-2 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
-                        <option value="All Categories" {{ request('category') == 'All Categories' || !request('category') ? 'selected' : '' }}>All Categories</option>
-                        <option value="single_male" {{ request('category') == 'single_male' ? 'selected' : '' }}>Single Male</option>
-                        <option value="single_female" {{ request('category') == 'single_female' ? 'selected' : '' }}>Single Female</option>
-                        <option value="couple" {{ request('category') == 'couple' ? 'selected' : '' }}>Couple</option>
-                        <option value="group" {{ request('category') == 'group' ? 'selected' : '' }}>Group</option>
                     </select>
                 </div>
 
@@ -290,6 +278,63 @@
 
     <!-- Footer -->
 </div>
+
+@push('scripts')
+@php
+    $googleMapsApiKey = config('services.google_maps.api_key');
+@endphp
+@if($googleMapsApiKey)
+<script>
+// Initialize Google Maps Places Autocomplete for search input
+function initSearchAutocomplete() {
+    const searchInput = document.getElementById('search');
+    if (!searchInput) return;
+
+    // Initialize Google Places Autocomplete
+    const autocomplete = new google.maps.places.Autocomplete(searchInput, {
+        types: ['geocode', 'establishment'],
+        fields: ['formatted_address', 'geometry', 'name', 'address_components']
+    });
+
+    // When a place is selected, update the input with the formatted address
+    autocomplete.addListener('place_changed', function() {
+        const place = autocomplete.getPlace();
+        if (place.formatted_address) {
+            searchInput.value = place.formatted_address;
+        }
+    });
+}
+
+// Load Google Maps API with Places library
+(function() {
+    // Check if script already exists
+    if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+        // Script already loaded, initialize directly
+        if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+            initSearchAutocomplete();
+        }
+    } else {
+        const script = document.createElement('script');
+        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&loading=async&libraries=places&callback=initSearchAutocompleteCallback';
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    }
+})();
+
+// Callback function for when Google Maps loads
+window.initSearchAutocompleteCallback = function() {
+    if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+        initSearchAutocomplete();
+    }
+};
+</script>
+@else
+<script>
+console.warn('Google Maps API key is not configured. Please add GOOGLE_MAPS_API_KEY to your .env file.');
+</script>
+@endif
+@endpush
 
 @endsection
 

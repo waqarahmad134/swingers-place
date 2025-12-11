@@ -43,7 +43,9 @@
 
     <link rel="stylesheet" href="{{ asset('public/style.css') }}">
 
+    @if(request()->routeIs('home') || request()->is('/'))
     <script src="https://cdn.tailwindcss.com"></script>
+    @endif
 
     <style>
         /* Ensure user dropdown hover works */

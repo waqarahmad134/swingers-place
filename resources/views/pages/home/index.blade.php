@@ -367,10 +367,10 @@
             class="px-8 py-3 text-lg font-semibold bg-[linear-gradient(180deg,#EC003F_0%,#C70036_100%)] hover:bg-[#D94269] text-white rounded-lg transition duration-300 shadow-xl">
             Join Us FREE
         </button>
-        <button
+        <!-- <button
             class="px-8 py-3 text-lg font-semibold text-blue-400 bg-white border border-blue-400 rounded-lg transition duration-300">
             Try for free
-        </button>
+        </button> -->
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8">

@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>@yield('title', config('app.name', 'swingers place'))</title>
+    <title>@yield('title', config('app.name', 'swingers nest'))</title>
 
     @php
-        $defaultMetaDescription = config('app.meta_description', 'swingers place');
+        $defaultMetaDescription = config('app.meta_description', 'swingers nest');
     @endphp
 
     <meta name="description" content="@yield('meta_description', $defaultMetaDescription)">

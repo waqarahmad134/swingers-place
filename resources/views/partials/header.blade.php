@@ -1,5 +1,5 @@
 @php
-    $siteName = config('app.name', 'swingers place');
+    $siteName = config('app.name', 'swingers nest');
     $logoUrl = config('app.logo_url', null);
     $hasLogo = !empty($logoUrl);
 
@@ -53,10 +53,13 @@
     <nav class="flex justify-between items-center md:px-7 px-3 h-[68px] bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
       <!-- Logo -->
       <div class="flex gap-2 items-center">
-        <a href="{{ Route::has('home') ? route('home') : url('/') }}">
-          <img src="{{ asset('assets/main-logo.png') }}" height="32" width="172" alt="{{ $siteName }}" />
+        <a href="{{ Auth::check() ? route('dashboard.members') : (Route::has('home') ? route('home') : url('/')) }}" class="group">
+          <span class="text-xl md:text-2xl font-semibold text-gray-900 dark:text-white tracking-wide hover:text-[#9810FA] dark:hover:text-[#E60076] transition-colors duration-200">
+            Swingers Nest
+          </span>
         </a>
       </div>
+      <!-- <img src="{{ asset('assets/main-logo.png') }}" height="32" width="172" alt="{{ $siteName }}" /> -->
 
       <!-- Search Bar (Center) - Only show when logged in -->
       @auth

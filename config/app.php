@@ -13,8 +13,8 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'swingers place'),
-    'meta_description' => env('APP_META_DESCRIPTION', 'swingers place'),
+    'name' => env('APP_NAME', 'swingers nest'),
+    'meta_description' => env('APP_META_DESCRIPTION', 'swingers nest'),
     'logo_url' => env('APP_LOGO_URL', null),
 
     /*

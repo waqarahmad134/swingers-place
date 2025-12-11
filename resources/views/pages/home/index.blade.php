@@ -369,7 +369,7 @@
         </button>
         <button
             class="px-8 py-3 text-lg font-semibold text-blue-400 bg-white border border-blue-400 rounded-lg transition duration-300">
-            Try 7+ membership £9
+            Try for free
         </button>
     </div>
 

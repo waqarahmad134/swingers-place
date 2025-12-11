@@ -21,22 +21,22 @@
                 <form method="POST" action="{{ route('login') }}" class="space-y-5">
                     @csrf
 
-                    <!-- Email Field -->
+                    <!-- Username Field -->
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Email
+                        <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Enter your Username or Email
                         </label>
                         <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value="{{ old('email') }}"
+                            type="text"
+                            id="username"
+                            name="username"
+                            value="{{ old('username') }}"
                             required
                             autofocus
                             class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all"
-                            placeholder="you@example.com"
+                            placeholder="username or email@example.com"
                         >
-                        @error('email')
+                        @error('username')
                             <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                         @enderror
                     </div>
@@ -44,7 +44,7 @@
                     <!-- Password Field -->
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                            Password
+                        Enter Your Password
                         </label>
                         <div class="relative">
                             <input

@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class LoginController extends Controller
@@ -24,13 +26,35 @@ class LoginController extends Controller
     public function login(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'username' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
         $remember = $request->boolean('remember');
+        $username = $credentials['username'];
+        $password = $credentials['password'];
 
-        if (Auth::attempt($credentials, $remember)) {
+        // Determine if input is email or username
+        $isEmail = filter_var($username, FILTER_VALIDATE_EMAIL);
+
+        // Try to find user by username or email
+        $user = null;
+        if ($isEmail) {
+            $user = User::where('email', $username)->first();
+        } else {
+            $user = User::where('username', $username)->first();
+        }
+
+        // If user not found with first method, try the other
+        if (!$user && $isEmail) {
+            $user = User::where('username', $username)->first();
+        } elseif (!$user && !$isEmail) {
+            $user = User::where('email', $username)->first();
+        }
+
+        // Attempt authentication
+        if ($user && Hash::check($password, $user->password)) {
+            Auth::login($user, $remember);
             $request->session()->regenerate();
 
             // Update last seen at on login
@@ -45,8 +69,8 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+            'username' => 'The provided credentials do not match our records.',
+        ])->onlyInput('username');
     }
 
     /**

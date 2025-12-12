@@ -61,9 +61,6 @@
 
         </div>
 
-        <p class="md:mt-8 mt-5 text-gray-200 hover:text-white transition duration-300 cursor-pointer">
-            More...
-        </p>
     </div>
 </section>
 

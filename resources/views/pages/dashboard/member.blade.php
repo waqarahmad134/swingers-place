@@ -260,10 +260,67 @@
 
     <!-- Pagination -->
     @if($members->hasPages())
-        <div class="mt-6 flex justify-center">
-            <div class="text-gray-900 dark:text-gray-100">
-            {{ $members->links() }}
-            </div>
+        @php
+            $currentPage = $members->currentPage();
+            $lastPage = $members->lastPage();
+            $showPages = 3; // Show first 3 pages
+        @endphp
+        <div class="mt-6 flex justify-center items-center gap-2">
+            <!-- Previous Button -->
+            @if($members->onFirstPage())
+                <button disabled class="px-3 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed">
+                    <i class="ri-arrow-left-s-line text-xl"></i>
+                </button>
+            @else
+                <a href="{{ $members->previousPageUrl() }}" class="px-3 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <i class="ri-arrow-left-s-line text-xl"></i>
+                </a>
+            @endif
+
+            <!-- Page Numbers -->
+            @if($currentPage <= $showPages)
+                {{-- Show first pages if current page is in first few --}}
+                @for($i = 1; $i <= min($showPages, $lastPage); $i++)
+                    @if($i == $currentPage)
+                        <button class="px-4 py-2 rounded-lg bg-[#9810FA] text-white font-semibold">
+                            {{ $i }}
+                        </button>
+                    @else
+                        <a href="{{ $members->url($i) }}" class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            {{ $i }}
+                        </a>
+                    @endif
+                @endfor
+            @else
+                {{-- Show first page, current page, and last page --}}
+                <a href="{{ $members->url(1) }}" class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    1
+                </a>
+                @if($currentPage > 2)
+                    <span class="px-2 text-gray-500 dark:text-gray-400">...</span>
+                @endif
+                <button class="px-4 py-2 rounded-lg bg-[#9810FA] text-white font-semibold">
+                    {{ $currentPage }}
+                </button>
+            @endif
+
+            @if($lastPage > $showPages && $currentPage < $lastPage)
+                <span class="px-2 text-gray-500 dark:text-gray-400">...</span>
+                <a href="{{ $members->url($lastPage) }}" class="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    {{ $lastPage }}
+                </a>
+            @endif
+
+            <!-- Next Button -->
+            @if($members->hasMorePages())
+                <a href="{{ $members->nextPageUrl() }}" class="px-3 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <i class="ri-arrow-right-s-line text-xl"></i>
+                </a>
+            @else
+                <button disabled class="px-3 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-600 cursor-not-allowed">
+                    <i class="ri-arrow-right-s-line text-xl"></i>
+                </button>
+            @endif
         </div>
     @endif
 

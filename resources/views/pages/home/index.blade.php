@@ -68,7 +68,7 @@
 </section>
 
 <!-- Second Find the Best Option for You -->
-<!-- <section class="w-full max-w-[1180px] mx-auto flex flex-col items-center py-20 px-6">
+<section class="w-full max-w-[1180px] mx-auto flex flex-col items-center py-20 px-6">
     <div class="text-center mb-10">
         <h2 class="text-4xl font-['Grand_Hotel'] text-[#FB4F7B] mb-3 font-medium">
             Find the Best Option for You
@@ -78,142 +78,91 @@
         </p>
     </div>
 
-    <form class="space-y-8 w-full">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-                <label for="search_input" class="flex items-center space-x-2 dark font-semibold mb-2">
+    <form method="GET" action="{{ auth()->check() ? route('dashboard.members') : route('login') }}" id="homeSearchForm" class="w-full">
+        @if(!auth()->check())
+            <input type="hidden" name="redirect_to" value="{{ route('dashboard.members') }}">
+        @endif
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm dark:shadow-none border border-gray-200 dark:border-gray-700">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Search / Name -->
+                <div>
+                    <label for="home_search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <i class="ri-search-line mr-1"></i> Search
+                    </label>
+                    <input 
+                        type="text" 
+                        name="search"
+                        id="home_search"
+                        value="{{ request('search') }}"
+                        placeholder="Name, location, interests..." 
+                        class="w-full text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FB4F7B] focus:border-transparent"
+                    />
+                </div>
+
+                <!-- Category -->
+                <div>
+                    <label for="home_filter_category" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <i class="ri-group-line mr-1"></i> Category
+                    </label>
+                    <select 
+                        name="filter_category"
+                        id="home_filter_category"
+                        class="w-full text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#FB4F7B]"
+                    >
+                        <option value="">All Categories</option>
+                        <option value="single_male" {{ request('filter_category') == 'single_male' ? 'selected' : '' }}>Single Male</option>
+                        <option value="single_female" {{ request('filter_category') == 'single_female' ? 'selected' : '' }}>Single Female</option>
+                        <option value="couple" {{ request('filter_category') == 'couple' ? 'selected' : '' }}>Couple</option>
+                        <option value="group" {{ request('filter_category') == 'group' ? 'selected' : '' }}>Group</option>
+                    </select>
+                </div>
+
+                <!-- Location -->
+                <div>
+                    <label for="home_filter_location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <i class="ri-map-pin-line mr-1"></i> Location
+                    </label>
+                    <input 
+                        type="text" 
+                        name="filter_location"
+                        id="home_filter_location"
+                        value="{{ request('filter_location') }}"
+                        placeholder="Enter location..." 
+                        class="w-full text-sm bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#FB4F7B] focus:border-transparent"
+                    />
+                </div>
+            </div>
+
+            <!-- Search Button and Online Toggle -->
+            <div class="mt-6 flex items-center justify-between">
+                <button 
+                    type="submit" 
+                    class="bg-[#FB4F7B] hover:bg-fuchsia-700 text-white text-sm font-semibold px-8 py-3 rounded-xl transition-colors flex items-center gap-2 shadow-xl"
+                >
                     <i class="ri-search-line"></i>
-                    <span>Search</span>
-                </label>
-                <input type="text" id="search_input" placeholder="What are you looking for?"
-                    class="px-4 py-3 w-full rounded-lg dark border border-[#FB4F7B]" />
-            </div>
+                    Search
+                </button>
 
-            <div>
-                <label for="category_main" class="flex dark items-center space-x-2 font-semibold mb-2">
-                    <i class="ri-filter-line"></i>
-                    <span>Category</span>
-                </label>
-                <div class="relative">
-                    <select id="category_main"
-                        class="w-full px-4 py-3 rounded-lg bg-form-bg dark border border-[#FB4F7B] appearance-none">
-                        <option>All Categories</option>
-                        <option>Singles</option>
-                        <option>Couples</option>
-                        <option>Non-binary</option>
-                    </select>
-                    <i
-                        class="ri-arrow-down-s-line absolute right-3 top-[40px] transform -translate-y-1/2 dark pointer-events-none text-xl"></i>
+                <!-- Online Users Toggle Filter -->
+                <div class="flex items-center gap-3">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" 
+                               name="online_only" 
+                               value="1"
+                               id="homeOnlineOnlyToggle"
+                               {{ request('online_only') ? 'checked' : '' }}
+                               class="sr-only peer">
+                        <div class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#FB4F7B]/30 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FB4F7B]"></div>
+                    </label>
+                    <span class="text-sm font-medium text-gray-900 dark:text-white">
+                        <i class="ri-wifi-line text-lg mr-1"></i>
+                        Show only online users
+                    </span>
                 </div>
-            </div>
-
-            <div>
-                <label for="location_input" class="flex items-center space-x-2 dark font-semibold mb-2">
-                    <i class="ri-map-pin-line"></i>
-                    <span>Location</span>
-                </label>
-                <input type="text" id="location_input" placeholder="Enter location"
-                    class="w-full px-4 py-3 rounded-lg bg-form-bg dark border border-[#FB4F7B]" />
-            </div>
-        </div>
-
-        <div class="pt-4">
-            <h3 class="text-xl font-bold dark">Advanced Filters</h3>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div>
-                <label for="sort_by" class="block dark font-semibold mb-2">
-                    Sort By
-                </label>
-                <div class="relative">
-                    <select id="sort_by"
-                        class="w-full px-4 py-3 rounded-lg bg-form-bg dark border border-[#FB4F7B] appearance-none">
-                        <option>Best Match</option>
-                        <option>Newest</option>
-                        <option>Nearest</option>
-                    </select>
-                    <i
-                        class="ri-arrow-down-s-line absolute right-3 top-[40px] transform -translate-y-1/2 dark pointer-events-none text-xl"></i>
-                </div>
-            </div>
-
-            <div>
-                <label for="category_adv" class="block dark font-semibold mb-2">
-                    Category
-                </label>
-                <div class="relative">
-                    <select id="category_adv"
-                        class="w-full px-4 py-3 rounded-lg bg-form-bg dark border border-[#FB4F7B] appearance-none">
-                        <option>All Categories</option>
-                        <option>Fetishes</option>
-                        <option>Lifestyle</option>
-                    </select>
-                    <i
-                        class="ri-arrow-down-s-line absolute right-3 top-[40px] transform -translate-y-1/2 dark pointer-events-none text-xl"></i>
-                </div>
-            </div>
-
-            <div>
-                <label for="distance" class="block dark font-semibold mb-2">
-                    Distance
-                </label>
-                <div class="relative">
-                    <select id="distance"
-                        class="w-full px-4 py-3 rounded-lg bg-form-bg dark border border-[#FB4F7B] appearance-none">
-                        <option>Any Distance</option>
-                        <option>Within 10 miles</option>
-                        <option>Within 50 miles</option>
-                    </select>
-                    <i
-                        class="ri-arrow-down-s-line absolute right-3 top-[40px] transform -translate-y-1/2 dark pointer-events-none text-xl"></i>
-                </div>
-            </div>
-
-            <div>
-                <label for="age" class="block dark font-semibold mb-2">
-                    Age
-                </label>
-                <div class="relative">
-                    <select id="age"
-                        class="w-full px-4 py-3 rounded-lg bg-form-bg dark border border-[#FB4F7B] appearance-none">
-                        <option>Any Age</option>
-                        <option>18-25</option>
-                        <option>26-35</option>
-                        <option>36+</option>
-                    </select>
-                    <i
-                        class="ri-arrow-down-s-line absolute right-3 top-[40px] transform -translate-y-1/2 dark pointer-events-none text-xl"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex items-center space-x-6 pt-6">
-            <button type="submit"
-                class="flex items-center space-x-2 px-8 py-3 bg-[#FB4F7B] hover:bg-fuchsia-700 text-white rounded-lg font-semibold transition duration-300 shadow-xl">
-                <i class="ri-search-line"></i>
-                <span>Search</span>
-            </button>
-
-            <div class="flex items-center space-x-3">
-                <label for="online_toggle" class="flex items-center cursor-pointer">
-                    <div class="relative">
-                        <input type="checkbox" id="online_toggle" class="sr-only peer" />
-                        <div
-                            class="block bg-[#FB4F7B] w-10 h-6 rounded-full transition duration-300 peer-checked:bg-gray-600">
-                        </div>
-                        <div
-                            class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition transform duration-300 peer-checked:translate-x-4">
-                        </div>
-                    </div>
-                </label>
-                <label for="online_toggle" class="dark select-none">
-                    Show only online users
-                </label>
             </div>
         </div>
     </form>
-</section> -->
+</section>
 
 <!-- SECTION: Second Want to Become a Member? -->
 <section class="w-full max-w-6xl mx-auto px-6 py-16">
@@ -367,10 +316,6 @@
             class="px-8 py-3 text-lg font-semibold bg-[linear-gradient(180deg,#EC003F_0%,#C70036_100%)] hover:bg-[#D94269] text-white rounded-lg transition duration-300 shadow-xl">
             Join Us FREE
         </button>
-        <!-- <button
-            class="px-8 py-3 text-lg font-semibold text-blue-400 bg-white border border-blue-400 rounded-lg transition duration-300">
-            Try for free
-        </button> -->
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -589,6 +534,82 @@
     </div>
 </section>
 
+
+@push('scripts')
+@php
+    $googleMapsApiKey = config('services.google_maps.api_key');
+@endphp
+@if($googleMapsApiKey)
+<script>
+// Initialize Google Maps Places Autocomplete for location input on home page
+function initHomeLocationAutocomplete() {
+    const locationInput = document.getElementById('home_filter_location');
+    if (!locationInput) return;
+
+    // Initialize Google Places Autocomplete for location field
+    const autocomplete = new google.maps.places.Autocomplete(locationInput, {
+        types: ['geocode'],
+        fields: ['formatted_address', 'geometry', 'address_components']
+    });
+
+    // When a place is selected, update the input with the formatted address
+    autocomplete.addListener('place_changed', function() {
+        const place = autocomplete.getPlace();
+        if (place.formatted_address) {
+            locationInput.value = place.formatted_address;
+        }
+    });
+}
+
+// Load Google Maps API with Places library
+(function() {
+    // Check if script already exists
+    if (document.querySelector('script[src*="maps.googleapis.com"]')) {
+        // Script already loaded, initialize directly
+        if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+            initHomeLocationAutocomplete();
+        }
+    } else {
+        const script = document.createElement('script');
+        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&loading=async&libraries=places&callback=initHomeLocationAutocompleteCallback';
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    }
+})();
+
+// Callback function for when Google Maps loads
+window.initHomeLocationAutocompleteCallback = function() {
+    if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+        initHomeLocationAutocomplete();
+    }
+};
+
+// Handle form submission - if not logged in, store search params and redirect to login
+@if(!auth()->check())
+document.getElementById('homeSearchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const params = new URLSearchParams();
+    
+    // Store all form values
+    for (const [key, value] of formData.entries()) {
+        if (value) {
+            params.append(key, value);
+        }
+    }
+    
+    // Redirect to login with search params
+    window.location.href = '{{ route("login") }}?redirect=' + encodeURIComponent('{{ route("dashboard.members") }}?' + params.toString());
+});
+@endif
+</script>
+@else
+<script>
+console.warn('Google Maps API key is not configured. Please add GOOGLE_MAPS_API_KEY to your .env file.');
+</script>
+@endif
+@endpush
 
 @endsection
 

@@ -20,6 +20,9 @@
                 <!-- Login Form -->
                 <form method="POST" action="{{ route('login') }}" class="space-y-5">
                     @csrf
+                    @if(isset($redirect))
+                        <input type="hidden" name="redirect" value="{{ $redirect }}">
+                    @endif
 
                     <!-- Username Field -->
                     <div>

@@ -15,9 +15,11 @@ class LoginController extends Controller
     /**
      * Show the login form.
      */
-    public function showLoginForm(): View
+    public function showLoginForm(Request $request): View
     {
-        return view('pages.auth.login');
+        return view('pages.auth.login', [
+            'redirect' => $request->get('redirect')
+        ]);
     }
 
     /**
@@ -60,12 +62,16 @@ class LoginController extends Controller
             // Update last seen at on login
             Auth::user()->updateLastSeen();
 
+            // Check for redirect parameter
+            $redirectUrl = $request->get('redirect');
+            
             // Redirect based on user role
             if (Auth::user()->is_admin) {
-                return redirect()->intended('/admin');
+                return redirect()->intended($redirectUrl ?: '/admin');
             }
 
-            return redirect()->intended('/account/profile');
+            // If redirect URL is provided, use it; otherwise go to profile
+            return redirect()->intended($redirectUrl ?: '/account/profile');
         }
 
         return back()->withErrors([

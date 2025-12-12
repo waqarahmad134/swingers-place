@@ -93,15 +93,6 @@
             </div>
         </div>
 
-    <!-- action buttons -->
-    <!-- <div class="flex items-center justify-end gap-3 mb-6">
-            <button class="px-2 py-1.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-colors">
-                <i class="ri-apps-2-line text-normal"></i>
-            </button>
-            <button class="px-2 py-1.5 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-colors">
-                <i class="ri-map-2-line text-normal"></i>
-            </button>
-    </div> -->
 
         <!-- Filter Bar -->
         <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-6 shadow-sm dark:shadow-none border border-gray-200 dark:border-gray-700">
@@ -285,22 +276,22 @@
 @endphp
 @if($googleMapsApiKey)
 <script>
-// Initialize Google Maps Places Autocomplete for search input
-function initSearchAutocomplete() {
-    const searchInput = document.getElementById('search');
-    if (!searchInput) return;
+// Initialize Google Maps Places Autocomplete for location input
+function initLocationAutocomplete() {
+    const locationInput = document.getElementById('filter_location');
+    if (!locationInput) return;
 
-    // Initialize Google Places Autocomplete
-    const autocomplete = new google.maps.places.Autocomplete(searchInput, {
-        types: ['geocode', 'establishment'],
-        fields: ['formatted_address', 'geometry', 'name', 'address_components']
+    // Initialize Google Places Autocomplete for location field
+    const autocomplete = new google.maps.places.Autocomplete(locationInput, {
+        types: ['geocode'],
+        fields: ['formatted_address', 'geometry', 'address_components']
     });
 
     // When a place is selected, update the input with the formatted address
     autocomplete.addListener('place_changed', function() {
         const place = autocomplete.getPlace();
         if (place.formatted_address) {
-            searchInput.value = place.formatted_address;
+            locationInput.value = place.formatted_address;
         }
     });
 }
@@ -311,11 +302,11 @@ function initSearchAutocomplete() {
     if (document.querySelector('script[src*="maps.googleapis.com"]')) {
         // Script already loaded, initialize directly
         if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-            initSearchAutocomplete();
+            initLocationAutocomplete();
         }
     } else {
         const script = document.createElement('script');
-        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&loading=async&libraries=places&callback=initSearchAutocompleteCallback';
+        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&loading=async&libraries=places&callback=initLocationAutocompleteCallback';
         script.async = true;
         script.defer = true;
         document.head.appendChild(script);
@@ -323,9 +314,9 @@ function initSearchAutocomplete() {
 })();
 
 // Callback function for when Google Maps loads
-window.initSearchAutocompleteCallback = function() {
+window.initLocationAutocompleteCallback = function() {
     if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-        initSearchAutocomplete();
+        initLocationAutocomplete();
     }
 };
 </script>

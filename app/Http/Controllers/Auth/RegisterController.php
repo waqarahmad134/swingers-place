@@ -299,10 +299,11 @@ class RegisterController extends Controller
             'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:5120'], // 5MB max
         ]);
 
-        // Store category, preferences, and location in session
+        // Store category, preferences, location, and languages in session
         $registrationData = session('registration_data', []);
         $registrationData['category'] = $request->input('category');
         $registrationData['preferences'] = $request->input('preferences', []);
+        $registrationData['languages'] = $request->input('languages', []);
         $registrationData['home_location'] = $request->input('home_location');
         $registrationData['country'] = $request->input('country');
         $registrationData['city'] = $request->input('city');
@@ -467,9 +468,10 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        // Get category, preferences, location, bio, basic info, and profile photo from session data
+        // Get category, preferences, languages, location, bio, basic info, and profile photo from session data
         $category = $registrationData['category'] ?? null;
         $preferences = $registrationData['preferences'] ?? [];
+        $languages = $registrationData['languages'] ?? [];
         $homeLocation = $registrationData['home_location'] ?? null;
         $country = $registrationData['country'] ?? null;
         $city = $registrationData['city'] ?? null;
@@ -502,6 +504,7 @@ class RegisterController extends Controller
             'profile_type' => $profileType,
             'category' => $category,
             'preferences' => !empty($preferences) ? json_encode($preferences) : null,
+            'languages' => !empty($languages) ? json_encode($languages) : null,
             'home_location' => $homeLocation,
             'country' => $country,
             'city' => $city,

@@ -525,6 +525,74 @@
                             </div>
                             
                             <div class="space-y-4">
+                                <!-- Languages Spoken -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Languages Spoken</label>
+                                    @php
+                                        $languageOptions = [
+                                            'Afrikaans', 'Akan', 'Albanian', 'Amharic', 'Arabic', 'Aragonese', 'Armenian', 'Assamese', 'Aymara', 'Azerbaijani',
+                                            'Balinese', 'Bambara', 'Basque', 'Belarusian', 'Bengali', 'Berber (Tamazight)', 'Bislama', 'Bosnian', 'Bulgarian', 'Burmese',
+                                            'Catalan', 'Cebuano', 'Chichewa', 'Chinese (Mandarin)', 'Corsican', 'Croatian', 'Czech',
+                                            'Danish', 'Dari', 'Divehi (Dhivehi)', 'Dutch', 'Dzongkha',
+                                            'English', 'Esperanto', 'Estonian', 'Ewe',
+                                            'Faroese', 'Fijian', 'Filipino (Tagalog)', 'Finnish', 'French', 'Frisian', 'Fulah',
+                                            'Galician', 'Georgian', 'German', 'Greek', 'Greenlandic (Kalaallisut)', 'Guarani', 'Gujarati',
+                                            'Haitian Creole', 'Hausa', 'Hebrew', 'Herero', 'Hindi', 'Hiri Motu', 'Hungarian',
+                                            'Icelandic', 'Igbo', 'Indonesian', 'Interlingua', 'Irish', 'Italian',
+                                            'Japanese', 'Javanese',
+                                            'Kannada', 'Kazakh', 'Khmer', 'Kikongo', 'Kinyarwanda', 'Kirundi', 'Korean', 'Kurdish', 'Kyrgyz',
+                                            'Lao', 'Latin', 'Latvian', 'Lingala', 'Lithuanian', 'Luba-Katanga', 'Luxembourgish',
+                                            'Macedonian', 'Maithili', 'Malagasy', 'Malay', 'Malayalam', 'Maltese', 'Manipuri', 'Maori', 'Marathi', 'Mongolian', 'Montenegrin',
+                                            'Nauruan', 'Nepali', 'Northern Sotho', 'Norwegian',
+                                            'Occitan', 'Odia (Oriya)', 'Oromo', 'Ossetian',
+                                            'Pashto', 'Persian (Farsi)', 'Polish', 'Portuguese', 'Punjabi',
+                                            'Quechua',
+                                            'Romanian', 'Romansh', 'Rundi', 'Russian',
+                                            'Samoan', 'Sango', 'Sanskrit', 'Scottish Gaelic', 'Serbian', 'Sesotho', 'Setswana', 'Shona', 'Sindhi', 'Sinhala', 'Slovak', 'Slovenian', 'Somali', 'Spanish', 'Swahili', 'Swati', 'Swedish',
+                                            'Tajik', 'Tamil', 'Tatar', 'Telugu', 'Thai', 'Tigrinya', 'Tongan', 'Tsonga', 'Tshiluba', 'Tunisian Arabic', 'Turkish', 'Turkmen',
+                                            'Ukrainian', 'Urdu', 'Uyghur', 'Uzbek',
+                                            'Venda', 'Vietnamese',
+                                            'Walloon', 'Welsh', 'Wolof',
+                                            'Xhosa',
+                                            'Xitsonga',
+                                            'Yiddish', 'Yoruba',
+                                            'Zhuang', 'Zulu'
+                                        ];
+                                    @endphp
+                                    <div class="relative" id="register-language-select-container">
+                                        <!-- Selected Languages Display -->
+                                        <div class="min-h-[42px] w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 flex flex-wrap gap-2 items-center cursor-pointer" id="register-language-select-trigger">
+                                            <span id="register-language-placeholder" class="text-gray-500 dark:text-gray-400 text-sm">Select languages...</span>
+                                            <div id="register-language-selected-tags" class="flex flex-wrap gap-2 hidden"></div>
+                                            <i class="ri-arrow-down-s-line ml-auto text-gray-400" id="register-language-arrow"></i>
+                                        </div>
+                                        
+                                        <!-- Dropdown -->
+                                        <div id="register-language-dropdown" class="hidden absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-hidden">
+                                            <!-- Search Input -->
+                                            <div class="p-2 border-b border-gray-200 dark:border-gray-700">
+                                                <input type="text" id="register-language-search" placeholder="Search languages..." class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9810FA]">
+                                            </div>
+                                            
+                                            <!-- Options List -->
+                                            <div class="overflow-y-auto max-h-48" id="register-language-options-list">
+                                                @foreach($languageOptions as $lang)
+                                                    @php
+                                                        $langLower = strtolower($lang);
+                                                    @endphp
+                                                    <label class="register-language-option flex items-center px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" data-lang="{{ $langLower }}" data-lang-name="{{ $lang }}">
+                                                        <input type="checkbox" 
+                                                               name="languages[]" 
+                                                               value="{{ $langLower }}" 
+                                                               class="register-language-checkbox rounded border-gray-300 text-purple-600 focus:ring-purple-500">
+                                                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">{{ $lang }}</span>
+                                                    </label>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Describe Yourself -->
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -1223,6 +1291,9 @@
             // Get bio/describe yourself
             const bio = document.getElementById('bio').value;
             
+            // Get selected languages
+            const selectedLanguages = Array.from(document.querySelectorAll('input[name="languages[]"]:checked')).map(cb => cb.value);
+            
             // Get basic info based on category
             let dateOfBirth, sexuality, dateOfBirthHer, sexualityHer, dateOfBirthHim, sexualityHim;
             if (selectedCategory.value === 'couple') {
@@ -1247,6 +1318,9 @@
             formData.append('home_location_lat', homeLocationLat);
             formData.append('home_location_lng', homeLocationLng);
             formData.append('bio', bio);
+            selectedLanguages.forEach(lang => {
+                formData.append('languages[]', lang);
+            });
             
             // Add basic info based on category
             if (selectedCategory.value === 'couple') {
@@ -1283,6 +1357,125 @@
                 alert('An error occurred. Please try again.');
             });
         });
+    </script>
+
+    <!-- Language Select Dropdown Script -->
+    <script>
+    // Language Select Dropdown for Registration
+    (function() {
+        const container = document.getElementById('register-language-select-container');
+        if (!container) return;
+        
+        const trigger = document.getElementById('register-language-select-trigger');
+        const dropdown = document.getElementById('register-language-dropdown');
+        const searchInput = document.getElementById('register-language-search');
+        const placeholder = document.getElementById('register-language-placeholder');
+        const selectedTags = document.getElementById('register-language-selected-tags');
+        const checkboxes = container.querySelectorAll('.register-language-checkbox');
+        const options = container.querySelectorAll('.register-language-option');
+        
+        let isOpen = false;
+        let selectedLanguages = [];
+        
+        // Initialize selected languages from checked checkboxes
+        checkboxes.forEach(cb => {
+            if (cb.checked) {
+                const lang = cb.value;
+                selectedLanguages.push(lang);
+                updateSelectedTags();
+            }
+        });
+        
+        // Toggle dropdown
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isOpen = !isOpen;
+            if (isOpen) {
+                dropdown.classList.remove('hidden');
+                searchInput.focus();
+            } else {
+                dropdown.classList.add('hidden');
+            }
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!container.contains(e.target)) {
+                isOpen = false;
+                dropdown.classList.add('hidden');
+            }
+        });
+        
+        // Search functionality
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            options.forEach(option => {
+                const langName = option.getAttribute('data-lang-name').toLowerCase();
+                const langValue = option.getAttribute('data-lang').toLowerCase();
+                if (langName.includes(searchTerm) || langValue.includes(searchTerm)) {
+                    option.style.display = 'flex';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        });
+        
+        // Handle checkbox changes
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', function() {
+                const lang = this.value;
+                if (this.checked) {
+                    if (!selectedLanguages.includes(lang)) {
+                        selectedLanguages.push(lang);
+                    }
+                } else {
+                    selectedLanguages = selectedLanguages.filter(l => l !== lang);
+                }
+                updateSelectedTags();
+            });
+        });
+        
+        // Update selected tags display
+        function updateSelectedTags() {
+            if (selectedLanguages.length === 0) {
+                placeholder.classList.remove('hidden');
+                selectedTags.classList.add('hidden');
+            } else {
+                placeholder.classList.add('hidden');
+                selectedTags.classList.remove('hidden');
+                selectedTags.innerHTML = '';
+                
+                selectedLanguages.forEach(lang => {
+                    const langName = Array.from(options).find(opt => opt.getAttribute('data-lang') === lang)?.getAttribute('data-lang-name') || lang;
+                    const tag = document.createElement('span');
+                    tag.className = 'inline-flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-md text-xs';
+                    tag.innerHTML = `
+                        <span>${langName}</span>
+                        <button type="button" class="hover:text-purple-900 dark:hover:text-purple-100 remove-language" data-lang="${lang}">
+                            <i class="ri-close-line text-sm"></i>
+                        </button>
+                    `;
+                    selectedTags.appendChild(tag);
+                });
+                
+                // Add remove functionality
+                selectedTags.querySelectorAll('.remove-language').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const lang = this.getAttribute('data-lang');
+                        const checkbox = container.querySelector(`input[value="${lang}"]`);
+                        if (checkbox) {
+                            checkbox.checked = false;
+                            checkbox.dispatchEvent(new Event('change'));
+                        }
+                    });
+                });
+            }
+        }
+        
+        // Initialize
+        updateSelectedTags();
+    })();
     </script>
 
     <!-- Google Maps Script for Location -->

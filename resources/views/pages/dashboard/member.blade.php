@@ -243,7 +243,7 @@
                                 Connected
                             </button>
                         @else
-                            <button onclick="event.stopPropagation(); window.location.href='{{ route('user.profile', $member->username ?: $member->id) }}'" class="bg-[#9810FA] hover:bg-purple-700 text-white text-xs font-semibold px-4 py-1.5 rounded-full flex items-center gap-1 transition-colors">
+                            <button onclick="event.stopPropagation(); window.location.href='{{ route('user.profile', $member->username ?: $member->id) }}'" class="hidden bg-[#9810FA] hover:bg-purple-700 text-white text-xs font-semibold px-4 py-1.5 rounded-full flex items-center gap-1 transition-colors">
                                 <i class="ri-user-add-line"></i>
                                 <span>Connect</span>
                             </button>

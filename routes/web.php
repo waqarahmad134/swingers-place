@@ -37,7 +37,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::middleware('auth')->get('/dashboard/members', [\App\Http\Controllers\Web\DashboardController::class, 'members'])->name('dashboard.members');
 
 // User Profile (Public)
-Route::get('/user/{id}', [HomeController::class, 'showProfile'])->name('user.profile');
+Route::get('/user/{username}', [HomeController::class, 'showProfile'])->name('user.profile');
 
 // Messaging
 Route::middleware('auth')->group(function () {

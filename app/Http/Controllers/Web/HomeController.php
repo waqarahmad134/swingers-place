@@ -88,12 +88,25 @@ class HomeController extends Controller
     /**
      * Display the user profile page.
      */
-    public function showProfile($id)
+    public function showProfile($username)
     {
-        $user = User::where('id', $id)
+        // Try to find by username first
+        $user = User::where('username', $username)
             ->where('profile_type', 'normal')
             ->where('is_active', true)
-            ->firstOrFail();
+            ->first();
+        
+        // If not found and parameter is numeric, try ID (for backward compatibility with old links)
+        if (!$user && is_numeric($username)) {
+            $user = User::where('id', $username)
+                ->where('profile_type', 'normal')
+                ->where('is_active', true)
+                ->first();
+        }
+        
+        if (!$user) {
+            abort(404);
+        }
 
         $profile = $user->profile;
         

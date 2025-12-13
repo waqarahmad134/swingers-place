@@ -6,7 +6,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div class="mx-auto max-w-4xl space-y-6">
             <div class="flex flex-col gap-2">
-                <a href="{{ route('user.profile', $otherUser->id) }}" class="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-secondary">
+                <a href="{{ route('user.profile', $otherUser->username ?: $otherUser->id) }}" class="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-secondary">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>

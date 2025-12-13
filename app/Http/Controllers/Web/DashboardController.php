@@ -168,9 +168,15 @@ class DashboardController extends Controller
             });
         }
 
+        // Check if random mode is requested
+        $isRandom = $request->boolean('random');
+        
         // Sort by
         $sortBy = $request->get('sort_by', 'All');
-        if ($sortBy !== 'All') {
+        if ($isRandom) {
+            // Random ordering - use database random function
+            $query->inRandomOrder();
+        } elseif ($sortBy !== 'All') {
             switch ($sortBy) {
                 case 'Newest':
                     $query->latest();
@@ -190,6 +196,9 @@ class DashboardController extends Controller
                     $query->oldest();
                     break;
             }
+        } else {
+            // Default ordering: Show latest members first (newest first)
+            $query->latest('created_at');
         }
 
         $members = $query->paginate(20)->withQueryString();

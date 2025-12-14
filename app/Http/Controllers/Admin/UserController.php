@@ -91,10 +91,43 @@ class UserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $accountType = $request->input('account_type', 'user');
+        
+        // Base rules for all account types
         $rules = [
+            'account_type' => ['required', 'in:user,editor'],
             'username' => ['required', 'string', 'max:255', 'unique:users,username'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['nullable', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+        ];
+
+        // Editor only needs basic info
+        if ($accountType === 'editor') {
+            $validated = $request->validate($rules);
+            
+            // Auto-set name from username
+            $fullName = $validated['username'] ?? 'Editor';
+            
+            // Hash password
+            $password = \Illuminate\Support\Facades\Hash::make($validated['password']);
+            
+            $user = User::create([
+                'name' => $fullName,
+                'username' => $validated['username'],
+                'email' => $validated['email'],
+                'password' => $password,
+                'is_editor' => true,
+                'is_admin' => false,
+                'is_active' => true,
+                'email_verified_at' => now(),
+            ]);
+            
+            return redirect()->route('admin.users.index')
+                ->with('success', 'Editor account created successfully.');
+        }
+        
+        // Regular user validation rules
+        $rules = array_merge($rules, [
             'terms_accepted' => ['required', 'accepted'],
             'category' => ['required', 'in:couple,single_female,single_male,transsexual'],
             'preferences' => ['nullable', 'array'],
@@ -107,7 +140,7 @@ class UserController extends Controller
             'profile_photo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'],
             'is_admin' => ['nullable', 'boolean'],
             'is_active' => ['nullable', 'boolean'],
-        ];
+        ]);
 
         // Add category-specific validation
         $category = $request->input('category');
@@ -141,6 +174,7 @@ class UserController extends Controller
             'password' => $password,
             'profile_type' => $profileType,
             'is_admin' => $request->boolean('is_admin', false),
+            'is_editor' => false,
             'is_active' => $request->boolean('is_active', true),
             'email_verified_at' => now(), // Auto-verify for admin-created users
         ]);

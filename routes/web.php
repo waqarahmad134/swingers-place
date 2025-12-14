@@ -90,6 +90,24 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     Route::delete('/profile', [\App\Http\Controllers\Web\ProfileController::class, 'destroy'])->name('profile.delete');
 });
 
+// Editor Routes (restricted to editors - user management only)
+Route::middleware(['auth', 'editor'])->prefix('editor')->name('editor.')->group(function () {
+    // Users - Editors can only manage users
+    Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [\App\Http\Controllers\Admin\UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
+    Route::get('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'show'])->name('users.show');
+    Route::get('/users/{user}/edit', [\App\Http\Controllers\Admin\UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
+    Route::get('/users/{user}/data', [\App\Http\Controllers\Admin\UserController::class, 'getData'])->name('users.data');
+    Route::post('/users/{user}/verify', [\App\Http\Controllers\Admin\UserController::class, 'verify'])->name('users.verify');
+    Route::post('/users/{user}/toggle-status', [\App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle-status');
+    Route::post('/users/{user}/toggle-online-status', [\App\Http\Controllers\Admin\UserController::class, 'toggleOnlineStatus'])->name('users.toggle-online-status');
+    Route::post('/users/{user}/set-scheduled-offline', [\App\Http\Controllers\Admin\UserController::class, 'setScheduledOffline'])->name('users.set-scheduled-offline');
+    Route::post('/users/{user}/toggle-message-block', [\App\Http\Controllers\Admin\UserController::class, 'toggleMessageBlock'])->name('users.toggle-message-block');
+});
+
 // Admin Routes (restricted to admins)
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');

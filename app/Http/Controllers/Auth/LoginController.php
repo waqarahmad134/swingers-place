@@ -69,6 +69,11 @@ class LoginController extends Controller
             if (Auth::user()->is_admin) {
                 return redirect()->intended($redirectUrl ?: '/admin');
             }
+            
+            // Redirect editors to user management
+            if (Auth::user()->is_editor) {
+                return redirect()->intended($redirectUrl ?: '/editor/users');
+            }
 
             // If redirect URL is provided, use it; otherwise go to profile
             return redirect()->intended($redirectUrl ?: '/account/profile');

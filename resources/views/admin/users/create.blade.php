@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends(Auth::check() && Auth::user()->is_editor ? 'layouts.editor' : 'layouts.admin')
 
 @section('title', 'Create User - Admin Panel')
 
@@ -24,6 +24,17 @@
                 <!-- Register Form -->
                 <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-5" id="register-form" novalidate>
                     @csrf
+
+                    <!-- Account Type -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Account Type <span class="text-red-500">*</span>
+                        </label>
+                        <select name="account_type" id="account_type" required class="w-full px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#9810FA] focus:border-transparent transition-all">
+                            <option value="user" {{ old('account_type') == 'user' ? 'selected' : '' }}>Regular User</option>
+                            <option value="editor" {{ old('account_type') == 'editor' ? 'selected' : '' }}>Editor</option>
+                        </select>
+                    </div>
 
                     <!-- Username -->
                     <div>
@@ -146,8 +157,8 @@
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
 
-                    <!-- Admin Checkbox -->
-                    <div class="flex items-start gap-2 border-t pt-4 dark:border-gray-700">
+                    <!-- Admin Checkbox (only for regular users) -->
+                    <div id="admin-checkbox-section" class="flex items-start gap-2 border-t pt-4 dark:border-gray-700">
                         <input
                             type="checkbox"
                             id="is_admin"
@@ -161,6 +172,8 @@
                         </label>
                     </div>
 
+                    <!-- Regular User Fields (hidden for editors) -->
+                    <div id="regular-user-fields">
                     <!-- Profile Photo Section -->
                     <div id="profile-photo-section" class="mt-6">
                         <!-- Profile Photo Upload -->
@@ -501,6 +514,8 @@
                             </div>
                         </div>
                     </div>
+                    </div>
+                    <!-- End Regular User Fields -->
 
                     <!-- Create Button -->
                     <button
@@ -892,6 +907,38 @@ console.warn('Google Maps API key is not configured. Please add GOOGLE_MAPS_API_
 @endif
 
 <script>
+// Account Type Toggle
+(function() {
+    const accountTypeSelect = document.getElementById('account_type');
+    const regularUserFields = document.getElementById('regular-user-fields');
+    const adminCheckboxSection = document.getElementById('admin-checkbox-section');
+    const termsAccepted = document.getElementById('terms_accepted');
+    
+    function toggleFields() {
+        const accountType = accountTypeSelect.value;
+        
+        if (accountType === 'editor') {
+            // Hide regular user fields
+            if (regularUserFields) regularUserFields.style.display = 'none';
+            if (adminCheckboxSection) adminCheckboxSection.style.display = 'none';
+            // Make terms not required for editors
+            if (termsAccepted) termsAccepted.required = false;
+        } else {
+            // Show regular user fields
+            if (regularUserFields) regularUserFields.style.display = 'block';
+            if (adminCheckboxSection) adminCheckboxSection.style.display = 'flex';
+            // Make terms required for regular users
+            if (termsAccepted) termsAccepted.required = true;
+        }
+    }
+    
+    if (accountTypeSelect) {
+        accountTypeSelect.addEventListener('change', toggleFields);
+        // Initialize on page load
+        toggleFields();
+    }
+})();
+
 // Profile Photo Preview Function
 function previewProfileImage(input, previewId) {
     if (input.files && input.files[0]) {

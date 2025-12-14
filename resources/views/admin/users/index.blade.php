@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends(Auth::check() && Auth::user()->is_editor ? 'layouts.editor' : 'layouts.admin')
 
 @section('title', 'Manage Users - Admin Panel')
 @section('page-title', 'User Management')

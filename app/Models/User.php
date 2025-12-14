@@ -29,6 +29,7 @@ class User extends Authenticatable
         'phone',
         'gender',
         'is_admin',
+        'is_editor',
         'is_active',
         'profile_image',
         'profile_type',
@@ -66,6 +67,7 @@ class User extends Authenticatable
             'scheduled_offline_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'is_editor' => 'boolean',
             'is_active' => 'boolean',
             'can_message' => 'boolean',
         ];

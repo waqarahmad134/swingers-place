@@ -2,9 +2,13 @@
 
 @section('title', 'Edit User - Admin Panel')
 
+@php
+    $routePrefix = Auth::check() && Auth::user()->is_editor ? 'editor' : 'admin';
+@endphp
+
 @section('content')
     <div class="mb-6">
-        <a href="{{ route('admin.users.index') }}" class="text-sm text-gray-600 hover:text-primary dark:text-gray-400">
+        <a href="{{ route($routePrefix . '.users.index') }}" class="text-sm text-gray-600 hover:text-primary dark:text-gray-400">
             ← Back to Users
         </a>
     </div>
@@ -12,7 +16,7 @@
     <h1 class="mb-6 text-3xl font-extrabold text-secondary">Edit User: {{ $user->name }}</h1>
 
     <div class="max-w-5xl rounded-lg border border-gray-200 bg-white p-6 shadow-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-        <form action="{{ route('admin.users.update', $user) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <form action="{{ route($routePrefix . '.users.update', $user) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -161,7 +165,7 @@
                 <button type="submit" class="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-secondary">
                     Update User
                 </button>
-                <a href="{{ route('admin.users.index') }}" class="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
+                <a href="{{ route($routePrefix . '.users.index') }}" class="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                     Cancel
                 </a>
             </div>

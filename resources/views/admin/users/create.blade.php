@@ -2,10 +2,14 @@
 
 @section('title', 'Create User - Admin Panel')
 
+@php
+    $routePrefix = Auth::check() && Auth::user()->is_editor ? 'editor' : 'admin';
+@endphp
+
 @section('content')
 <div class="p-6">
     <div class="mb-6">
-        <a href="{{ route('admin.users.index') }}" class="text-sm text-gray-600 hover:text-primary dark:text-gray-400">
+        <a href="{{ route($routePrefix . '.users.index') }}" class="text-sm text-gray-600 hover:text-primary dark:text-gray-400">
             ← Back to Users
         </a>
     </div>
@@ -22,7 +26,7 @@
                 </div>
 
                 <!-- Register Form -->
-                <form method="POST" action="{{ route('admin.users.store') }}" class="space-y-5" id="register-form" novalidate>
+                <form method="POST" action="{{ route($routePrefix . '.users.store') }}" class="space-y-5" id="register-form" novalidate>
                     @csrf
 
                     <!-- Account Type -->
@@ -527,7 +531,7 @@
 
                     <!-- Cancel Link -->
                     <div class="mt-4 text-center">
-                        <a href="{{ route('admin.users.index') }}" class="text-sm font-semibold text-[#9810FA] hover:text-[#E60076] transition-colors">
+                        <a href="{{ route($routePrefix . '.users.index') }}" class="text-sm font-semibold text-[#9810FA] hover:text-[#E60076] transition-colors">
                             Cancel
                         </a>
                     </div>

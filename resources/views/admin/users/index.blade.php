@@ -3,6 +3,10 @@
 @section('title', 'Manage Users - Admin Panel')
 @section('page-title', 'User Management')
 
+@php
+    $routePrefix = Auth::check() && Auth::user()->is_editor ? 'editor' : 'admin';
+@endphp
+
 @section('content')
     <!-- Heading -->
     <div class="pt-[14px] pb-4 md:pb-8 flex justify-between items-center">
@@ -10,7 +14,7 @@
             <h2 class="text-[#0A0A0A] text-[24px] font-medium font-['poppins']">User Management</h2>
             <p class="text-[#717182] text-xs md:text-base font-['poppins']">Manage and moderate all user accounts</p>
         </div>
-        <a href="{{ route('admin.users.create') }}" class="bg-[#FF8FA3] hover:bg-[#FF7A91] text-white px-6 py-2.5 rounded-xl font-semibold transition-colors flex items-center gap-2">
+        <a href="{{ route($routePrefix . '.users.create') }}" class="bg-[#FF8FA3] hover:bg-[#FF7A91] text-white px-6 py-2.5 rounded-xl font-semibold transition-colors flex items-center gap-2">
             <i class="ri-user-add-line"></i>
             <span>Create User</span>
         </a>
@@ -19,7 +23,7 @@
     <!-- Search and Filter Bar -->
     <div class="md:w-[98%] md:gap-0 gap-3 shadow-md flex-col md:flex-row md:justify-between flex py-4 px-3 rounded-2xl border border-[#0000001A]">
         <!-- Search Bar -->
-        <form action="{{ route('admin.users.index') }}" method="GET" class="flex">
+        <form action="{{ route($routePrefix . '.users.index') }}" method="GET" class="flex">
             @if($status !== 'all')
                 <input type="hidden" name="status" value="{{ $status }}" />
             @endif
@@ -37,19 +41,19 @@
 
         <!-- Filter Buttons -->
         <div class="flex justify-center flex-wrap gap-2">
-            <a href="{{ route('admin.users.index', array_merge(request()->except('status'), ['status' => 'all'])) }}" class="{{ $status === 'all' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} text-sm md:text-base font-['Poppins'] md:py-2 md:px-5 rounded-xl min-w-[48px] py-1 px-3">
+            <a href="{{ route($routePrefix . '.users.index', array_merge(request()->except('status'), ['status' => 'all'])) }}" class="{{ $status === 'all' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} text-sm md:text-base font-['Poppins'] md:py-2 md:px-5 rounded-xl min-w-[48px] py-1 px-3">
                 All
             </a>
-            <a href="{{ route('admin.users.index', array_merge(request()->except('status'), ['status' => 'active'])) }}" class="{{ $status === 'active' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] min-w-[86px] rounded-xl">
+            <a href="{{ route($routePrefix . '.users.index', array_merge(request()->except('status'), ['status' => 'active'])) }}" class="{{ $status === 'active' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] min-w-[86px] rounded-xl">
                 Active
             </a>
-            <a href="{{ route('admin.users.index', array_merge(request()->except('status'), ['status' => 'pending'])) }}" class="{{ $status === 'pending' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] min-w-[86px] rounded-xl">
+            <a href="{{ route($routePrefix . '.users.index', array_merge(request()->except('status'), ['status' => 'pending'])) }}" class="{{ $status === 'pending' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] min-w-[86px] rounded-xl">
                 Pending
             </a>
-            <a href="{{ route('admin.users.index', array_merge(request()->except('status'), ['status' => 'verified'])) }}" class="{{ $status === 'verified' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] min-w-[86px] rounded-xl">
+            <a href="{{ route($routePrefix . '.users.index', array_merge(request()->except('status'), ['status' => 'verified'])) }}" class="{{ $status === 'verified' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] min-w-[86px] rounded-xl">
                 Verified
             </a>
-            <a href="{{ route('admin.users.index', array_merge(request()->except('status'), ['status' => 'banned'])) }}" class="{{ $status === 'banned' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] min-w-[86px] rounded-xl">
+            <a href="{{ route($routePrefix . '.users.index', array_merge(request()->except('status'), ['status' => 'banned'])) }}" class="{{ $status === 'banned' ? 'bg-[#FF8FA3] text-white' : 'border border-[#0000001A]' }} md:px-5 py-1 text-sm md:text-base md:py-2 font-['Poppins'] min-w-[86px] rounded-xl">
                 Banned
             </a>
         </div>
@@ -175,7 +179,7 @@
 
                                     <!-- Verify Account -->
                                     <div class="group/item">
-                                        <form action="{{ route('admin.users.verify', $user) }}" method="POST" class="inline">
+                                        <form action="{{ route($routePrefix . '.users.verify', $user) }}" method="POST" class="inline">
                                             @csrf
                                             <button type="submit" class="w-full text-left flex gap-2 items-center px-4 py-3 border-b border-[#A1A1A1] md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors">
                                                 <img src="{{ asset('admin-assets/edit.png') }}" width="24" alt="" class="transition-all group-hover/item:invert group-hover/item:brightness-0" />
@@ -187,7 +191,7 @@
                                     <!-- Activate/Ban User -->
                                     @if ($user->id !== auth()->id())
                                         <div class="group/item">
-                                            <form action="{{ route('admin.users.toggle-status', $user) }}" method="POST" class="inline">
+                                            <form action="{{ route($routePrefix . '.users.toggle-status', $user) }}" method="POST" class="inline">
                                                 @csrf
                                                 <button type="submit" class="w-full text-left flex gap-2 items-center px-4 py-3 border-b border-[#A1A1A1] md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors">
                                                     <img src="{{ asset('admin-assets/edit.png') }}" width="24" alt="" class="transition-all group-hover/item:invert group-hover/item:brightness-0" />
@@ -200,7 +204,7 @@
                                     <!-- Delete User -->
                                     @if ($user->id !== auth()->id())
                                         <div class="group/item">
-                                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                            <form action="{{ route($routePrefix . '.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="w-full text-left flex gap-2 items-center px-4 py-3 md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors">
@@ -364,7 +368,7 @@
     <script>
         function openEditModal(userId) {
             // Fetch user data
-            const baseUrl = '{{ url("/admin/users") }}';
+            const baseUrl = '{{ url("/' . $routePrefix . '/users") }}';
             fetch(`${baseUrl}/${userId}/data`)
                 .then(response => response.json())
                 .then(data => {
@@ -437,7 +441,7 @@
                     // Disable toggle during request
                     this.disabled = true;
                     
-                    fetch(`/admin/users/${userId}/toggle-online-status`, {
+                    fetch(`/{{ $routePrefix }}/users/${userId}/toggle-online-status`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -499,7 +503,7 @@
                     
                     // Debounce the request
                     timeout = setTimeout(() => {
-                        fetch(`/admin/users/${userId}/set-scheduled-offline`, {
+                        fetch(`/{{ $routePrefix }}/users/${userId}/set-scheduled-offline`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -551,7 +555,7 @@
                     if (input) {
                         input.value = '';
                         
-                        fetch(`/admin/users/${userId}/set-scheduled-offline`, {
+                        fetch(`/{{ $routePrefix }}/users/${userId}/set-scheduled-offline`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -603,7 +607,7 @@
                     // Disable toggle during request
                     this.disabled = true;
                     
-                    fetch(`/admin/users/${userId}/toggle-message-block`, {
+                    fetch(`/{{ $routePrefix }}/users/${userId}/toggle-message-block`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

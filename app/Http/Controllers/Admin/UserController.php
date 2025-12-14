@@ -12,6 +12,14 @@ use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
+    /**
+     * Get the correct route prefix based on user role
+     */
+    protected function getRoutePrefix(): string
+    {
+        return auth()->user()->is_editor ? 'editor' : 'admin';
+    }
+
     public function index(Request $request): View
     {
         $search = $request->get('search', '');
@@ -122,7 +130,7 @@ class UserController extends Controller
                 'email_verified_at' => now(),
             ]);
             
-            return redirect()->route('admin.users.index')
+            return redirect()->route($this->getRoutePrefix() . '.users.index')
                 ->with('success', 'Editor account created successfully.');
         }
         
@@ -228,7 +236,7 @@ class UserController extends Controller
             'onboarding_step' => 9,
         ]);
 
-        return redirect()->route('admin.users.index')
+        return redirect()->route($this->getRoutePrefix() . '.users.index')
             ->with('success', 'User created successfully.');
     }
 
@@ -339,7 +347,7 @@ class UserController extends Controller
         
         $profile->save();
 
-        return redirect()->route('admin.users.index')
+        return redirect()->route($this->getRoutePrefix() . '.users.index')
             ->with('success', 'User updated successfully!');
     }
 
@@ -358,15 +366,15 @@ class UserController extends Controller
         
         $user->save();
 
-        return redirect()->route('admin.users.index')
+        return redirect()->route($this->getRoutePrefix() . '.users.index')
             ->with('success', $message);
     }
 
     public function toggleStatus(User $user): RedirectResponse
     {
-        // Prevent admin from banning themselves
+        // Prevent admin/editor from banning themselves
         if ($user->id === auth()->id()) {
-            return redirect()->route('admin.users.index')
+            return redirect()->route($this->getRoutePrefix() . '.users.index')
                 ->with('error', 'You cannot change your own status!');
         }
 
@@ -377,7 +385,7 @@ class UserController extends Controller
         $status = $user->is_active ? 'activated' : 'banned';
         $message = "User account {$status} successfully!";
 
-        return redirect()->route('admin.users.index')
+        return redirect()->route($this->getRoutePrefix() . '.users.index')
             ->with('success', $message);
     }
 
@@ -385,7 +393,7 @@ class UserController extends Controller
     {
         $user->delete();
 
-        return redirect()->route('admin.users.index')
+        return redirect()->route($this->getRoutePrefix() . '.users.index')
             ->with('success', 'User deleted successfully!');
     }
 

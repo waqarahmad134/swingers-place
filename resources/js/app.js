@@ -373,6 +373,10 @@ const showToast = (message, type = 'success', duration = 3000) => {
     return toastId;
 };
 
+// Make showToast available globally
+window.showToast = showToast;
+window.removeToast = removeToast;
+
 const removeToast = (toastId) => {
     const toast = document.getElementById(toastId);
     if (!toast) {

@@ -218,16 +218,20 @@
                 </div>
             </div>
 
-            <!-- Messages Area -->
+            <!-- Messages Container Wrapper -->
             <div 
                 data-chat
                 data-chat-send-url="{{ route('messages.store', $selectedUser, false) }}"
                 data-chat-poll-url="{{ route('messages.poll', $selectedUser, false) }}"
                 data-chat-last-id="{{ $lastMessageId }}"
                 data-user-id="{{ $selectedUser->id }}"
-                class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-6 space-y-3"
-                id="chat-messages"
+                class="flex-1 flex flex-col overflow-hidden"
             >
+                <!-- Messages Area -->
+                <div 
+                    class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-6 space-y-3"
+                    id="chat-messages"
+                >
                 <!-- Empty State -->
                 <div data-chat-empty class="flex h-full flex-col items-center justify-center gap-3 text-center text-gray-500 dark:text-gray-400 {{ $messages->isEmpty() ? '' : 'hidden' }}">
                     <i class="ri-message-3-line text-5xl"></i>
@@ -296,7 +300,7 @@
 
                 <form 
                     data-chat-form 
-                    action="{{ route('messages.store', $selectedUser) }}" 
+                    action="javascript:void(0);" 
                     method="POST"
                     enctype="multipart/form-data"
                     class="flex items-center gap-3"
@@ -411,7 +415,7 @@
                         <i class="ri-mic-line text-xl"></i>
                     </button>
                     <button
-                        type="submit"
+                        type="button"
                         data-chat-submit
                         class="p-2.5 bg-[#9810FA] hover:bg-purple-700 text-white rounded-full transition-colors flex items-center justify-center flex-shrink-0"
                         title="Send Message"
@@ -419,6 +423,7 @@
                         <i class="ri-send-plane-fill text-lg"></i>
                     </button>
                 </form>
+            </div>
             </div>
         @else
             <!-- No Chat Selected -->
@@ -544,67 +549,149 @@ document.addEventListener('DOMContentLoaded', function() {
         let lastMessageId = parseInt(chatContainer.dataset.chatLastId) || 0;
         let pollingInterval = null;
 
-        // Send message
-        if (form) {
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
+        // Send message function
+        const sendMessage = async function() {
+            if (!input || !form || !sendUrl) {
+                console.error('Missing required elements for sending message');
+                return;
+            }
+            
+            const body = input.value.trim();
+            const fileInput = document.getElementById('fileAttachment');
+            const imageInput = document.getElementById('imageAttachment');
+            
+            // Check if there's a message or attachment
+            if (!body && (!fileInput || !fileInput.files.length) && (!imageInput || !imageInput.files.length)) {
+                return;
+            }
+
+            // Disable input while sending
+            input.disabled = true;
+            const submitBtn = form.querySelector('[data-chat-submit]');
+            if (submitBtn) submitBtn.disabled = true;
+
+            try {
+                // Create FormData for file uploads
+                const formData = new FormData();
+                formData.append('body', body || ' '); // Send space if only file
                 
-                const body = input.value.trim();
-                const fileInput = document.getElementById('fileAttachment');
-                const imageInput = document.getElementById('imageAttachment');
+                const csrfToken = document.querySelector('meta[name="csrf-token"]');
+                if (csrfToken) {
+                    formData.append('_token', csrfToken.content);
+                }
                 
-                // Check if there's a message or attachment
-                if (!body && !fileInput.files.length && !imageInput.files.length) return;
+                if (fileInput && fileInput.files.length) {
+                    formData.append('attachment', fileInput.files[0]);
+                }
+                
+                if (imageInput && imageInput.files.length) {
+                    formData.append('image', imageInput.files[0]);
+                }
 
-                // Disable input while sending
-                input.disabled = true;
-                const submitBtn = form.querySelector('[data-chat-submit]');
-                if (submitBtn) submitBtn.disabled = true;
+                const response = await fetch(sendUrl, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken ? csrfToken.content : '',
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: formData,
+                });
 
-                try {
-                    // Create FormData for file uploads
-                    const formData = new FormData();
-                    formData.append('body', body || ' '); // Send space if only file
-                    
-                    if (fileInput.files.length) {
-                        formData.append('attachment', fileInput.files[0]);
-                    }
-                    
-                    if (imageInput.files.length) {
-                        formData.append('image', imageInput.files[0]);
-                    }
-
-                    const response = await fetch(sendUrl, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                            'Accept': 'application/json',
-                        },
-                        body: formData,
-                    });
-
-                    if (response.ok) {
-                        const data = await response.json();
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.message) {
                         addMessage(data.message);
                         input.value = '';
                         lastMessageId = data.message.id;
                         
                         // Clear file inputs and previews
-                        fileInput.value = '';
-                        imageInput.value = '';
-                        document.getElementById('filePreviewArea').classList.add('hidden');
-                        document.getElementById('imagePreviewArea').classList.add('hidden');
+                        if (fileInput) {
+                            fileInput.value = '';
+                        }
+                        if (imageInput) {
+                            imageInput.value = '';
+                        }
+                        const filePreviewArea = document.getElementById('filePreviewArea');
+                        const imagePreviewArea = document.getElementById('imagePreviewArea');
+                        if (filePreviewArea) filePreviewArea.classList.add('hidden');
+                        if (imagePreviewArea) imagePreviewArea.classList.add('hidden');
                         
                         if (emptyState) emptyState.classList.add('hidden');
+                        
+                        // Scroll to bottom after adding message
+                        if (messagesContainer) {
+                            setTimeout(() => {
+                                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                            }, 100);
+                        }
                     }
-                } catch (error) {
-                    console.error('Failed to send message:', error);
-                } finally {
-                    input.disabled = false;
-                    if (submitBtn) submitBtn.disabled = false;
-                    input.focus();
+                } else {
+                    // Handle error response
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('Failed to send message:', errorData);
+                    if (window.showToast) {
+                        window.showToast(errorData.message || 'Failed to send message', 'error');
+                    } else {
+                        alert(errorData.message || 'Failed to send message');
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to send message:', error);
+                if (window.showToast) {
+                    window.showToast('Failed to send message. Please try again.', 'error');
+                } else {
+                    alert('Failed to send message. Please try again.');
+                }
+            } finally {
+                input.disabled = false;
+                const submitBtn = form.querySelector('[data-chat-submit]');
+                if (submitBtn) submitBtn.disabled = false;
+                input.focus();
+            }
+        };
+
+        // Attach event listeners
+        if (form && input) {
+            console.log('Form and input found, attaching listeners');
+            
+            // Form submit (for Enter key)
+            form.addEventListener('submit', function(e) {
+                console.log('Form submit triggered');
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                sendMessage();
+                return false;
+            });
+            
+            // Submit button click - use direct selector
+            const submitBtn = document.querySelector('[data-chat-submit]');
+            console.log('Submit button found:', !!submitBtn);
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function(e) {
+                    console.log('Submit button clicked');
+                    e.preventDefault();
+                    e.stopPropagation();
+                    sendMessage();
+                });
+            } else {
+                console.error('Submit button not found');
+            }
+            
+            // Enter key in input
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    console.log('Enter key pressed in input');
+                    e.preventDefault();
+                    e.stopPropagation();
+                    sendMessage();
                 }
             });
+            
+            console.log('All event listeners attached successfully');
+        } else {
+            console.error('Form or input not found', { form: !!form, input: !!input });
         }
 
         // Poll for new messages

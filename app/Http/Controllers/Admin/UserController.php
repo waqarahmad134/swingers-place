@@ -351,7 +351,7 @@ class UserController extends Controller
             ->with('success', 'User updated successfully!');
     }
 
-    public function verify(User $user): RedirectResponse
+    public function verify(User $user): RedirectResponse|\Illuminate\Http\JsonResponse
     {
         // Toggle verification status
         if ($user->email_verified_at) {
@@ -366,16 +366,31 @@ class UserController extends Controller
         
         $user->save();
 
+        if (request()->expectsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'is_verified' => (bool) $user->email_verified_at,
+            ]);
+        }
+
         return redirect()->route($this->getRoutePrefix() . '.users.index')
             ->with('success', $message);
     }
 
-    public function toggleStatus(User $user): RedirectResponse
+    public function toggleStatus(User $user): RedirectResponse|\Illuminate\Http\JsonResponse
     {
         // Prevent admin/editor from banning themselves
         if ($user->id === auth()->id()) {
+            $errorMessage = 'You cannot change your own status!';
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $errorMessage,
+                ], 403);
+            }
             return redirect()->route($this->getRoutePrefix() . '.users.index')
-                ->with('error', 'You cannot change your own status!');
+                ->with('error', $errorMessage);
         }
 
         // Toggle active status
@@ -385,13 +400,28 @@ class UserController extends Controller
         $status = $user->is_active ? 'activated' : 'banned';
         $message = "User account {$status} successfully!";
 
+        if (request()->expectsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'is_active' => $user->is_active,
+            ]);
+        }
+
         return redirect()->route($this->getRoutePrefix() . '.users.index')
             ->with('success', $message);
     }
 
-    public function destroy(User $user): RedirectResponse
+    public function destroy(User $user): RedirectResponse|\Illuminate\Http\JsonResponse
     {
         $user->delete();
+
+        if (request()->expectsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'User deleted successfully!',
+            ]);
+        }
 
         return redirect()->route($this->getRoutePrefix() . '.users.index')
             ->with('success', 'User deleted successfully!');

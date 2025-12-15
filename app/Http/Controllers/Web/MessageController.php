@@ -121,17 +121,27 @@ class MessageController extends Controller
             ->exists();
 
         if ($isBlocked) {
-            if ($request->expectsJson()) {
+            if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
                 return response()->json(['message' => 'Cannot send message.'], 403);
             }
             return redirect()->back()->with('error', 'Cannot send message to this user.');
         }
 
-        $validated = $request->validate([
-            'body' => ['nullable', 'string', 'max:2000'],
-            'attachment' => ['nullable', 'file', 'max:10240'], // 10MB max
-            'image' => ['nullable', 'image', 'max:5120'], // 5MB max
-        ]);
+        try {
+            $validated = $request->validate([
+                'body' => ['nullable', 'string', 'max:2000'],
+                'attachment' => ['nullable', 'file', 'max:10240'], // 10MB max
+                'image' => ['nullable', 'image', 'max:5120'], // 5MB max
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'message' => 'Validation failed',
+                    'errors' => $e->errors(),
+                ], 422);
+            }
+            throw $e;
+        }
 
         $attachmentPath = null;
         $attachmentType = null;
@@ -167,7 +177,7 @@ class MessageController extends Controller
             'message' => $this->transformMessage($message, $currentUser->id),
         ];
 
-        if ($request->expectsJson()) {
+        if ($request->expectsJson() || $request->ajax() || $request->wantsJson()) {
             return response()->json($payload);
         }
 

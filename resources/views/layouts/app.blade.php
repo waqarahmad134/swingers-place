@@ -257,20 +257,52 @@
                     const closeBtn = document.getElementById('close-complete-profile-modal');
                     const continueBtn = document.getElementById('continue-browsing-btn');
                     
-                    // Show modal on page load (no persistence - will show again on next page visit)
+                    // Storage key for tracking when modal was last closed
+                    const storageKey = 'complete-profile-modal-closed';
+                    const hoursToWait = 24;
+                    const millisecondsToWait = hoursToWait * 60 * 60 * 1000; // 24 hours in milliseconds
+                    
+                    // Check if modal should be shown based on 24-hour rule
+                    function shouldShowModal() {
+                        const lastClosed = localStorage.getItem(storageKey);
+                        if (!lastClosed) {
+                            // Never been closed, show it
+                            return true;
+                        }
+                        
+                        const lastClosedTime = parseInt(lastClosed, 10);
+                        const currentTime = Date.now();
+                        const timeDifference = currentTime - lastClosedTime;
+                        
+                        // Show modal if 24 hours have passed
+                        return timeDifference >= millisecondsToWait;
+                    }
+                    
+                    // Store the current timestamp when modal is closed
+                    function markModalAsClosed() {
+                        localStorage.setItem(storageKey, Date.now().toString());
+                    }
+                    
+                    // Show modal on page load if conditions are met
                     if (modal) {
-                        // Delay showing modal slightly for better UX
-                        setTimeout(function() {
-                            modal.classList.remove('hidden');
-                            document.body.style.overflow = 'hidden';
-                        }, 1000);
+                        if (shouldShowModal()) {
+                            // Delay showing modal slightly for better UX
+                            setTimeout(function() {
+                                modal.classList.remove('hidden');
+                                document.body.style.overflow = 'hidden';
+                            }, 1000);
+                        } else {
+                            // Don't show modal, but keep it in DOM (hidden)
+                            modal.classList.add('hidden');
+                        }
                     }
                     
                     function closeModal() {
                         if (modal) {
                             modal.classList.add('hidden');
                             document.body.style.overflow = '';
-                            // No persistence - when user navigates to a new page, modal will show again
+                            // Mark modal as closed with current timestamp
+                            markModalAsClosed();
                         }
                     }
                     

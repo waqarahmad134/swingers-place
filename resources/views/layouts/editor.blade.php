@@ -112,7 +112,19 @@
         </main>
     </div>
 
+    @include('components.toast')
+    
     @stack('scripts')
+    
+    <!-- Load app.js for toast notifications -->
+    @vite(['resources/js/app.js'])
+    
+    <script>
+        // Make showToast available globally
+        if (typeof showToast !== 'undefined') {
+            window.showToast = showToast;
+        }
+    </script>
 </body>
 </html>
 

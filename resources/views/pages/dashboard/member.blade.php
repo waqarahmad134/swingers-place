@@ -195,12 +195,12 @@
 
                         <!-- Online Badge -->
                         
-                        @if($isOnline)
+                        <!-- @if($isOnline)
                             <div class="bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-xl flex items-center gap-1">
                                 <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
                                 <span>Online</span>
                             </div>
-                        @endif
+                        @endif -->
                     </div>
 
                     <!-- Distance Badge (static - not in DB) -->
@@ -236,7 +236,7 @@
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-1 text-red-500">
                             <i class="ri-heart-fill text-lg"></i>
-                            <span class="text-gray-900 dark:text-white text-sm font-medium">{{ rand(200, 2000) }}</span>
+                            <span class="text-gray-900 dark:text-white text-sm font-medium">{{ 0 }}</span>
                         </div>
                         @if(rand(0, 4) === 0)
                             <button class="bg-[#9810FA] text-white text-xs font-semibold px-4 py-1.5 rounded-lg" onclick="event.stopPropagation();">

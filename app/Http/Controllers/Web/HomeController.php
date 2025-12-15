@@ -14,6 +14,11 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Redirect authenticated users to members page
+        if (auth()->check()) {
+            return redirect()->route('dashboard.members');
+        }
+
         // Get active slides ordered by order field, then by creation date
         $slidesData = Slide::where('is_active', true)
             ->orderBy('order')

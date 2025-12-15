@@ -179,34 +179,29 @@
 
                                     <!-- Verify Account -->
                                     <div class="group/item">
-                                        <form action="{{ route($routePrefix . '.users.verify', $user) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button type="submit" class="w-full text-left flex gap-2 items-center px-4 py-3 border-b border-[#A1A1A1] md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors">
-                                                <img src="{{ asset('admin-assets/edit.png') }}" width="24" alt="" class="transition-all group-hover/item:invert group-hover/item:brightness-0" />
-                                                <span class="transition-colors group-hover/item:text-white">{{ $user->email_verified_at ? 'Unverify Account' : 'Verify Account' }}</span>
-                                            </button>
-                                        </form>
+                                        <button type="button" onclick="verifyUser({{ $user->id }}, {{ $user->email_verified_at ? 'true' : 'false' }})" class="w-full text-left flex gap-2 items-center px-4 py-3 border-b border-[#A1A1A1] md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors verify-user-btn" data-user-id="{{ $user->id }}">
+                                            <img src="{{ asset('admin-assets/edit.png') }}" width="24" alt="" class="transition-all group-hover/item:invert group-hover/item:brightness-0" />
+                                            <span class="transition-colors group-hover/item:text-white verify-user-text">{{ $user->email_verified_at ? 'Unverify Account' : 'Verify Account' }}</span>
+                                        </button>
                                     </div>
 
                                     <!-- Activate/Ban User -->
                                     @if ($user->id !== auth()->id())
                                         <div class="group/item">
-                                            <form action="{{ route($routePrefix . '.users.toggle-status', $user) }}" method="POST" class="inline">
-                                                @csrf
-                                                <button type="submit" class="w-full text-left flex gap-2 items-center px-4 py-3 border-b border-[#A1A1A1] md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors">
-                                                    <img src="{{ asset('admin-assets/edit.png') }}" width="24" alt="" class="transition-all group-hover/item:invert group-hover/item:brightness-0" />
-                                                    <span class="transition-colors group-hover/item:text-white">{{ $user->is_active ? 'Ban User' : 'Activate User' }}</span>
-                                                </button>
-                                            </form>
+                                            <button type="button" onclick="toggleUserStatus({{ $user->id }}, {{ $user->is_active ? 'true' : 'false' }})" class="w-full text-left flex gap-2 items-center px-4 py-3 border-b border-[#A1A1A1] md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors toggle-status-btn" data-user-id="{{ $user->id }}">
+                                                <img src="{{ asset('admin-assets/edit.png') }}" width="24" alt="" class="transition-all group-hover/item:invert group-hover/item:brightness-0" />
+                                                <span class="transition-colors group-hover/item:text-white toggle-status-text">{{ $user->is_active ? 'Ban User' : 'Activate User' }}</span>
+                                            </button>
                                         </div>
                                     @endif
 
                                     <!-- Delete User -->
                                     @if ($user->id !== auth()->id())
                                         <div class="group/item">
-                                            <form action="{{ route($routePrefix . '.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                                @csrf
-                                                @method('DELETE')
+                                            <button type="button" onclick="deleteUser({{ $user->id }})" class="w-full text-left flex gap-2 items-center px-4 py-3 border-b border-[#A1A1A1] md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors delete-user-btn" data-user-id="{{ $user->id }}">
+                                                <img src="{{ asset('admin-assets/edit.png') }}" width="24" alt="" class="transition-all group-hover/item:invert group-hover/item:brightness-0" />
+                                                <span class="transition-colors group-hover/item:text-white">Delete User</span>
+                                            </button>
                                                 <button type="submit" class="w-full text-left flex gap-2 items-center px-4 py-3 md:text-base text-sm text-[#595959] hover:bg-[#FF7166] hover:rounded-xl transition-colors">
                                                     <img src="{{ asset('admin-assets/delete.png') }}" width="24" alt="" class="transition-all group-hover/item:invert group-hover/item:brightness-0" />
                                                     <span class="transition-colors group-hover/item:text-white">Delete User</span>
@@ -507,6 +502,7 @@
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
+                                'Accept': 'application/json',
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
                             },
                             body: JSON.stringify({
@@ -559,6 +555,7 @@
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
+                                'Accept': 'application/json',
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
                             },
                             body: JSON.stringify({
@@ -611,6 +608,7 @@
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
+                            'Accept': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
                         },
                         body: JSON.stringify({
@@ -653,6 +651,164 @@
                 });
             });
         });
+
+        // Verify/Unverify User
+        function verifyUser(userId, isVerified) {
+            if (!confirm(isVerified ? 'Are you sure you want to unverify this user?' : 'Are you sure you want to verify this user?')) {
+                return;
+            }
+
+            const button = document.querySelector(`.verify-user-btn[data-user-id="${userId}"]`);
+            const textSpan = button?.querySelector('.verify-user-text');
+            
+            if (button) button.disabled = true;
+
+            fetch(`/{{ $routePrefix }}/users/${userId}/verify`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok');
+            })
+            .then(data => {
+                if (data.success) {
+                    if (window.showToast) {
+                        window.showToast(data.message || (isVerified ? 'User account unverified successfully!' : 'User account verified successfully!'), 'success');
+                    }
+                    // Reload page to update UI
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    if (window.showToast) {
+                        window.showToast(data.message || 'Failed to update verification status', 'error');
+                    }
+                    if (button) button.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (window.showToast) {
+                    window.showToast('Failed to update verification status', 'error');
+                } else {
+                    alert('Failed to update verification status');
+                }
+                if (button) button.disabled = false;
+            });
+        }
+
+        // Toggle User Status (Activate/Ban)
+        function toggleUserStatus(userId, isActive) {
+            if (!confirm(isActive ? 'Are you sure you want to ban this user?' : 'Are you sure you want to activate this user?')) {
+                return;
+            }
+
+            const button = document.querySelector(`.toggle-status-btn[data-user-id="${userId}"]`);
+            const textSpan = button?.querySelector('.toggle-status-text');
+            
+            if (button) button.disabled = true;
+
+            fetch(`/{{ $routePrefix }}/users/${userId}/toggle-status`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok');
+            })
+            .then(data => {
+                if (data.success) {
+                    if (window.showToast) {
+                        window.showToast(data.message || (isActive ? 'User banned successfully!' : 'User activated successfully!'), 'success');
+                    }
+                    // Reload page to update UI
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    if (window.showToast) {
+                        window.showToast(data.message || 'Failed to update user status', 'error');
+                    } else {
+                        alert(data.message || 'Failed to update user status');
+                    }
+                    if (button) button.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (window.showToast) {
+                    window.showToast('Failed to update user status', 'error');
+                } else {
+                    alert('Failed to update user status');
+                }
+                if (button) button.disabled = false;
+            });
+        }
+
+        // Delete User
+        function deleteUser(userId) {
+            if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+                return;
+            }
+
+            const button = document.querySelector(`.delete-user-btn[data-user-id="${userId}"]`);
+            if (button) button.disabled = true;
+
+            fetch(`/{{ $routePrefix }}/users/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok');
+            })
+            .then(data => {
+                if (data.success) {
+                    if (window.showToast) {
+                        window.showToast(data.message || 'User deleted successfully!', 'success');
+                    }
+                    // Reload page to update UI
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000);
+                } else {
+                    if (window.showToast) {
+                        window.showToast(data.message || 'Failed to delete user', 'error');
+                    } else {
+                        alert(data.message || 'Failed to delete user');
+                    }
+                    if (button) button.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (window.showToast) {
+                    window.showToast('Failed to delete user', 'error');
+                } else {
+                    alert('Failed to delete user');
+                }
+                if (button) button.disabled = false;
+            });
+        }
     </script>
     @endpush
 @endsection

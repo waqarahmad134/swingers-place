@@ -114,9 +114,10 @@
                     <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">Distance</label>
                     <select name="distance" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-2xl px-3 py-2 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
                         <option value="Any Distance" {{ request('distance') == 'Any Distance' || !request('distance') ? 'selected' : '' }}>Any Distance</option>
-                        <option value="10" {{ request('distance') == '10' ? 'selected' : '' }}>Within 10 miles</option>
-                        <option value="25" {{ request('distance') == '25' ? 'selected' : '' }}>Within 25 miles</option>
-                        <option value="50" {{ request('distance') == '50' ? 'selected' : '' }}>Within 50 miles</option>
+                        <option value="10" {{ request('distance') == '10' ? 'selected' : '' }}>Within 10 km</option>
+                        <option value="25" {{ request('distance') == '25' ? 'selected' : '' }}>Within 25 km</option>
+                        <option value="50" {{ request('distance') == '50' ? 'selected' : '' }}>Within 50 km</option>
+                        <option value="100" {{ request('distance') == '100' ? 'selected' : '' }}>Within 100 km</option>
                     </select>
                 </div>
 
@@ -206,7 +207,7 @@
                     <!-- Distance Badge (static - not in DB) -->
                     <div class="absolute bottom-2 right-2 bg-black/60 dark:bg-gray-900/80 text-white text-xs font-semibold px-2 py-1 rounded-xl">
                         <i class="ri-map-pin-line text-sm mr-1"></i>
-                        <span class="font-light">{{ rand(5, 25) }} miles</span>  
+                        <span class="font-light">{{ rand(5, 25) }} km</span>  
                     </div>
                 </div>
 

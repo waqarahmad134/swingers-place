@@ -186,21 +186,21 @@
                     
                     <div class="absolute top-2 left-2 flex flex-col items-start gap-2">
                         <!-- Verified Badge -->
-                        @if($member->email_verified_at)
+                        <!-- @if($member->email_verified_at)
                             <div class="bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded-xl flex items-center gap-1">
                                 <i class="ri-check-line text-sm"></i>
                                 <span class="font-light">Verified</span>
                             </div>
-                        @endif
+                        @endif -->
 
                         <!-- Online Badge -->
                         
-                        <!-- @if($isOnline)
+                        @if($isOnline)
                             <div class="bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-xl flex items-center gap-1">
                                 <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
                                 <span>Online</span>
                             </div>
-                        @endif -->
+                        @endif
                     </div>
 
                     <!-- Distance Badge (static - not in DB) -->

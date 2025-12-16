@@ -35,6 +35,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Dashboard Routes (authenticated users) - MUST be at the top before any catch-all routes
 Route::middleware('auth')->get('/dashboard/members', [\App\Http\Controllers\Web\DashboardController::class, 'members'])->name('dashboard.members');
+Route::middleware('auth')->get('/dashboard/search', [\App\Http\Controllers\Web\DashboardController::class, 'search'])->name('dashboard.search');
 
 // User Profile (Public)
 Route::get('/user/{username}', [HomeController::class, 'showProfile'])->name('user.profile');

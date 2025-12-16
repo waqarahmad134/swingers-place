@@ -44,6 +44,14 @@
             </div>
         </a>
 
+        <!-- Search -->
+        <a href="{{ route('dashboard.search') }}" class="md:w-full w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 cursor-pointer md:rounded-3xl px-3 transition-all hover:bg-purple-600 text-gray-700 dark:text-gray-300">
+            <div class="flex items-center gap-3">
+                <i class="ri-search-line text-normal"></i>
+                <h2 class="text-sm md:block hidden font-normal">Search</h2>
+            </div>
+        </a>
+
         <!-- Events & Travel -->
         <a href="#" class="md:w-full w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 cursor-pointer md:rounded-3xl px-3 transition-all hover:bg-purple-600 text-gray-700 dark:text-gray-300">
             <div class="flex items-center gap-3">

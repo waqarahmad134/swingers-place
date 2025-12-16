@@ -58,6 +58,109 @@ class DashboardController extends Controller
             });
         }
 
+        // New filter sidebar filters - combine with OR logic
+        $hasCategoryFilter = false;
+        $categoryConditions = [];
+        
+        // Couples filter
+        if ($request->boolean('filter_couples')) {
+            $hasCategoryFilter = true;
+            $categoryConditions[] = function ($q) {
+                $q->whereHas('profile', function ($profileQ) {
+                    $profileQ->where('category', 'couple');
+                });
+            };
+        }
+        
+        // Female filter
+        if ($request->boolean('filter_female')) {
+            $hasCategoryFilter = true;
+            $categoryConditions[] = function ($q) {
+                $q->where(function ($subQ) {
+                    $subQ->where('gender', 'female')
+                         ->orWhereHas('profile', function ($profileQ) {
+                             $profileQ->where('category', 'single_female');
+                         });
+                });
+            };
+        }
+        
+        // Male filter
+        if ($request->boolean('filter_male')) {
+            $hasCategoryFilter = true;
+            $categoryConditions[] = function ($q) {
+                $q->where(function ($subQ) {
+                    $subQ->where('gender', 'male')
+                         ->orWhereHas('profile', function ($profileQ) {
+                             $profileQ->where('category', 'single_male');
+                         });
+                });
+            };
+        }
+        
+        // Business filter
+        if ($request->boolean('filter_business')) {
+            $hasCategoryFilter = true;
+            $categoryConditions[] = function ($q) {
+                $q->whereHas('profile', function ($profileQ) {
+                    $profileQ->where(function ($pq) {
+                        $pq->where('category', 'business')
+                           ->orWhere('profile_type', 'business');
+                    });
+                });
+            };
+        }
+        
+        // Transgender filter
+        if ($request->boolean('filter_transgender')) {
+            $hasCategoryFilter = true;
+            $categoryConditions[] = function ($q) {
+                $q->where(function ($subQ) {
+                    $subQ->where('gender', 'transgender')
+                         ->orWhere('gender', 'other')
+                         ->orWhere('gender', 'non-binary');
+                });
+            };
+        }
+        
+        // Apply category filters with OR logic
+        if ($hasCategoryFilter && !empty($categoryConditions)) {
+            $query->where(function ($q) use ($categoryConditions) {
+                foreach ($categoryConditions as $index => $condition) {
+                    if ($index === 0) {
+                        $condition($q);
+                    } else {
+                        $q->orWhere(function ($subQ) use ($condition) {
+                            $condition($subQ);
+                        });
+                    }
+                }
+            });
+        }
+        
+        // Looking for me/us filter (placeholder - would need a profile field for this)
+        if ($request->boolean('filter_looking_for_me')) {
+            // This would require a profile field like 'looking_for' or similar
+            // For now, we'll skip this filter
+        }
+        
+        // With photos only filter
+        if ($request->boolean('with_photos_only')) {
+            $query->where(function ($q) {
+                $q->whereHas('profile', function ($profileQ) {
+                    $profileQ->whereNotNull('profile_photo')
+                             ->orWhereNotNull('album_photos');
+                })
+                ->orWhereNotNull('profile_image');
+            });
+        }
+        
+        // With videos only filter (placeholder - would need video field)
+        if ($request->boolean('with_videos_only')) {
+            // This would require a videos field in the profile
+            // For now, we'll skip this filter
+        }
+
         // Company filter (still available if needed)
         if ($request->filled('filter_company')) {
             $company = $request->get('filter_company');
@@ -204,6 +307,31 @@ class DashboardController extends Controller
 
         $members = $query->paginate(20)->withQueryString();
         return view('pages.dashboard.member', compact('members'));
+    }
+
+    /**
+     * Display the search page.
+     */
+    public function search(Request $request): View
+    {
+        // If query is provided, redirect to members page with search parameters
+        if ($request->filled('query')) {
+            $queryParams = [
+                'search' => $request->get('query'),
+            ];
+            
+            // Add category filter if not 'all'
+            if ($request->filled('category') && $request->get('category') !== 'all') {
+                $category = $request->get('category');
+                // Map search categories to filter categories if needed
+                // For now, we'll just pass it as a search parameter
+                $queryParams['search_category'] = $category;
+            }
+            
+            return redirect()->route('dashboard.members', $queryParams);
+        }
+        
+        return view('pages.dashboard.search');
     }
 }
 

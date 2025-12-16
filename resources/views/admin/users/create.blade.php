@@ -8,6 +8,23 @@
 
 @section('content')
 <div class="p-6">
+    @if(session('error'))
+        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ session('error') }}</span>
+        </div>
+    @endif
+    
+    @if($errors->any())
+        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <p class="font-semibold">Please fix the following errors:</p>
+            <ul class="mt-2 list-disc space-y-1 pl-5">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    
     <div class="mb-6">
         <a href="{{ route($routePrefix . '.users.index') }}" class="text-sm text-gray-600 hover:text-primary dark:text-gray-400">
             ← Back to Users
@@ -26,10 +43,11 @@
                 </div>
 
                 <!-- Register Form -->
-                <form method="POST" action="{{ route($routePrefix . '.users.store') }}" class="space-y-5" id="register-form" novalidate>
+                <form method="POST" action="{{ route($routePrefix . '.users.store') }}" class="space-y-5" id="register-form" enctype="multipart/form-data" novalidate>
                     @csrf
 
                     <!-- Account Type -->
+                    @if(!Auth::user()->is_editor)
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Account Type <span class="text-red-500">*</span>
@@ -39,6 +57,9 @@
                             <option value="editor" {{ old('account_type') == 'editor' ? 'selected' : '' }}>Editor</option>
                         </select>
                     </div>
+                    @else
+                    <input type="hidden" name="account_type" value="user">
+                    @endif
 
                     <!-- Username -->
                     <div>
@@ -150,18 +171,19 @@
                             id="terms_accepted"
                             name="terms_accepted"
                             value="1"
-                            required
+                            {{ !Auth::user()->is_editor ? 'required' : '' }}
                             class="mt-1 h-4 w-4 rounded border-gray-300 text-[#9810FA] focus:ring-[#9810FA]"
                         >
                         <label for="terms_accepted" class="text-sm text-gray-700 dark:text-gray-300">
-                            I confirm that this user agrees to the <a href="{{ route('terms') }}" target="_blank" class="text-[#9810FA] hover:text-[#E60076] underline">Terms of Service</a> and <a href="{{ route('privacy') }}" target="_blank" class="text-[#9810FA] hover:text-[#E60076] underline">Privacy Policy</a> <span class="text-red-500">*</span>
+                            I confirm that this user agrees to the <a href="{{ route('terms') }}" target="_blank" class="text-[#9810FA] hover:text-[#E60076] underline">Terms of Service</a> and <a href="{{ route('privacy') }}" target="_blank" class="text-[#9810FA] hover:text-[#E60076] underline">Privacy Policy</a> @if(!Auth::user()->is_editor)<span class="text-red-500">*</span>@endif
                         </label>
                     </div>
                     @error('terms_accepted')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
 
-                    <!-- Admin Checkbox (only for regular users) -->
+                    @if(!Auth::user()->is_editor)
+                    <!-- Admin Checkbox (only for regular users and admins) -->
                     <div id="admin-checkbox-section" class="flex items-start gap-2 border-t pt-4 dark:border-gray-700">
                         <input
                             type="checkbox"
@@ -175,6 +197,7 @@
                             Admin (can access admin panel)
                         </label>
                     </div>
+                    @endif
 
                     <!-- Regular User Fields (hidden for editors) -->
                     <div id="regular-user-fields">
@@ -213,7 +236,7 @@
                         <div class="grid grid-cols-4 gap-4">
                             <!-- Couple -->
                             <label class="category-option">
-                                <input type="radio" name="category" value="couple" class="sr-only category-input" required>
+                                <input type="radio" name="category" value="couple" class="sr-only category-input" {{ !Auth::user()->is_editor ? 'required' : '' }}>
                                 <div class="category-card flex flex-col items-center p-2 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
                                     <div class="">
                                         <img src="{{ asset('assets/couple_icon.svg') }}" alt="Couple" class="w-10 h-10">
@@ -224,7 +247,7 @@
 
                             <!-- Female -->
                             <label class="category-option">
-                                <input type="radio" name="category" value="single_female" class="sr-only category-input" required>
+                                <input type="radio" name="category" value="single_female" class="sr-only category-input" {{ !Auth::user()->is_editor ? 'required' : '' }}>
                                 <div class="category-card flex flex-col items-center p-2 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
                                     <div class="">
                                         <img src="{{ asset('assets/female.svg') }}" alt="Female" class="w-10 h-10">
@@ -235,7 +258,7 @@
 
                             <!-- Male -->
                             <label class="category-option">
-                                <input type="radio" name="category" value="single_male" class="sr-only category-input" required>
+                                <input type="radio" name="category" value="single_male" class="sr-only category-input" {{ !Auth::user()->is_editor ? 'required' : '' }}>
                                 <div class="category-card flex flex-col items-center p-2 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
                                     <div class="">
                                         <img src="{{ asset('assets/male.svg') }}" alt="Male" class="w-10 h-10">
@@ -246,7 +269,7 @@
 
                             <!-- Transgender -->
                             <label class="category-option">
-                                <input type="radio" name="category" value="transsexual" class="sr-only category-input" required>
+                                <input type="radio" name="category" value="transsexual" class="sr-only category-input" {{ !Auth::user()->is_editor ? 'required' : '' }}>
                                 <div class="category-card flex flex-col items-center p-2 border-2 border-gray-200 dark:border-gray-700 rounded-2xl cursor-pointer hover:border-[#9810FA] transition-all text-center">
                                     <div class="">
                                         <img src="{{ asset('assets/transgender.svg') }}" alt="Transgender" class="w-10 h-10">

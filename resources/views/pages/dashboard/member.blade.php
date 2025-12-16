@@ -239,7 +239,7 @@
                             <i class="ri-heart-fill text-lg"></i>
                             <span class="text-gray-900 dark:text-white text-sm font-medium">{{ 0 }}</span>
                         </div>
-                        @if(rand(0, 4) === 0)
+                        <!-- @if(rand(0, 4) === 0)
                             <button class="bg-[#9810FA] text-white text-xs font-semibold px-4 py-1.5 rounded-lg" onclick="event.stopPropagation();">
                                 Connected
                             </button>
@@ -248,7 +248,7 @@
                                 <i class="ri-user-add-line"></i>
                                 <span>Connect</span>
                             </button>
-                        @endif
+                        @endif -->
                     </div>
                 </div>
             </a>

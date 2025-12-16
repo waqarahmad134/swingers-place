@@ -99,18 +99,42 @@ class UserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $accountType = $request->input('account_type', 'user');
+        $currentUser = auth()->user();
+        
+        // If current user is editor, force account_type to 'user'
+        $isEditorCreating = $currentUser->is_editor;
+        if ($isEditorCreating) {
+            $accountType = 'user';
+            // Override any submitted account_type for editors
+            $request->merge(['account_type' => 'user']);
+        } else {
+            $accountType = $request->input('account_type', 'user');
+        }
+        
+        // If current user is editor, they can only create regular users
+        if ($isEditorCreating && $accountType !== 'user') {
+            return redirect()->back()
+                ->with('error', 'Editors can only create regular user accounts.')
+                ->withInput();
+        }
         
         // Base rules for all account types
         $rules = [
-            'account_type' => ['required', 'in:user,editor'],
+            'account_type' => $isEditorCreating ? ['nullable', 'in:user,editor'] : ['required', 'in:user,editor'],
             'username' => ['required', 'string', 'max:255', 'unique:users,username'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
         ];
 
-        // Editor only needs basic info
+        // Editor only needs basic info (only admins can create editors)
         if ($accountType === 'editor') {
+            // Only admins can create editors
+            if (!$currentUser->is_admin) {
+                return redirect()->back()
+                    ->with('error', 'Only administrators can create editor accounts.')
+                    ->withInput();
+            }
+            
             $validated = $request->validate($rules);
             
             // Auto-set name from username
@@ -128,6 +152,7 @@ class UserController extends Controller
                 'is_admin' => false,
                 'is_active' => true,
                 'email_verified_at' => now(),
+                'created_by' => $currentUser->id,
             ]);
             
             return redirect()->route($this->getRoutePrefix() . '.users.index')
@@ -135,9 +160,10 @@ class UserController extends Controller
         }
         
         // Regular user validation rules
+        // If created by editor, make category and terms optional (they can be filled later)
         $rules = array_merge($rules, [
-            'terms_accepted' => ['required', 'accepted'],
-            'category' => ['required', 'in:couple,single_female,single_male,transsexual'],
+            'terms_accepted' => $isEditorCreating ? ['nullable', 'accepted'] : ['required', 'accepted'],
+            'category' => $isEditorCreating ? ['nullable', 'in:couple,single_female,single_male,transsexual'] : ['required', 'in:couple,single_female,single_male,transsexual'],
             'preferences' => ['nullable', 'array'],
             'home_location' => ['nullable', 'string', 'max:255'],
             'country' => ['nullable', 'string', 'max:255'],
@@ -145,21 +171,27 @@ class UserController extends Controller
             'home_location_lat' => ['nullable', 'numeric'],
             'home_location_lng' => ['nullable', 'numeric'],
             'bio' => ['nullable', 'string'],
-            'profile_photo' => ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'],
             'is_admin' => ['nullable', 'boolean'],
             'is_active' => ['nullable', 'boolean'],
         ]);
+        
+        // Only validate profile_photo if a file is actually uploaded
+        if ($request->hasFile('profile_photo')) {
+            $rules['profile_photo'] = ['image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'];
+        }
 
-        // Add category-specific validation
+        // Add category-specific validation (only if category is provided)
         $category = $request->input('category');
-        if ($category === 'couple') {
-            $rules['date_of_birth_her'] = ['nullable', 'date'];
-            $rules['sexuality_her'] = ['nullable', 'string'];
-            $rules['date_of_birth_him'] = ['nullable', 'date'];
-            $rules['sexuality_him'] = ['nullable', 'string'];
-        } else {
-            $rules['date_of_birth'] = ['nullable', 'date'];
-            $rules['sexuality'] = ['nullable', 'string'];
+        if ($category) {
+            if ($category === 'couple') {
+                $rules['date_of_birth_her'] = ['nullable', 'date'];
+                $rules['sexuality_her'] = ['nullable', 'string'];
+                $rules['date_of_birth_him'] = ['nullable', 'date'];
+                $rules['sexuality_him'] = ['nullable', 'string'];
+            } else {
+                $rules['date_of_birth'] = ['nullable', 'date'];
+                $rules['sexuality'] = ['nullable', 'string'];
+            }
         }
 
         $validated = $request->validate($rules);
@@ -175,16 +207,25 @@ class UserController extends Controller
             ? \Illuminate\Support\Facades\Hash::make($validated['password']) 
             : \Illuminate\Support\Facades\Hash::make(uniqid('user_', true));
 
+        // Editors cannot create admin users
+        $isAdmin = $request->boolean('is_admin', false);
+        if ($currentUser->is_editor && $isAdmin) {
+            return redirect()->back()
+                ->with('error', 'Editors cannot create administrator accounts.')
+                ->withInput();
+        }
+        
         $user = User::create([
             'name' => $fullName,
             'username' => $validated['username'] ?? null,
             'email' => $validated['email'] ?? null,
             'password' => $password,
             'profile_type' => $profileType,
-            'is_admin' => $request->boolean('is_admin', false),
+            'is_admin' => $isAdmin,
             'is_editor' => false,
             'is_active' => $request->boolean('is_active', true),
-            'email_verified_at' => now(), // Auto-verify for admin-created users
+            'email_verified_at' => now(), // Auto-verify for admin/editor-created users
+            'created_by' => $currentUser->id,
         ]);
 
         // Handle profile photo upload
@@ -198,12 +239,17 @@ class UserController extends Controller
         // Get preferences
         $preferences = $validated['preferences'] ?? [];
 
-        // Get basic info based on category
+        // Get basic info based on category (if provided)
         $dateOfBirth = null;
         $sexuality = null;
         $coupleData = null;
         
-        if ($category === 'couple') {
+        // If editor is creating and no category provided, set default category
+        if ($isEditorCreating && !$category) {
+            $category = 'single_male'; // Default category for editor-created users
+        }
+        
+        if ($category && $category === 'couple') {
             // Store couple data in JSON
             $coupleData = [
                 'date_of_birth_her' => $validated['date_of_birth_her'] ?? null,
@@ -211,7 +257,7 @@ class UserController extends Controller
                 'date_of_birth_him' => $validated['date_of_birth_him'] ?? null,
                 'sexuality_him' => $validated['sexuality_him'] ?? null,
             ];
-        } else {
+        } else if ($category) {
             $dateOfBirth = $validated['date_of_birth'] ?? null;
             $sexuality = $validated['sexuality'] ?? null;
         }
@@ -220,7 +266,7 @@ class UserController extends Controller
         \App\Models\UserProfile::create([
             'user_id' => $user->id,
             'profile_type' => $profileType,
-            'category' => $category,
+            'category' => $category ?? 'single_male', // Default if not provided
             'preferences' => !empty($preferences) ? json_encode($preferences) : null,
             'home_location' => $validated['home_location'] ?? null,
             'country' => $validated['country'] ?? null,
@@ -232,8 +278,8 @@ class UserController extends Controller
             'couple_data' => $coupleData ? json_encode($coupleData) : null,
             'bio' => $validated['bio'] ?? null,
             'profile_photo' => $profilePhotoPath,
-            'onboarding_completed' => true,
-            'onboarding_step' => 9,
+            'onboarding_completed' => $isEditorCreating ? false : true, // Editors create incomplete profiles
+            'onboarding_step' => $isEditorCreating ? 1 : 9,
         ]);
 
         return redirect()->route($this->getRoutePrefix() . '.users.index')

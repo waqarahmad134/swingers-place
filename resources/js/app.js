@@ -396,8 +396,8 @@ window.removeToast = removeToast;
 const setupChatInterface = () => {
     const chatRoot = document.querySelector('[data-chat]');
     if (!chatRoot) {
-                return;
-            }
+        return;
+    }
 
     const messagesEl = chatRoot.querySelector('[data-chat-messages]');
     const emptyState = chatRoot.querySelector('[data-chat-empty]');

@@ -16,10 +16,11 @@ class DashboardController extends Controller
     {
         $currentUserId = auth()->id();
         
-        // Build query and always exclude current user
+        // Build query and always exclude current user, admins, and editors
         $query = User::with('profile')
             ->where('is_active', true)
             ->where('is_admin', false)
+            ->where('is_editor', false)
             ->where('id', '!=', $currentUserId);
 
         // Search filter (general search - name, location, interests)

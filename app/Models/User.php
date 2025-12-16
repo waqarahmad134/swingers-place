@@ -42,6 +42,7 @@ class User extends Authenticatable
         'last_seen_at',
         'scheduled_offline_at',
         'can_message',
+        'created_by',
     ];
 
     /**
@@ -79,6 +80,22 @@ class User extends Authenticatable
     public function profile()
     {
         return $this->hasOne(UserProfile::class);
+    }
+
+    /**
+     * Get the user who created this user.
+     */
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Get all users created by this user.
+     */
+    public function createdUsers()
+    {
+        return $this->hasMany(User::class, 'created_by');
     }
 
     /**

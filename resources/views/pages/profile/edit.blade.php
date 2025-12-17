@@ -50,10 +50,6 @@
                                     <i class="ri-user-line mr-2"></i>
                                     Account
                                 </button>
-                                <button type="button" onclick="switchTab('photos')" id="tab-photos" class="tab-button px-6 py-3 text-sm font-semibold rounded-lg transition-colors text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                    <i class="ri-image-line mr-2"></i>
-                                    Photos
-                                </button>
                             </div>
                         </div>
 
@@ -661,114 +657,6 @@
                                 </div>
                             </div>
 
-                            <!-- Photos Tab -->
-                            <div id="content-photos" class="tab-content hidden">
-                                @php
-                                    $albumPhotos = $profile && $profile->album_photos 
-                                        ? (is_array($profile->album_photos) ? $profile->album_photos : json_decode($profile->album_photos, true) ?? [])
-                                        : [];
-                                    
-                                    // Separate photos by category if structured, otherwise treat all as album
-                                    $adultPhotos = isset($albumPhotos['adult']) ? $albumPhotos['adult'] : [];
-                                    $nonAdultPhotos = isset($albumPhotos['non_adult']) ? $albumPhotos['non_adult'] : [];
-                                    $albumPhotosList = isset($albumPhotos['album']) ? $albumPhotos['album'] : (isset($albumPhotos['adult']) || isset($albumPhotos['non_adult']) ? [] : $albumPhotos);
-                                @endphp
-
-                                <!-- Non-Adult Photos Section -->
-                                <div class="mb-8">
-                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                        <i class="ri-image-line text-purple-600"></i>
-                                        Non-Adult Photos
-                                    </h3>
-                                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6">
-                                        <input type="file" id="non_adult_photos" name="non_adult_photos[]" accept="image/*" multiple class="hidden" onchange="handlePhotoUpload(this, 'non-adult-preview')">
-                                        <label for="non_adult_photos" class="cursor-pointer flex flex-col items-center justify-center py-8 text-center hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition-colors">
-                                            <i class="ri-upload-cloud-2-line text-4xl text-gray-400 mb-2"></i>
-                                            <p class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Upload Non-Adult Photos</p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">Click to select or drag and drop multiple images</p>
-                                        </label>
-                                        
-                                        <!-- Preview Grid -->
-                                        <div id="non-adult-preview" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                                            @if(!empty($nonAdultPhotos))
-                                                @foreach($nonAdultPhotos as $index => $photo)
-                                                    <div class="relative group" data-photo-path="{{ $photo }}">
-                                                        <img src="{{ asset('storage/' . $photo) }}" alt="Non-adult photo" class="w-full h-32 object-cover rounded-lg border-2 border-gray-200 dark:border-gray-700">
-                                                        <button type="button" onclick="removePhoto('non_adult', '{{ $photo }}', this)" class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                            <i class="ri-delete-bin-line text-sm"></i>
-                                                        </button>
-                                                        <input type="hidden" name="existing_non_adult_photos[]" value="{{ $photo }}">
-                                                    </div>
-                                                @endforeach
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Adult Photos Section -->
-                                <div class="mb-8">
-                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                        <i class="ri-image-line text-red-600"></i>
-                                        Adult Photos
-                                        <span class="text-xs bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 px-2 py-0.5 rounded-full font-semibold">XXX</span>
-                                    </h3>
-                                    <div class="border-2 border-dashed border-red-300 dark:border-red-700 rounded-xl p-6 bg-red-50/50 dark:bg-red-900/10">
-                                        <input type="file" id="adult_photos" name="adult_photos[]" accept="image/*" multiple class="hidden" onchange="handlePhotoUpload(this, 'adult-preview')">
-                                        <label for="adult_photos" class="cursor-pointer flex flex-col items-center justify-center py-8 text-center hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
-                                            <i class="ri-upload-cloud-2-line text-4xl text-red-400 mb-2"></i>
-                                            <p class="text-sm font-semibold text-red-700 dark:text-red-300 mb-1">Upload Adult Photos</p>
-                                            <p class="text-xs text-red-500 dark:text-red-400">Click to select or drag and drop multiple images</p>
-                                        </label>
-                                        
-                                        <!-- Preview Grid -->
-                                        <div id="adult-preview" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                                            @if(!empty($adultPhotos))
-                                                @foreach($adultPhotos as $index => $photo)
-                                                    <div class="relative group" data-photo-path="{{ $photo }}">
-                                                        <img src="{{ asset('storage/' . $photo) }}" alt="Adult photo" class="w-full h-32 object-cover rounded-lg border-2 border-red-200 dark:border-red-700">
-                                                        <button type="button" onclick="removePhoto('adult', '{{ $photo }}', this)" class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                            <i class="ri-delete-bin-line text-sm"></i>
-                                                        </button>
-                                                        <input type="hidden" name="existing_adult_photos[]" value="{{ $photo }}">
-                                                    </div>
-                                                @endforeach
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Album Photos Section -->
-                                <div class="mb-8">
-                                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                                        <i class="ri-folder-image-line text-blue-600"></i>
-                                        Album Photos
-                                    </h3>
-                                    <div class="border-2 border-dashed border-blue-300 dark:border-blue-700 rounded-xl p-6 bg-blue-50/50 dark:bg-blue-900/10">
-                                        <input type="file" id="album_photos" name="album_photos[]" accept="image/*" multiple class="hidden" onchange="handlePhotoUpload(this, 'album-preview')">
-                                        <label for="album_photos" class="cursor-pointer flex flex-col items-center justify-center py-8 text-center hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors">
-                                            <i class="ri-upload-cloud-2-line text-4xl text-blue-400 mb-2"></i>
-                                            <p class="text-sm font-semibold text-blue-700 dark:text-blue-300 mb-1">Upload Album Photos</p>
-                                            <p class="text-xs text-blue-500 dark:text-blue-400">Click to select or drag and drop multiple images</p>
-                                        </label>
-                                        
-                                        <!-- Preview Grid -->
-                                        <div id="album-preview" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                                            @if(!empty($albumPhotosList))
-                                                @foreach($albumPhotosList as $index => $photo)
-                                                    <div class="relative group" data-photo-path="{{ $photo }}">
-                                                        <img src="{{ asset('storage/' . $photo) }}" alt="Album photo" class="w-full h-32 object-cover rounded-lg border-2 border-blue-200 dark:border-blue-700">
-                                                        <button type="button" onclick="removePhoto('album', '{{ $photo }}', this)" class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                            <i class="ri-delete-bin-line text-sm"></i>
-                                                        </button>
-                                                        <input type="hidden" name="existing_album_photos[]" value="{{ $photo }}">
-                                                    </div>
-                                                @endforeach
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <!-- Action Buttons -->
                             <div class="flex items-center justify-end gap-3 border-t border-gray-200 dark:border-gray-700 pt-6 mt-6">
                                 <a href="{{ route('account.profile') }}" class="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-6 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 shadow-sm transition-colors hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -957,74 +845,6 @@
             reader.readAsDataURL(file);
         }
     });
-
-    // Handle photo uploads for different categories
-    function handlePhotoUpload(input, previewId) {
-        const files = input.files;
-        const previewContainer = document.getElementById(previewId);
-        
-        if (!previewContainer) return;
-        
-        Array.from(files).forEach(file => {
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const photoDiv = document.createElement('div');
-                    photoDiv.className = 'relative group';
-                    
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.className = 'w-full h-32 object-cover rounded-lg border-2 ' + 
-                        (previewId.includes('adult') ? 'border-red-200 dark:border-red-700' : 
-                         previewId.includes('non') ? 'border-gray-200 dark:border-gray-700' : 
-                         'border-blue-200 dark:border-blue-700');
-                    img.alt = 'Photo preview';
-                    
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.type = 'button';
-                    deleteBtn.className = 'absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity';
-                    deleteBtn.innerHTML = '<i class="ri-delete-bin-line text-sm"></i>';
-                    deleteBtn.onclick = function() {
-                        photoDiv.remove();
-                    };
-                    
-                    photoDiv.appendChild(img);
-                    photoDiv.appendChild(deleteBtn);
-                    previewContainer.appendChild(photoDiv);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        // Reset input to allow uploading same file again
-        input.value = '';
-    }
-
-    // Remove existing photo
-    function removePhoto(category, photoPath, buttonElement) {
-        if (confirm('Are you sure you want to delete this photo?')) {
-            // Find the photo container
-            const photoDiv = buttonElement.closest('.relative.group');
-            if (photoDiv) {
-                // Create hidden input to mark photo for deletion
-                const deleteInput = document.createElement('input');
-                deleteInput.type = 'hidden';
-                deleteInput.name = 'deleted_' + category + '_photos[]';
-                deleteInput.value = photoPath;
-                document.getElementById('profile-form').appendChild(deleteInput);
-                
-                // Remove the hidden input for existing photo
-                const existingInput = photoDiv.querySelector('input[type="hidden"][name*="existing"]');
-                if (existingInput) {
-                    existingInput.remove();
-                }
-                
-                // Remove the photo preview
-                photoDiv.remove();
-            }
-        }
-    }
-
 
     // Google Maps Autocomplete for Location
     @php

@@ -875,6 +875,194 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- AGE Accordion -->
+                    <div class="accordion-item bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 overflow-hidden">
+                        <button 
+                            type="button"
+                            class="accordion-header w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                            onclick="toggleAccordion(this)"
+                        >
+                            <h2 class="text-sm font-semibold uppercase text-gray-500 dark:text-gray-400">AGE</h2>
+                            <i class="ri-arrow-up-s-line accordion-icon text-blue-500 text-lg transition-transform duration-300"></i>
+                        </button>
+                        <div class="accordion-content hidden px-4 pb-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                                <!-- FEMALES Column -->
+                                <div>
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <i class="ri-women-line text-pink-500 text-xl"></i>
+                                        <h3 class="text-sm font-semibold uppercase text-pink-500">FEMALES</h3>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex-1">
+                                            <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">from</label>
+                                            <select 
+                                                name="female_age_from"
+                                                class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                            >
+                                                <option value="">Select</option>
+                                                @for($i = 18; $i <= 100; $i++)
+                                                    <option value="{{ $i }}" {{ request('female_age_from') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="flex-1">
+                                            <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">Until</label>
+                                            <select 
+                                                name="female_age_until"
+                                                class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                            >
+                                                <option value="">Select</option>
+                                                @for($i = 18; $i <= 100; $i++)
+                                                    <option value="{{ $i }}" {{ request('female_age_until') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- MALES Column -->
+                                <div>
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <i class="ri-men-line text-blue-500 text-xl"></i>
+                                        <h3 class="text-sm font-semibold uppercase text-blue-500">MALES</h3>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="flex-1">
+                                            <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">from</label>
+                                            <select 
+                                                name="male_age_from"
+                                                class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                            >
+                                                <option value="">Select</option>
+                                                @for($i = 18; $i <= 100; $i++)
+                                                    <option value="{{ $i }}" {{ request('male_age_from') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="flex-1">
+                                            <label class="block text-xs text-gray-600 dark:text-gray-400 mb-1">Until</label>
+                                            <select 
+                                                name="male_age_until"
+                                                class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                            >
+                                                <option value="">Select</option>
+                                                @for($i = 18; $i <= 100; $i++)
+                                                    <option value="{{ $i }}" {{ request('male_age_until') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SMOKING Accordion -->
+                    <div class="accordion-item bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 overflow-hidden">
+                        <button 
+                            type="button"
+                            class="accordion-header w-full flex items-center justify-between px-4 py-3 text-left hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                            onclick="toggleAccordion(this)"
+                        >
+                            <h2 class="text-sm font-semibold uppercase text-gray-500 dark:text-gray-400">SMOKING</h2>
+                            <i class="ri-arrow-up-s-line accordion-icon text-blue-500 text-lg transition-transform duration-300"></i>
+                        </button>
+                        <div class="accordion-content hidden px-4 pb-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                                <!-- FEMALES Column -->
+                                <div>
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <i class="ri-women-line text-pink-500 text-xl"></i>
+                                        <h3 class="text-sm font-semibold uppercase text-pink-500">FEMALES</h3>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <!-- Not important -->
+                                        <label class="flex items-center gap-3 cursor-pointer group">
+                                            <input 
+                                                type="radio" 
+                                                name="female_smoking" 
+                                                value="not_important"
+                                                {{ !request('female_smoking') || request('female_smoking') == 'not_important' ? 'checked' : '' }}
+                                                class="w-5 h-5 text-green-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-green-500 focus:ring-2"
+                                            />
+                                            <span class="text-gray-900 dark:text-white font-medium group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Not important</span>
+                                        </label>
+
+                                        <!-- Yes -->
+                                        <label class="flex items-center gap-3 cursor-pointer group">
+                                            <input 
+                                                type="radio" 
+                                                name="female_smoking" 
+                                                value="yes"
+                                                {{ request('female_smoking') == 'yes' ? 'checked' : '' }}
+                                                class="w-5 h-5 text-green-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-green-500 focus:ring-2"
+                                            />
+                                            <span class="text-gray-900 dark:text-white font-medium group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Yes</span>
+                                        </label>
+
+                                        <!-- No -->
+                                        <label class="flex items-center gap-3 cursor-pointer group">
+                                            <input 
+                                                type="radio" 
+                                                name="female_smoking" 
+                                                value="no"
+                                                {{ request('female_smoking') == 'no' ? 'checked' : '' }}
+                                                class="w-5 h-5 text-green-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-green-500 focus:ring-2"
+                                            />
+                                            <span class="text-gray-900 dark:text-white font-medium group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">No</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- MALES Column -->
+                                <div>
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <i class="ri-men-line text-blue-500 text-xl"></i>
+                                        <h3 class="text-sm font-semibold uppercase text-blue-500">MALES</h3>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <!-- Not important -->
+                                        <label class="flex items-center gap-3 cursor-pointer group">
+                                            <input 
+                                                type="radio" 
+                                                name="male_smoking" 
+                                                value="not_important"
+                                                {{ !request('male_smoking') || request('male_smoking') == 'not_important' ? 'checked' : '' }}
+                                                class="w-5 h-5 text-green-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-green-500 focus:ring-2"
+                                            />
+                                            <span class="text-gray-900 dark:text-white font-medium group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Not important</span>
+                                        </label>
+
+                                        <!-- Yes -->
+                                        <label class="flex items-center gap-3 cursor-pointer group">
+                                            <input 
+                                                type="radio" 
+                                                name="male_smoking" 
+                                                value="yes"
+                                                {{ request('male_smoking') == 'yes' ? 'checked' : '' }}
+                                                class="w-5 h-5 text-green-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-green-500 focus:ring-2"
+                                            />
+                                            <span class="text-gray-900 dark:text-white font-medium group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Yes</span>
+                                        </label>
+
+                                        <!-- No -->
+                                        <label class="flex items-center gap-3 cursor-pointer group">
+                                            <input 
+                                                type="radio" 
+                                                name="male_smoking" 
+                                                value="no"
+                                                {{ request('male_smoking') == 'no' ? 'checked' : '' }}
+                                                class="w-5 h-5 text-green-600 bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-green-500 focus:ring-2"
+                                            />
+                                            <span class="text-gray-900 dark:text-white font-medium group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">No</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Back Button and Submit Button -->
@@ -931,6 +1119,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 b.classList.remove('ring-2', 'ring-white', 'ring-offset-2', 'ring-offset-blue-600');
             });
             this.classList.add('ring-2', 'ring-white', 'ring-offset-2', 'ring-offset-blue-600');
+            
+            // Submit form if query is filled and category is actionable
+            const searchQuery = document.getElementById('searchQuery').value;
+            if (searchQuery && searchQuery.trim() !== '') {
+                const actionableCategories = ['all', 'login_name', 'profile_text'];
+                if (actionableCategories.includes(category)) {
+                    document.getElementById('searchForm').submit();
+                }
+            }
         });
     });
 
@@ -1103,6 +1300,60 @@ document.addEventListener('DOMContentLoaded', function() {
             input.type = 'hidden';
             input.name = 'sexuality_search_mode';
             input.value = sexualitySearchMode.value;
+            advancedSearchForm.appendChild(input);
+        }
+
+        // Map age values
+        const femaleAgeFrom = document.querySelector('select[name="female_age_from"]').value;
+        const femaleAgeUntil = document.querySelector('select[name="female_age_until"]').value;
+        if (femaleAgeFrom) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'filter_female_age_from';
+            input.value = femaleAgeFrom;
+            advancedSearchForm.appendChild(input);
+        }
+        if (femaleAgeUntil) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'filter_female_age_until';
+            input.value = femaleAgeUntil;
+            advancedSearchForm.appendChild(input);
+        }
+
+        const maleAgeFrom = document.querySelector('select[name="male_age_from"]').value;
+        const maleAgeUntil = document.querySelector('select[name="male_age_until"]').value;
+        if (maleAgeFrom) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'filter_male_age_from';
+            input.value = maleAgeFrom;
+            advancedSearchForm.appendChild(input);
+        }
+        if (maleAgeUntil) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'filter_male_age_until';
+            input.value = maleAgeUntil;
+            advancedSearchForm.appendChild(input);
+        }
+
+        // Map smoking values
+        const femaleSmoking = document.querySelector('input[name="female_smoking"]:checked');
+        if (femaleSmoking && femaleSmoking.value !== 'not_important') {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'filter_female_smoking';
+            input.value = femaleSmoking.value;
+            advancedSearchForm.appendChild(input);
+        }
+
+        const maleSmoking = document.querySelector('input[name="male_smoking"]:checked');
+        if (maleSmoking && maleSmoking.value !== 'not_important') {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'filter_male_smoking';
+            input.value = maleSmoking.value;
             advancedSearchForm.appendChild(input);
         }
         

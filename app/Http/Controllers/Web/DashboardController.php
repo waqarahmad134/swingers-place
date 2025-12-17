@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -23,17 +24,40 @@ class DashboardController extends Controller
             ->where('is_editor', false)
             ->where('id', '!=', $currentUserId);
 
-        // Search filter (general search - name, location, interests)
+        // Search filter with category support
         if ($request->filled('search')) {
             $search = $request->get('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%")
-                  ->orWhereHas('profile', function ($profileQuery) use ($search) {
-                      $profileQuery->where('home_location', 'like', "%{$search}%")
-                                   ->orWhere('bio', 'like', "%{$search}%");
-                  });
+            $searchCategory = $request->get('search_category', 'all');
+            
+            $query->where(function ($q) use ($search, $searchCategory) {
+                if ($searchCategory === 'login_name') {
+                    // Search only in users table (name, username, email)
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('username', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('first_name', 'like', "%{$search}%")
+                      ->orWhere('last_name', 'like', "%{$search}%");
+                } elseif ($searchCategory === 'profile_text') {
+                    // Search only in profile table (bio, looking_for, additional_notes)
+                    $q->whereHas('profile', function ($profileQuery) use ($search) {
+                        $profileQuery->where('bio', 'like', "%{$search}%")
+                                     ->orWhere('looking_for', 'like', "%{$search}%")
+                                     ->orWhere('additional_notes', 'like', "%{$search}%");
+                    });
+                } else {
+                    // Default: search in both users and profile tables (all)
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('username', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('first_name', 'like', "%{$search}%")
+                      ->orWhere('last_name', 'like', "%{$search}%")
+                      ->orWhereHas('profile', function ($profileQuery) use ($search) {
+                          $profileQuery->where('home_location', 'like', "%{$search}%")
+                                       ->orWhere('bio', 'like', "%{$search}%")
+                                       ->orWhere('looking_for', 'like', "%{$search}%")
+                                       ->orWhere('additional_notes', 'like', "%{$search}%");
+                      });
+                }
             });
         }
 
@@ -312,7 +336,7 @@ class DashboardController extends Controller
     /**
      * Display the search page.
      */
-    public function search(Request $request): View
+    public function search(Request $request): View|RedirectResponse
     {
         // If query is provided, redirect to members page with search parameters
         if ($request->filled('query')) {
@@ -321,11 +345,13 @@ class DashboardController extends Controller
             ];
             
             // Add category filter if not 'all'
-            if ($request->filled('category') && $request->get('category') !== 'all') {
+            if ($request->filled('category')) {
                 $category = $request->get('category');
-                // Map search categories to filter categories if needed
-                // For now, we'll just pass it as a search parameter
-                $queryParams['search_category'] = $category;
+                // Only pass actionable categories (all, login_name, profile_text)
+                $actionableCategories = ['all', 'login_name', 'profile_text'];
+                if (in_array($category, $actionableCategories)) {
+                    $queryParams['search_category'] = $category;
+                }
             }
             
             return redirect()->route('dashboard.members', $queryParams);

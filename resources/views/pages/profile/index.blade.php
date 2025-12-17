@@ -8,8 +8,52 @@
     <div class="flex gap-0 w-full">
         <!-- Main Content -->
         <div id="main-content" class="flex-1 transition-all duration-300 ease-in-out min-w-0">
-            <!-- Profile Tab Content -->
-            <div id="tab-profile" class="tab-content">
+            <!-- Tab Navigation -->
+            <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <nav class="flex space-x-1" aria-label="Tabs">
+                        <!-- PROFILE Tab -->
+                        <button 
+                            type="button"
+                            data-tab="profile"
+                            class="profile-tab px-6 py-4 text-sm font-semibold text-white bg-blue-600 border-b-2 border-blue-600 transition-colors"
+                        >
+                            PROFILE
+                        </button>
+                        
+                        <!-- PICTURES Tab -->
+                        <button 
+                            type="button"
+                            data-tab="pictures"
+                            class="profile-tab px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                        >
+                            PICTURES
+                        </button>
+                        
+                        <!-- VIDEOS Tab -->
+                        <button 
+                            type="button"
+                            data-tab="videos"
+                            class="profile-tab px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                        >
+                            VIDEOS
+                        </button>
+                        
+                        <!-- ALBUM Tab -->
+                        <button 
+                            type="button"
+                            data-tab="album"
+                            class="profile-tab px-6 py-4 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border-b-2 border-transparent hover:border-gray-300 dark:hover:border-gray-600 transition-colors"
+                        >
+                            ALBUM
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Tab Content Area -->
+            <!-- PROFILE Tab Content -->
+            <div id="profile-tab-content-profile" class="profile-tab-content">
                 @include('pages.profile.tabs.profile', [
                     'user' => $user, 
                     'profile' => $profile, 
@@ -23,6 +67,41 @@
                     'joinDate' => $joinDate, 
                     'isOwnProfile' => $isOwnProfile ?? false
                 ])
+            </div>
+
+            <!-- PICTURES Tab Content -->
+            <div id="profile-tab-content-pictures" class="profile-tab-content hidden">
+                @include('pages.profile.tabs.pictures', [
+                    'user' => $user,
+                    'profile' => $profile,
+                    'isOwnProfile' => $isOwnProfile ?? false
+                ])
+            </div>
+
+            <!-- VIDEOS Tab Content -->
+            <div id="profile-tab-content-videos" class="profile-tab-content hidden">
+                <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
+                            <i class="ri-video-line text-6xl text-gray-400 dark:text-gray-600 mb-4"></i>
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Videos</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Video content will be displayed here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ALBUM Tab Content -->
+            <div id="profile-tab-content-album" class="profile-tab-content hidden">
+                <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
+                            <i class="ri-folder-image-line text-6xl text-gray-400 dark:text-gray-600 mb-4"></i>
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Album</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Album content will be displayed here.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <!-- Account Tab Content -->
@@ -483,6 +562,46 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Profile Tab Navigation
+    const profileTabButtons = document.querySelectorAll('.profile-tab');
+    const profileTabContents = document.querySelectorAll('.profile-tab-content');
+    
+    // Check if we need to restore a tab from sessionStorage (after photo upload)
+    const savedTab = sessionStorage.getItem('activeProfileTab');
+    if (savedTab) {
+        sessionStorage.removeItem('activeProfileTab');
+        // Find and click the saved tab
+        const savedTabButton = document.querySelector(`.profile-tab[data-tab="${savedTab}"]`);
+        if (savedTabButton) {
+            // Trigger click to switch to the saved tab
+            savedTabButton.click();
+        }
+    }
+    
+    // Handle profile tab clicks
+    profileTabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            
+            // Update active tab button
+            profileTabButtons.forEach(btn => {
+                btn.classList.remove('text-white', 'bg-blue-600', 'border-blue-600');
+                btn.classList.add('text-gray-600', 'dark:text-gray-400', 'border-transparent', 'hover:text-gray-900', 'dark:hover:text-white', 'hover:border-gray-300', 'dark:hover:border-gray-600');
+            });
+            this.classList.add('text-white', 'bg-blue-600', 'border-blue-600');
+            this.classList.remove('text-gray-600', 'dark:text-gray-400', 'border-transparent', 'hover:text-gray-900', 'dark:hover:text-white', 'hover:border-gray-300', 'dark:hover:border-gray-600');
+            
+            // Show corresponding content
+            profileTabContents.forEach(content => {
+                content.classList.add('hidden');
+            });
+            const targetTab = document.getElementById('profile-tab-content-' + tabName);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+            }
+        });
+    });
+
     const sidebar = document.getElementById('settings-sidebar');
     const mainContent = document.getElementById('main-content');
     const closeBtn = document.getElementById('close-sidebar');

@@ -116,6 +116,9 @@ class ProfileController extends Controller
         if ($request->hasFile('profile_image')) {
             $rules['profile_image'] = ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'];
         }
+        if ($request->hasFile('profile_photo')) {
+            $rules['profile_photo'] = ['nullable', 'image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'];
+        }
         if ($request->has('category')) {
             $rules['category'] = ['nullable', 'string'];
         }
@@ -237,6 +240,34 @@ class ProfileController extends Controller
             $imagePath = $request->file('profile_image')->store('profiles', 'public');
             $user->profile_image = $imagePath;
             $profile->profile_photo = $imagePath; // Also save to profile for consistency
+        }
+        
+        // Handle profile_photo upload (from pictures tab)
+        if ($request->hasFile('profile_photo')) {
+            // Delete old images if exist
+            if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+                Storage::disk('public')->delete($user->profile_image);
+            }
+            if ($profile->profile_photo && Storage::disk('public')->exists($profile->profile_photo)) {
+                Storage::disk('public')->delete($profile->profile_photo);
+            }
+            
+            // Store new image
+            $imagePath = $request->file('profile_photo')->store('profiles', 'public');
+            $user->profile_image = $imagePath;
+            $profile->profile_photo = $imagePath;
+        }
+        
+        // Handle remove profile photo
+        if ($request->has('remove_profile_photo') && $request->boolean('remove_profile_photo')) {
+            if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+                Storage::disk('public')->delete($user->profile_image);
+            }
+            if ($profile->profile_photo && Storage::disk('public')->exists($profile->profile_photo)) {
+                Storage::disk('public')->delete($profile->profile_photo);
+            }
+            $user->profile_image = null;
+            $profile->profile_photo = null;
         }
 
         // Update user data - only if fields are present in request
@@ -373,18 +404,26 @@ class ProfileController extends Controller
         if (!isset($albumPhotos['album'])) $albumPhotos['album'] = [];
         
         // Handle Non-Adult Photos
-        $existingNonAdult = $request->input('existing_non_adult_photos', []);
         $deletedNonAdult = $request->input('deleted_non_adult_photos', []);
         
-        // Filter out deleted photos from existing
-        $albumPhotos['non_adult'] = array_filter($existingNonAdult, function($photo) use ($deletedNonAdult) {
-            return !in_array($photo, $deletedNonAdult);
-        });
+        // If request has existing_non_adult_photos, use it; otherwise preserve existing from database
+        if ($request->has('existing_non_adult_photos')) {
+            $existingNonAdult = $request->input('existing_non_adult_photos', []);
+            // Filter out deleted photos from existing
+            $albumPhotos['non_adult'] = array_filter($existingNonAdult, function($photo) use ($deletedNonAdult) {
+                return !in_array($photo, $deletedNonAdult);
+            });
+        } else {
+            // Preserve existing photos from database, but remove deleted ones
+            $albumPhotos['non_adult'] = array_filter($albumPhotos['non_adult'], function($photo) use ($deletedNonAdult) {
+                return !in_array($photo, $deletedNonAdult);
+            });
+        }
         
         // Add new uploaded photos
         if ($request->hasFile('non_adult_photos')) {
             foreach ($request->file('non_adult_photos') as $file) {
-                $path = $file->store('photos/non-adult', 'public');
+                $path = $file->store('profiles/non-adult', 'public');
                 $albumPhotos['non_adult'][] = $path;
             }
         }
@@ -399,18 +438,26 @@ class ProfileController extends Controller
         $albumPhotos['non_adult'] = array_values($albumPhotos['non_adult']); // Re-index
         
         // Handle Adult Photos
-        $existingAdult = $request->input('existing_adult_photos', []);
         $deletedAdult = $request->input('deleted_adult_photos', []);
         
-        // Filter out deleted photos from existing
-        $albumPhotos['adult'] = array_filter($existingAdult, function($photo) use ($deletedAdult) {
-            return !in_array($photo, $deletedAdult);
-        });
+        // If request has existing_adult_photos, use it; otherwise preserve existing from database
+        if ($request->has('existing_adult_photos')) {
+            $existingAdult = $request->input('existing_adult_photos', []);
+            // Filter out deleted photos from existing
+            $albumPhotos['adult'] = array_filter($existingAdult, function($photo) use ($deletedAdult) {
+                return !in_array($photo, $deletedAdult);
+            });
+        } else {
+            // Preserve existing photos from database, but remove deleted ones
+            $albumPhotos['adult'] = array_filter($albumPhotos['adult'], function($photo) use ($deletedAdult) {
+                return !in_array($photo, $deletedAdult);
+            });
+        }
         
         // Add new uploaded photos
         if ($request->hasFile('adult_photos')) {
             foreach ($request->file('adult_photos') as $file) {
-                $path = $file->store('photos/adult', 'public');
+                $path = $file->store('profiles/adult', 'public');
                 $albumPhotos['adult'][] = $path;
             }
         }
@@ -436,7 +483,7 @@ class ProfileController extends Controller
         // Add new uploaded photos
         if ($request->hasFile('album_photos')) {
             foreach ($request->file('album_photos') as $file) {
-                $path = $file->store('photos/album', 'public');
+                $path = $file->store('profiles/album', 'public');
                 $albumPhotos['album'][] = $path;
             }
         }

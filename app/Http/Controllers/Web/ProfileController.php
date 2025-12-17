@@ -170,6 +170,10 @@ class ProfileController extends Controller
         if ($request->hasFile('album_photos')) {
             $rules['album_photos.*'] = ['image', 'mimes:jpeg,jpg,png,gif,webp', 'max:5120'];
         }
+        // Video upload validation
+        if ($request->hasFile('videos')) {
+            $rules['videos.*'] = ['file', 'mimes:mp4,avi,mov,wmv,flv,webm', 'max:102400']; // 100MB max per video
+        }
 
         // Add validation rules for couple fields only if they're present in request
         if ($isCouple) {
@@ -499,6 +503,38 @@ class ProfileController extends Controller
         
         // Update album_photos in profile
         $profile->album_photos = $albumPhotos;
+        
+        // Handle Videos
+        $videos = $profile->videos 
+            ? (is_array($profile->videos) ? $profile->videos : json_decode($profile->videos, true) ?? [])
+            : [];
+        
+        $deletedVideos = $request->input('deleted_videos', []);
+        
+        // Preserve existing videos, but remove deleted ones
+        $videos = array_filter($videos, function($video) use ($deletedVideos) {
+            return !in_array($video, $deletedVideos);
+        });
+        
+        // Add new uploaded videos
+        if ($request->hasFile('videos')) {
+            foreach ($request->file('videos') as $file) {
+                $path = $file->store('profiles/videos', 'public');
+                $videos[] = $path;
+            }
+        }
+        
+        // Delete removed videos from storage
+        foreach ($deletedVideos as $videoPath) {
+            if (Storage::disk('public')->exists($videoPath)) {
+                Storage::disk('public')->delete($videoPath);
+            }
+        }
+        
+        $videos = array_values($videos); // Re-index
+        
+        // Update videos in profile
+        $profile->videos = $videos;
         
         $profile->save();
 

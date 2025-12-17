@@ -80,15 +80,11 @@
 
             <!-- VIDEOS Tab Content -->
             <div id="profile-tab-content-videos" class="profile-tab-content hidden">
-                <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
-                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
-                            <i class="ri-video-line text-6xl text-gray-400 dark:text-gray-600 mb-4"></i>
-                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Videos</h2>
-                            <p class="text-gray-600 dark:text-gray-400">Video content will be displayed here.</p>
-                        </div>
-                    </div>
-                </div>
+                @include('pages.profile.tabs.videos', [
+                    'user' => $user,
+                    'profile' => $profile,
+                    'isOwnProfile' => $isOwnProfile ?? false
+                ])
             </div>
 
             <!-- ALBUM Tab Content -->

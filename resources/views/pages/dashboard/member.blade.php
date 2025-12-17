@@ -60,7 +60,7 @@
                 <input type="hidden" name="with_photos_only" value="{{ request('with_photos_only') }}">
                 <input type="hidden" name="with_videos_only" value="{{ request('with_videos_only') }}">
                 <input type="hidden" name="filter_location" value="{{ request('filter_location') }}">
-                <input type="hidden" name="sort_by" value="{{ request('sort_by', 'All') }}">
+                <input type="hidden" name="sort_by" value="{{ request('sort_by', 'Random') }}">
                 <input type="hidden" name="distance" value="{{ request('distance', 'Any Distance') }}">
                 <input type="hidden" name="age_range" value="{{ request('age_range', 'Any Age') }}">
                 <input type="hidden" name="online_only" value="{{ request('online_only') }}">

@@ -300,11 +300,12 @@ class DashboardController extends Controller
         $isRandom = $request->boolean('random');
         
         // Sort by
-        $sortBy = $request->get('sort_by', 'All');
-        if ($isRandom) {
+        $sortBy = $request->get('sort_by', 'Random');
+        if ($isRandom || $sortBy === 'Random') {
             // Random ordering - use database random function
+            // This will shuffle members differently on each page load
             $query->inRandomOrder();
-        } elseif ($sortBy !== 'All') {
+        } elseif ($sortBy !== 'All' && $sortBy !== 'Random') {
             switch ($sortBy) {
                 case 'Newest':
                     $query->latest();
@@ -325,8 +326,8 @@ class DashboardController extends Controller
                     break;
             }
         } else {
-            // Default ordering: Show latest members first (newest first)
-            $query->latest('created_at');
+            // Default ordering: Random shuffle on each visit
+            $query->inRandomOrder();
         }
 
         $members = $query->paginate(20)->withQueryString();

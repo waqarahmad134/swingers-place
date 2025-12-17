@@ -177,7 +177,7 @@
 
         <!-- Hidden inputs for other filters -->
         <input type="hidden" name="search" value="{{ request('search') }}">
-        <input type="hidden" name="sort_by" value="{{ request('sort_by', 'All') }}">
+        <input type="hidden" name="sort_by" value="{{ request('sort_by', 'Random') }}">
         <input type="hidden" name="distance" value="{{ request('distance', 'Any Distance') }}">
         <input type="hidden" name="age_range" value="{{ request('age_range', 'Any Age') }}">
         <input type="hidden" name="online_only" value="{{ request('online_only') }}">

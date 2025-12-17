@@ -155,7 +155,92 @@ class HomeController extends Controller
             ? (is_array($profile->languages) ? $profile->languages : json_decode($profile->languages, true) ?? [])
             : [];
         
-        return view('pages.profile.index', compact('user', 'profile', 'age', 'ageHer', 'ageHim', 'isCouple', 'coupleData', 'joinDate', 'isOwnProfile', 'preferences', 'languages'));
+        // Get match profiles (12 profiles that match this user)
+        $matchedProfiles = $this->getMatchedProfiles($user, $profile, 12);
+        
+        return view('pages.profile.index', compact('user', 'profile', 'age', 'ageHer', 'ageHim', 'isCouple', 'coupleData', 'joinDate', 'isOwnProfile', 'preferences', 'languages', 'matchedProfiles'));
+    }
+    
+    /**
+     * Get matched profiles based on user preferences and profile data.
+     */
+    private function getMatchedProfiles($currentUser, $currentProfile, $limit = 12)
+    {
+        if (!$currentProfile) {
+            return collect([]);
+        }
+        
+        $query = User::with('profile')
+            ->where('profile_type', 'normal')
+            ->where('is_active', true)
+            ->where('id', '!=', $currentUser->id)
+            ->whereHas('profile', function($q) {
+                $q->where('profile_visible', true)
+                  ->where('onboarding_completed', true);
+            });
+        
+        // Match by category (same category gets priority)
+        if ($currentProfile->category) {
+            $query->whereHas('profile', function($q) use ($currentProfile) {
+                $q->where('category', $currentProfile->category);
+            });
+        }
+        
+        // Match by location (same country or city)
+        if ($currentProfile->country) {
+            $query->whereHas('profile', function($q) use ($currentProfile) {
+                $q->where('country', $currentProfile->country);
+            });
+        }
+        
+        // Get initial matches
+        $matches = $query->take($limit)->get();
+        
+        // If we don't have enough matches, get more without location filter
+        if ($matches->count() < $limit) {
+            $remaining = $limit - $matches->count();
+            $matchedIds = $matches->pluck('id')->toArray();
+            
+            $additionalQuery = User::with('profile')
+                ->where('profile_type', 'normal')
+                ->where('is_active', true)
+                ->where('id', '!=', $currentUser->id)
+                ->whereNotIn('id', $matchedIds)
+                ->whereHas('profile', function($q) use ($currentProfile) {
+                    $q->where('profile_visible', true)
+                      ->where('onboarding_completed', true);
+                    
+                    if ($currentProfile->category) {
+                        $q->where('category', $currentProfile->category);
+                    }
+                })
+                ->take($remaining)
+                ->get();
+            
+            $matches = $matches->merge($additionalQuery);
+        }
+        
+        // If still not enough, get any active users
+        if ($matches->count() < $limit) {
+            $remaining = $limit - $matches->count();
+            $matchedIds = $matches->pluck('id')->toArray();
+            
+            $anyUsers = User::with('profile')
+                ->where('profile_type', 'normal')
+                ->where('is_active', true)
+                ->where('id', '!=', $currentUser->id)
+                ->whereNotIn('id', $matchedIds)
+                ->whereHas('profile', function($q) {
+                    $q->where('profile_visible', true)
+                      ->where('onboarding_completed', true);
+                })
+                ->take($remaining)
+                ->get();
+            
+            $matches = $matches->merge($anyUsers);
+        }
+        
+        return $matches->take($limit);
     }
 }
 

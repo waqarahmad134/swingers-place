@@ -185,6 +185,133 @@
                     @endif
                 </div>
             </div>
+            
+            <!-- Match Profiles Section -->
+            @if($matchedProfiles && $matchedProfiles->count() > 0)
+                <div class="mt-8">
+                    <div class="rounded-2xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+                        <div class="bg-gradient-to-r from-primary/10 to-secondary/10 px-8 py-6 rounded-t-2xl">
+                            <h2 class="text-2xl font-extrabold text-dark dark:text-white flex items-center gap-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                Match Profiles
+                            </h2>
+                        </div>
+                        <div class="p-8">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                @foreach($matchedProfiles as $matchedUser)
+                                    <div class="group relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:border-primary dark:border-gray-700 dark:bg-gray-800">
+                                        <!-- Profile Image -->
+                                        <a href="{{ route('user.profile', $matchedUser->username ?? $matchedUser->id) }}" class="block">
+                                            <div class="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-900">
+                                                @if($matchedUser->profile_image)
+                                                    <img src="{{ asset('storage/' . $matchedUser->profile_image) }}" 
+                                                         alt="{{ $matchedUser->name }}" 
+                                                         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110">
+                                                @else
+                                                    <div class="flex h-full w-full items-center justify-center bg-primary/10 text-primary">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                        </svg>
+                                                    </div>
+                                                @endif
+                                                
+                                                <!-- Category Badge -->
+                                                @if($matchedUser->profile && $matchedUser->profile->category)
+                                                    <div class="absolute top-2 left-2">
+                                                        <span class="inline-flex items-center rounded-full bg-primary/90 px-3 py-1 text-xs font-semibold text-white shadow-md backdrop-blur-sm">
+                                                            {{ ucwords(str_replace('_', ' ', $matchedUser->profile->category)) }}
+                                                        </span>
+                                                    </div>
+                                                @endif
+                                                
+                                                <!-- Location Badge -->
+                                                @if($matchedUser->profile && $matchedUser->profile->city)
+                                                    <div class="absolute bottom-2 right-2">
+                                                        <span class="inline-flex items-center gap-1 rounded-full bg-gray-900/70 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                            </svg>
+                                                            {{ $matchedUser->profile->city }}
+                                                        </span>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </a>
+                                        
+                                        <!-- Profile Info -->
+                                        <div class="p-4">
+                                            <a href="{{ route('user.profile', $matchedUser->username ?? $matchedUser->id) }}" class="block">
+                                                <h3 class="text-lg font-bold text-gray-900 dark:text-white truncate group-hover:text-primary transition-colors">
+                                                    {{ $matchedUser->name }}
+                                                </h3>
+                                            </a>
+                                            
+                                            @if($matchedUser->profile)
+                                                <!-- Age Display -->
+                                                @php
+                                                    $isMatchedCouple = $matchedUser->profile->category === 'couple';
+                                                    $matchedAge = null;
+                                                    $matchedAgeHer = null;
+                                                    $matchedAgeHim = null;
+                                                    
+                                                    if ($isMatchedCouple && $matchedUser->profile->couple_data) {
+                                                        $matchedCoupleData = is_array($matchedUser->profile->couple_data) 
+                                                            ? $matchedUser->profile->couple_data 
+                                                            : json_decode($matchedUser->profile->couple_data, true) ?? [];
+                                                        
+                                                        if (!empty($matchedCoupleData['date_of_birth_her'])) {
+                                                            $matchedAgeHer = \Carbon\Carbon::parse($matchedCoupleData['date_of_birth_her'])->age;
+                                                        }
+                                                        if (!empty($matchedCoupleData['date_of_birth_him'])) {
+                                                            $matchedAgeHim = \Carbon\Carbon::parse($matchedCoupleData['date_of_birth_him'])->age;
+                                                        }
+                                                    } elseif ($matchedUser->profile->date_of_birth) {
+                                                        $matchedAge = \Carbon\Carbon::parse($matchedUser->profile->date_of_birth)->age;
+                                                    }
+                                                @endphp
+                                                
+                                                @if($matchedAge || $matchedAgeHer || $matchedAgeHim)
+                                                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                                        @if($isMatchedCouple)
+                                                            @if($matchedAgeHer && $matchedAgeHim)
+                                                                {{ $matchedAgeHer }} / {{ $matchedAgeHim }} years old
+                                                            @elseif($matchedAgeHer)
+                                                                {{ $matchedAgeHer }} years old
+                                                            @elseif($matchedAgeHim)
+                                                                {{ $matchedAgeHim }} years old
+                                                            @endif
+                                                        @else
+                                                            {{ $matchedAge }} years old
+                                                        @endif
+                                                    </p>
+                                                @endif
+                                                
+                                                <!-- Bio Preview -->
+                                                @if($matchedUser->profile->bio)
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 line-clamp-2">
+                                                        {{ Str::limit($matchedUser->profile->bio, 80) }}
+                                                    </p>
+                                                @endif
+                                            @endif
+                                            
+                                            <!-- View Profile Button -->
+                                            <div class="mt-4">
+                                                <a href="{{ route('user.profile', $matchedUser->username ?? $matchedUser->id) }}" 
+                                                   class="block w-full rounded-lg bg-primary px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-secondary">
+                                                    View Profile
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 @endsection

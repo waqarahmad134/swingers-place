@@ -30,7 +30,7 @@
             <h2 class="text-lg font-bold text-gray-700 dark:text-white mb-3 uppercase">PRIMARY PROFILE PICTURE</h2>
             
             <p class="text-gray-400 dark:text-gray-400 mb-6 text-sm leading-relaxed">
-                Your primary picture appears on both app and browser versions of SDC, and must be vanilla (non-adult) as per Google and Apple's app policies. Make sure you're clearly visible; showing your face is encouraged but optional.
+                Your primary picture appears on both app and browser versions of swingers, and must be vanilla (non-adult) as per Google and Apple's app policies. Make sure you're clearly visible; showing your face is encouraged but optional.
             </p>
             
             @if($primaryProfilePhoto)
@@ -115,7 +115,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
             <h3 class="text-xl font-bold text-blue-500 dark:text-blue-400 mb-2 uppercase">NON-ADULT</h3>
             <p class="text-gray-600 dark:text-gray-400 mb-6 text-sm">
-                "Vanilla" photos are not sexually suggestive and don't contain nudity; they will appear on both our SDC app and website.
+                "Vanilla" photos are not sexually suggestive and don't contain nudity; they will appear on both our swingers app and website.
             </p>
             
             @if(!empty($nonAdultPhotos))
@@ -155,7 +155,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
             <h3 class="text-xl font-bold text-blue-500 dark:text-blue-400 mb-2 uppercase">ADULT</h3>
             <p class="text-gray-600 dark:text-gray-400 mb-6 text-sm">
-                Nude or suggestive pictures that will appear exclusively on our SDC website due to app store rules prohibiting adult photos.
+                Nude or suggestive pictures that will appear exclusively on our swingers website due to app store rules prohibiting adult photos.
             </p>
             
             @if(!empty($adultPhotos))

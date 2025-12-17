@@ -99,6 +99,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get all albums created by this user.
+     */
+    public function albums()
+    {
+        return $this->hasMany(Album::class);
+    }
+
+    /**
      * Check if user is currently online.
      * User is considered online if last_seen_at is within the last 5 minutes.
      * Also checks if scheduled_offline_at has passed (admin-controlled auto-offline).

@@ -89,15 +89,11 @@
 
             <!-- ALBUM Tab Content -->
             <div id="profile-tab-content-album" class="profile-tab-content hidden">
-                <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
-                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
-                            <i class="ri-folder-image-line text-6xl text-gray-400 dark:text-gray-600 mb-4"></i>
-                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Album</h2>
-                            <p class="text-gray-600 dark:text-gray-400">Album content will be displayed here.</p>
-                        </div>
-                    </div>
-                </div>
+                @include('pages.profile.tabs.album', [
+                    'user' => $user,
+                    'profile' => $profile,
+                    'isOwnProfile' => $isOwnProfile ?? false
+                ])
             </div>
             
             <!-- Account Tab Content -->
@@ -562,16 +558,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const profileTabButtons = document.querySelectorAll('.profile-tab');
     const profileTabContents = document.querySelectorAll('.profile-tab-content');
     
-    // Check if we need to restore a tab from sessionStorage (after photo upload)
+    // Check if we need to restore a tab from sessionStorage (after photo upload, video upload, or album creation)
     const savedTab = sessionStorage.getItem('activeProfileTab');
     if (savedTab) {
         sessionStorage.removeItem('activeProfileTab');
-        // Find and click the saved tab
-        const savedTabButton = document.querySelector(`.profile-tab[data-tab="${savedTab}"]`);
-        if (savedTabButton) {
-            // Trigger click to switch to the saved tab
-            savedTabButton.click();
-        }
+        // Wait a bit for DOM to be fully ready
+        setTimeout(() => {
+            // Find and click the saved tab
+            const savedTabButton = document.querySelector(`.profile-tab[data-tab="${savedTab}"]`);
+            if (savedTabButton) {
+                // Trigger click to switch to the saved tab
+                savedTabButton.click();
+            }
+        }, 50);
     }
     
     // Handle profile tab clicks

@@ -91,6 +91,16 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     Route::delete('/profile', [\App\Http\Controllers\Web\ProfileController::class, 'destroy'])->name('profile.delete');
 });
 
+// Album Routes (authenticated users)
+Route::middleware('auth')->prefix('albums')->name('albums.')->group(function () {
+    Route::post('/create', [\App\Http\Controllers\AlbumController::class, 'store'])->name('create');
+    Route::get('/{id}', [\App\Http\Controllers\AlbumController::class, 'show'])->name('show');
+    Route::post('/{id}/verify-password', [\App\Http\Controllers\AlbumController::class, 'verifyPassword'])->name('verify-password');
+    Route::post('/{id}/upload-images', [\App\Http\Controllers\AlbumController::class, 'uploadImages'])->name('upload-images');
+    Route::delete('/{id}', [\App\Http\Controllers\AlbumController::class, 'destroy'])->name('destroy');
+    Route::delete('/{albumId}/images/{imageId}', [\App\Http\Controllers\AlbumController::class, 'deleteImage'])->name('delete-image');
+});
+
 // Editor Routes (restricted to editors - user management only)
 Route::middleware(['auth', 'editor'])->prefix('editor')->name('editor.')->group(function () {
     // Users - Editors can only manage users

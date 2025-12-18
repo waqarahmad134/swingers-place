@@ -20,7 +20,7 @@ Route::get('/clear', function () {
 });
 
 Route::get('/migrations', function () {
-    Artisan::call('migrate', ['--force' => true]);
+    Artisan::call('migrate');
     return 'Migrations executed successfully!';
 });
 
@@ -28,6 +28,28 @@ Route::get('/seed', function () {
     Artisan::call('db:seed', ['--force' => true]);
     return 'Database seeded successfully!';
 });
+
+Route::get('/update-created-by', function () {
+    try {
+        // Find admin user by email
+        $admin = \App\Models\User::where('email', 'admin@gmail.com')->first();
+        
+        if (!$admin) {
+            return '<h1 style="color: red;">Error: Admin user with email "admin@gmail.com" not found!</h1>';
+        }
+        
+        // Update all users' created_by field to admin ID
+        // Exclude the admin itself
+        $updated = \App\Models\User::where('id', '!=', $admin->id)
+            ->update(['created_by' => $admin->id]);
+        
+        return '<h1 style="color: green;">Success!</h1>
+                <p>Updated <strong>' . $updated . '</strong> users with created_by = ' . $admin->id . ' (Admin: ' . $admin->name . ' - ' . $admin->email . ')</p>
+                <p><a href="/">Go to Home</a></p>';
+    } catch (\Exception $e) {
+        return '<h1 style="color: red;">Error: ' . $e->getMessage() . '</h1>';
+    }
+})->name('update.created-by');
 
 
 // Home (Landing Page)

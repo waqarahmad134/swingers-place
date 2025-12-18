@@ -161,7 +161,7 @@
                 name="filter_location"
                 id="filter_location_sidebar"
                 value="{{ request('filter_location') }}"
-                placeholder="Pune, Maharashtra, IN" 
+                placeholder="" 
                 class="w-full bg-gray-700 border border-gray-600 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
         </div>

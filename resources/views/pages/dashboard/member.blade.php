@@ -57,8 +57,6 @@
                 <input type="hidden" name="filter_business" value="{{ request('filter_business') }}">
                 <input type="hidden" name="filter_transgender" value="{{ request('filter_transgender') }}">
                 <input type="hidden" name="filter_looking_for_me" value="{{ request('filter_looking_for_me') }}">
-                <input type="hidden" name="with_photos_only" value="{{ request('with_photos_only') }}">
-                <input type="hidden" name="with_videos_only" value="{{ request('with_videos_only') }}">
                 <input type="hidden" name="filter_location" value="{{ request('filter_location') }}">
                 <input type="hidden" name="sort_by" value="{{ request('sort_by', 'Random') }}">
                 <input type="hidden" name="distance" value="{{ request('distance', 'Any Distance') }}">

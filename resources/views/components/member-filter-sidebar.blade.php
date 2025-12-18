@@ -128,37 +128,28 @@
             </div>
         </div>
 
-        <!-- Features Section -->
+        <!-- Show Online Users -->
         <div class="mb-6">
-            <a href="#" class="text-blue-400 hover:text-blue-300 font-medium text-sm">Features</a>
-        </div>
-
-        <!-- Image Options -->
-        <div class="mb-6">
-            <label class="block text-white font-medium mb-3">Images</label>
-            <div class="space-y-2">
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <input 
-                        type="checkbox" 
-                        name="with_photos_only" 
-                        value="1"
-                        {{ request('with_photos_only') ? 'checked' : '' }}
-                        class="w-4 h-4 text-purple-600 bg-gray-700 border-gray-600 rounded focus:ring-purple-500"
-                        onchange="updateFilterForm()"
-                    >
-                    <span class="text-white text-sm">With photos only</span>
+            <div class="flex items-center justify-between">
+                <label class="flex items-center gap-3 cursor-pointer flex-1">
+                    <div class="relative">
+                        <input 
+                            type="checkbox" 
+                            name="online_only" 
+                            value="1"
+                            {{ request('online_only') ? 'checked' : '' }}
+                            class="sr-only peer"
+                            onchange="updateFilterForm()"
+                        >
+                        <div class="relative w-12 h-6 bg-gray-600 rounded-full transition-colors peer-checked:bg-green-500">
+                            <div class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 peer-checked:translate-x-6"></div>
+                        </div>
+                    </div>
+                    <span class="text-white font-medium">Show online users only</span>
                 </label>
-                <label class="flex items-center gap-2 cursor-pointer">
-                    <input 
-                        type="checkbox" 
-                        name="with_videos_only" 
-                        value="1"
-                        {{ request('with_videos_only') ? 'checked' : '' }}
-                        class="w-4 h-4 text-purple-600 bg-gray-700 border-gray-600 rounded focus:ring-purple-500"
-                        onchange="updateFilterForm()"
-                    >
-                    <span class="text-white text-sm">With videos only</span>
-                </label>
+                <div class="w-8 h-8 rounded-full bg-green-500 flex-shrink-0 flex items-center justify-center">
+                    <div class="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                </div>
             </div>
         </div>
 
@@ -180,7 +171,6 @@
         <input type="hidden" name="sort_by" value="{{ request('sort_by', 'Random') }}">
         <input type="hidden" name="distance" value="{{ request('distance', 'Any Distance') }}">
         <input type="hidden" name="age_range" value="{{ request('age_range', 'Any Age') }}">
-        <input type="hidden" name="online_only" value="{{ request('online_only') }}">
 
         <!-- Ok Button -->
         <button 

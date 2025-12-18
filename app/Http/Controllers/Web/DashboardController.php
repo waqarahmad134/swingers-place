@@ -168,22 +168,6 @@ class DashboardController extends Controller
             // For now, we'll skip this filter
         }
         
-        // With photos only filter
-        if ($request->boolean('with_photos_only')) {
-            $query->where(function ($q) {
-                $q->whereHas('profile', function ($profileQ) {
-                    $profileQ->whereNotNull('profile_photo')
-                             ->orWhereNotNull('album_photos');
-                })
-                ->orWhereNotNull('profile_image');
-            });
-        }
-        
-        // With videos only filter (placeholder - would need video field)
-        if ($request->boolean('with_videos_only')) {
-            // This would require a videos field in the profile
-            // For now, we'll skip this filter
-        }
 
         // Company filter (still available if needed)
         if ($request->filled('filter_company')) {

@@ -51,6 +51,82 @@ Route::get('/update-created-by', function () {
     }
 })->name('update.created-by');
 
+Route::get('/rotate-users-online', function () {
+    try {
+        // Get all users where created_by is not null
+        $users = \App\Models\User::whereNotNull('created_by')
+            ->where('is_active', true)
+            ->orderBy('id')
+            ->get();
+        
+        $totalUsers = $users->count();
+        
+        if ($totalUsers == 0) {
+            return '<h1 style="color: orange;">No users found with created_by field set!</h1>
+                    <p>Please run <a href="/update-created-by">/update-created-by</a> first.</p>';
+        }
+        
+        // Calculate distribution: 24 hours in a day
+        $hoursPerDay = 24;
+        $usersPerHour = ceil($totalUsers / $hoursPerDay);
+        
+        // Get current hour (0-23)
+        $currentHour = (int) now()->format('H');
+        
+        // Calculate which users should be online for this hour
+        $startIndex = $currentHour * $usersPerHour;
+        $endIndex = min($startIndex + $usersPerHour, $totalUsers);
+        
+        // Set all users offline first (clear scheduled_offline_at and set last_seen_at to old time)
+        \App\Models\User::whereNotNull('created_by')
+            ->where('is_active', true)
+            ->update([
+                'last_seen_at' => now()->subHours(10), // Set to offline (more than 5 minutes ago)
+                'scheduled_offline_at' => null
+            ]);
+        
+        // Get users for current hour slot
+        $onlineUsers = $users->slice($startIndex, $endIndex - $startIndex);
+        
+        // Set these users online
+        $onlineUserIds = $onlineUsers->pluck('id')->toArray();
+        
+        // Calculate when they should go offline (at the end of current hour slot)
+        $offlineTime = now()->startOfHour()->addHours(1);
+        
+        \App\Models\User::whereIn('id', $onlineUserIds)
+            ->update([
+                'last_seen_at' => now(), // Set to now (within 5 minutes = online)
+                'scheduled_offline_at' => $offlineTime // Schedule to go offline at end of hour
+            ]);
+        
+        $onlineCount = count($onlineUserIds);
+        $offlineCount = $totalUsers - $onlineCount;
+        
+        return '<h1 style="color: green;">User Rotation Complete!</h1>
+                <div style="margin: 20px 0;">
+                    <h2>Statistics:</h2>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><strong>Total Users:</strong> ' . $totalUsers . '</li>
+                        <li><strong>Users Per Hour:</strong> ~' . $usersPerHour . '</li>
+                        <li><strong>Current Hour:</strong> ' . $currentHour . ':00 - ' . ($currentHour + 1) . ':00</li>
+                        <li style="color: green;"><strong>Users Online Now:</strong> ' . $onlineCount . '</li>
+                        <li style="color: gray;"><strong>Users Offline:</strong> ' . $offlineCount . '</li>
+                    </ul>
+                </div>
+                <div style="margin: 20px 0;">
+                    <h3>How it works:</h3>
+                    <p>Users are distributed across 24 hours. Each hour, a different set of users will be online.</p>
+                    <p>Users scheduled to go offline at: <strong>' . $offlineTime->format('Y-m-d H:i:s') . '</strong></p>
+                    <p><em>Run this route every hour (or set up a cron job) to rotate users.</em></p>
+                </div>
+                <p><a href="/">Go to Home</a> | <a href="/rotate-users-online">Refresh Rotation</a></p>';
+    } catch (\Exception $e) {
+        return '<h1 style="color: red;">Error: ' . $e->getMessage() . '</h1>
+                <pre style="background: #f5f5f5; padding: 10px; margin: 10px 0;">' . $e->getTraceAsString() . '</pre>';
+    }
+})->name('rotate.users.online');
+
 
 // Home (Landing Page)
 Route::get('/', [HomeController::class, 'index'])->name('home');

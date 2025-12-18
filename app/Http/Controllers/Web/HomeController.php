@@ -158,7 +158,14 @@ class HomeController extends Controller
         // Get match profiles (12 profiles that match this user)
         $matchedProfiles = $this->getMatchedProfiles($user, $profile, 12);
         
-        return view('pages.profile.index', compact('user', 'profile', 'age', 'ageHer', 'ageHim', 'isCouple', 'coupleData', 'joinDate', 'isOwnProfile', 'preferences', 'languages', 'matchedProfiles'));
+        // Get current user's likes/dislikes for matched profiles
+        $currentUserId = auth()->id();
+        $userLikes = $currentUserId ? \App\Models\UserLike::where('user_id', $currentUserId)
+            ->whereIn('liked_user_id', $matchedProfiles->pluck('id'))
+            ->get()
+            ->keyBy('liked_user_id') : collect();
+        
+        return view('pages.profile.index', compact('user', 'profile', 'age', 'ageHer', 'ageHim', 'isCouple', 'coupleData', 'joinDate', 'isOwnProfile', 'preferences', 'languages', 'matchedProfiles', 'userLikes'));
     }
     
     /**

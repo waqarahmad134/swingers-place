@@ -132,4 +132,50 @@ class User extends Authenticatable
     {
         $this->update(['last_seen_at' => now()]);
     }
+
+    /**
+     * Get likes given by this user.
+     */
+    public function likesGiven()
+    {
+        return $this->hasMany(UserLike::class, 'user_id');
+    }
+
+    /**
+     * Get likes received by this user.
+     */
+    public function likesReceived()
+    {
+        return $this->hasMany(UserLike::class, 'liked_user_id');
+    }
+
+    /**
+     * Get the count of likes received.
+     */
+    public function getLikesCountAttribute(): int
+    {
+        return $this->likesReceived()->where('type', 'like')->count();
+    }
+
+    /**
+     * Check if current user has liked this user.
+     */
+    public function isLikedBy(?int $userId): bool
+    {
+        if (!$userId) {
+            return false;
+        }
+        return $this->likesReceived()->where('user_id', $userId)->where('type', 'like')->exists();
+    }
+
+    /**
+     * Check if current user has disliked this user.
+     */
+    public function isDislikedBy(?int $userId): bool
+    {
+        if (!$userId) {
+            return false;
+        }
+        return $this->likesReceived()->where('user_id', $userId)->where('type', 'dislike')->exists();
+    }
 }

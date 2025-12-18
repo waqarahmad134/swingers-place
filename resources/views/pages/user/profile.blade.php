@@ -252,13 +252,13 @@
                                 $isMatchedOnline = !$hideMatchedOnlineStatus && $matchedUser->isOnline();
                             @endphp
                             
-                            <a href="{{ route('user.profile', $matchedUser->username ?: $matchedUser->id) }}" class="block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg hover:shadow-purple-500/20">
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg hover:shadow-purple-500/20">
                                 <!-- Profile Image -->
-                                <div class="relative">
+                                <a href="{{ route('user.profile', $matchedUser->username ?: $matchedUser->id) }}" class="block relative">
                                     <img 
                                         src="{{ $matchedProfilePhoto }}" 
                                         alt="{{ $matchedUser->name }}"
-                                        class="w-full h-64 object-cover bg-gray-200 dark:bg-gray-700"
+                                        class="w-full h-64 object-cover bg-gray-200 dark:bg-gray-700 cursor-pointer"
                                     />
                                     
                                     <div class="absolute top-2 left-2 flex flex-col items-start gap-2">
@@ -278,11 +278,13 @@
                                             <span class="font-light">{{ $matchedProfile->city }}</span>
                                         </div>
                                     @endif
-                                </div>
+                                </a>
 
                                 <!-- Profile Info -->
                                 <div class="p-4">
-                                    <h3 class="text-gray-900 dark:text-white mb-1 font-semibold">{{ $matchedUser->name }}</h3>
+                                    <a href="{{ route('user.profile', $matchedUser->username ?: $matchedUser->id) }}" class="block">
+                                        <h3 class="text-gray-900 dark:text-white mb-1 font-semibold hover:text-purple-500 transition-colors cursor-pointer">{{ $matchedUser->name }}</h3>
+                                    </a>
                                     <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">
                                         @if($matchedAge)
                                             {{ $matchedAge }} •
@@ -303,19 +305,173 @@
                                     </p>
 
                                     <!-- Engagement Stats -->
-                                    <div class="flex items-center justify-between">
-                                        <div class="flex items-center gap-1 text-red-500">
-                                            <i class="ri-heart-fill text-lg"></i>
-                                            <span class="text-gray-900 dark:text-white text-sm font-medium">0</span>
-                                        </div>
+                                    @php
+                                        $isMatchedLiked = isset($userLikes[$matchedUser->id]) && $userLikes[$matchedUser->id]->type === 'like';
+                                        $matchedLikesCount = $matchedUser->likesReceived()->where('type', 'like')->count();
+                                    @endphp
+                                    
+                                    <div class="flex items-center justify-start">
+                                        <button 
+                                            type="button"
+                                            onclick="event.stopPropagation(); toggleLike({{ $matchedUser->id }}, this)"
+                                            class="flex items-center gap-1 transition-colors {{ $isMatchedLiked ? 'text-red-500' : 'text-gray-400 hover:text-red-500' }}"
+                                            data-user-id="{{ $matchedUser->id }}"
+                                            data-liked="{{ $isMatchedLiked ? 'true' : 'false' }}"
+                                        >
+                                            <i class="ri-heart-{{ $isMatchedLiked ? 'fill' : 'line' }} text-lg"></i>
+                                            <span class="text-gray-900 dark:text-white text-sm font-medium likes-count-{{ $matchedUser->id }}">{{ $matchedLikesCount }}</span>
+                                        </button>
                                     </div>
                                 </div>
-                            </a>
+                            </div>
                         @endforeach
                     </div>
                 </div>
             @endif
         </div>
     </div>
+
+@push('scripts')
+<script>
+// Toggle like functionality
+function toggleLike(userId, button) {
+    const icon = button.querySelector('i');
+    const countSpan = button.querySelector('.likes-count-' + userId);
+    const isLiked = button.dataset.liked === 'true';
+    
+    // Optimistic UI update
+    if (isLiked) {
+        icon.classList.remove('ri-heart-fill');
+        icon.classList.add('ri-heart-line');
+        button.classList.remove('text-red-500');
+        button.classList.add('text-gray-400');
+        button.dataset.liked = 'false';
+    } else {
+        icon.classList.remove('ri-heart-line');
+        icon.classList.add('ri-heart-fill');
+        button.classList.remove('text-gray-400');
+        button.classList.add('text-red-500');
+        button.dataset.liked = 'true';
+    }
+    
+    // Make API call
+    fetch(`/users/${userId}/like`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update count
+            if (countSpan) {
+                countSpan.textContent = data.likes_count;
+            }
+            // Update button state based on response
+            if (data.is_liked) {
+                icon.classList.remove('ri-heart-line');
+                icon.classList.add('ri-heart-fill');
+                button.classList.remove('text-gray-400');
+                button.classList.add('text-red-500');
+                button.dataset.liked = 'true';
+            } else {
+                icon.classList.remove('ri-heart-fill');
+                icon.classList.add('ri-heart-line');
+                button.classList.remove('text-red-500');
+                button.classList.add('text-gray-400');
+                button.dataset.liked = 'false';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Revert optimistic update on error
+        if (isLiked) {
+            icon.classList.remove('ri-heart-line');
+            icon.classList.add('ri-heart-fill');
+            button.classList.remove('text-gray-400');
+            button.classList.add('text-red-500');
+            button.dataset.liked = 'true';
+        } else {
+            icon.classList.remove('ri-heart-fill');
+            icon.classList.add('ri-heart-line');
+            button.classList.remove('text-red-500');
+            button.classList.add('text-gray-400');
+            button.dataset.liked = 'false';
+        }
+    });
+}
+
+// Toggle dislike functionality
+function toggleDislike(userId, button) {
+    const icon = button.querySelector('i');
+    const isDisliked = button.dataset.disliked === 'true';
+    
+    // Optimistic UI update
+    if (isDisliked) {
+        icon.classList.remove('ri-close-circle-fill');
+        icon.classList.add('ri-close-circle-line');
+        button.classList.remove('text-gray-600', 'dark:text-gray-400');
+        button.classList.add('text-gray-400');
+        button.dataset.disliked = 'false';
+    } else {
+        icon.classList.remove('ri-close-circle-line');
+        icon.classList.add('ri-close-circle-fill');
+        button.classList.remove('text-gray-400');
+        button.classList.add('text-gray-600', 'dark:text-gray-400');
+        button.dataset.disliked = 'true';
+    }
+    
+    // Make API call
+    fetch(`/users/${userId}/dislike`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update button state based on response
+            if (data.is_disliked) {
+                icon.classList.remove('ri-close-circle-line');
+                icon.classList.add('ri-close-circle-fill');
+                button.classList.remove('text-gray-400');
+                button.classList.add('text-gray-600', 'dark:text-gray-400');
+                button.dataset.disliked = 'true';
+            } else {
+                icon.classList.remove('ri-close-circle-fill');
+                icon.classList.add('ri-close-circle-line');
+                button.classList.remove('text-gray-600', 'dark:text-gray-400');
+                button.classList.add('text-gray-400');
+                button.dataset.disliked = 'false';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Revert optimistic update on error
+        if (isDisliked) {
+            icon.classList.remove('ri-close-circle-line');
+            icon.classList.add('ri-close-circle-fill');
+            button.classList.remove('text-gray-400');
+            button.classList.add('text-gray-600', 'dark:text-gray-400');
+            button.dataset.disliked = 'true';
+        } else {
+            icon.classList.remove('ri-close-circle-fill');
+            icon.classList.add('ri-close-circle-line');
+            button.classList.remove('text-gray-600', 'dark:text-gray-400');
+            button.classList.add('text-gray-400');
+            button.dataset.disliked = 'false';
+        }
+    });
+}
+</script>
+@endpush
 @endsection
 

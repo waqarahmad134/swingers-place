@@ -887,5 +887,146 @@ window.initProfileMapCallback = function() {
 console.warn('Google Maps API key is not configured. Please add GOOGLE_MAPS_API_KEY to your .env file.');
 </script>
 @endif
+
+<script>
+// Toggle like functionality
+function toggleLike(userId, button) {
+    const icon = button.querySelector('i');
+    const countSpan = button.querySelector('.likes-count-' + userId);
+    const isLiked = button.dataset.liked === 'true';
+    
+    // Optimistic UI update
+    if (isLiked) {
+        icon.classList.remove('ri-heart-fill');
+        icon.classList.add('ri-heart-line');
+        button.classList.remove('text-red-500');
+        button.classList.add('text-gray-400');
+        button.dataset.liked = 'false';
+    } else {
+        icon.classList.remove('ri-heart-line');
+        icon.classList.add('ri-heart-fill');
+        button.classList.remove('text-gray-400');
+        button.classList.add('text-red-500');
+        button.dataset.liked = 'true';
+    }
+    
+    // Make API call
+    fetch(`/users/${userId}/like`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update count
+            if (countSpan) {
+                countSpan.textContent = data.likes_count;
+            }
+            // Update button state based on response
+            if (data.is_liked) {
+                icon.classList.remove('ri-heart-line');
+                icon.classList.add('ri-heart-fill');
+                button.classList.remove('text-gray-400');
+                button.classList.add('text-red-500');
+                button.dataset.liked = 'true';
+            } else {
+                icon.classList.remove('ri-heart-fill');
+                icon.classList.add('ri-heart-line');
+                button.classList.remove('text-red-500');
+                button.classList.add('text-gray-400');
+                button.dataset.liked = 'false';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Revert optimistic update on error
+        if (isLiked) {
+            icon.classList.remove('ri-heart-line');
+            icon.classList.add('ri-heart-fill');
+            button.classList.remove('text-gray-400');
+            button.classList.add('text-red-500');
+            button.dataset.liked = 'true';
+        } else {
+            icon.classList.remove('ri-heart-fill');
+            icon.classList.add('ri-heart-line');
+            button.classList.remove('text-red-500');
+            button.classList.add('text-gray-400');
+            button.dataset.liked = 'false';
+        }
+    });
+}
+
+// Toggle dislike functionality
+function toggleDislike(userId, button) {
+    const icon = button.querySelector('i');
+    const isDisliked = button.dataset.disliked === 'true';
+    
+    // Optimistic UI update
+    if (isDisliked) {
+        icon.classList.remove('ri-close-circle-fill');
+        icon.classList.add('ri-close-circle-line');
+        button.classList.remove('text-gray-600', 'dark:text-gray-400');
+        button.classList.add('text-gray-400');
+        button.dataset.disliked = 'false';
+    } else {
+        icon.classList.remove('ri-close-circle-line');
+        icon.classList.add('ri-close-circle-fill');
+        button.classList.remove('text-gray-400');
+        button.classList.add('text-gray-600', 'dark:text-gray-400');
+        button.dataset.disliked = 'true';
+    }
+    
+    // Make API call
+    fetch(`/users/${userId}/dislike`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update button state based on response
+            if (data.is_disliked) {
+                icon.classList.remove('ri-close-circle-line');
+                icon.classList.add('ri-close-circle-fill');
+                button.classList.remove('text-gray-400');
+                button.classList.add('text-gray-600', 'dark:text-gray-400');
+                button.dataset.disliked = 'true';
+            } else {
+                icon.classList.remove('ri-close-circle-fill');
+                icon.classList.add('ri-close-circle-line');
+                button.classList.remove('text-gray-600', 'dark:text-gray-400');
+                button.classList.add('text-gray-400');
+                button.dataset.disliked = 'false';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Revert optimistic update on error
+        if (isDisliked) {
+            icon.classList.remove('ri-close-circle-line');
+            icon.classList.add('ri-close-circle-fill');
+            button.classList.remove('text-gray-400');
+            button.classList.add('text-gray-600', 'dark:text-gray-400');
+            button.dataset.disliked = 'true';
+        } else {
+            icon.classList.remove('ri-close-circle-fill');
+            icon.classList.add('ri-close-circle-line');
+            button.classList.remove('text-gray-600', 'dark:text-gray-400');
+            button.classList.add('text-gray-400');
+            button.dataset.disliked = 'false';
+        }
+    });
+}
+</script>
 @endpush
 @endsection

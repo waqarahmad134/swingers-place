@@ -51,6 +51,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/messages/{user}/block', [MessageController::class, 'blockUser'])->name('messages.block')->whereNumber('user');
 });
 
+// Likes and Dislikes
+Route::middleware('auth')->group(function () {
+    Route::post('/users/{user}/like', [\App\Http\Controllers\Web\LikeController::class, 'toggleLike'])->name('users.like')->whereNumber('user');
+    Route::post('/users/{user}/dislike', [\App\Http\Controllers\Web\LikeController::class, 'toggleDislike'])->name('users.dislike')->whereNumber('user');
+});
+
 // Static Pages (with database fallback)
 Route::get('/about', [\App\Http\Controllers\Web\PageController::class, 'about'])->name('about');
 Route::get('/contact', [\App\Http\Controllers\Web\PageController::class, 'contact'])->name('contact');

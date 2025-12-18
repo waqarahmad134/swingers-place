@@ -331,7 +331,15 @@ class DashboardController extends Controller
         }
 
         $members = $query->paginate(20)->withQueryString();
-        return view('pages.dashboard.member', compact('members'));
+        
+        // Get current user's likes/dislikes for all members
+        $currentUserId = auth()->id();
+        $userLikes = \App\Models\UserLike::where('user_id', $currentUserId)
+            ->whereIn('liked_user_id', $members->pluck('id'))
+            ->get()
+            ->keyBy('liked_user_id');
+        
+        return view('pages.dashboard.member', compact('members', 'userLikes'));
     }
 
     /**

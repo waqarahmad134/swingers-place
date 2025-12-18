@@ -29,27 +29,27 @@ Route::get('/seed', function () {
     return 'Database seeded successfully!';
 });
 
-Route::get('/update-created-by', function () {
-    try {
-        // Find admin user by email
-        $admin = \App\Models\User::where('email', 'admin@gmail.com')->first();
+// Route::get('/update-created-by', function () {
+//     try {
+//         // Find admin user by email
+//         $admin = \App\Models\User::where('email', 'admin@gmail.com')->first();
         
-        if (!$admin) {
-            return '<h1 style="color: red;">Error: Admin user with email "admin@gmail.com" not found!</h1>';
-        }
+//         if (!$admin) {
+//             return '<h1 style="color: red;">Error: Admin user with email "admin@gmail.com" not found!</h1>';
+//         }
         
-        // Update all users' created_by field to admin ID
-        // Exclude the admin itself
-        $updated = \App\Models\User::where('id', '!=', $admin->id)
-            ->update(['created_by' => $admin->id]);
+//         // Update all users' created_by field to admin ID
+//         // Exclude the admin itself
+//         $updated = \App\Models\User::where('id', '!=', $admin->id)
+//             ->update(['created_by' => $admin->id]);
         
-        return '<h1 style="color: green;">Success!</h1>
-                <p>Updated <strong>' . $updated . '</strong> users with created_by = ' . $admin->id . ' (Admin: ' . $admin->name . ' - ' . $admin->email . ')</p>
-                <p><a href="/">Go to Home</a></p>';
-    } catch (\Exception $e) {
-        return '<h1 style="color: red;">Error: ' . $e->getMessage() . '</h1>';
-    }
-})->name('update.created-by');
+//         return '<h1 style="color: green;">Success!</h1>
+//                 <p>Updated <strong>' . $updated . '</strong> users with created_by = ' . $admin->id . ' (Admin: ' . $admin->name . ' - ' . $admin->email . ')</p>
+//                 <p><a href="/">Go to Home</a></p>';
+//     } catch (\Exception $e) {
+//         return '<h1 style="color: red;">Error: ' . $e->getMessage() . '</h1>';
+//     }
+// })->name('update.created-by');
 
 Route::get('/rotate-users-online', function () {
     try {
@@ -74,12 +74,11 @@ Route::get('/rotate-users-online', function () {
         $currentTime = now();
         $todayStart = $currentTime->copy()->startOfDay();
         
-        // Set all users offline first
+        // Set all users offline first (only last_seen_at, let existing system handle scheduled_offline_at)
         \App\Models\User::whereNotNull('created_by')
             ->where('is_active', true)
             ->update([
-                'last_seen_at' => now()->subHours(10), // Set to offline (more than 5 minutes ago)
-                'scheduled_offline_at' => null
+                'last_seen_at' => now()->subHours(10) // Set to offline (more than 5 minutes ago)
             ]);
         
         // Create schedule for all 24 hours using deterministic round-robin
@@ -127,16 +126,12 @@ Route::get('/rotate-users-online', function () {
         $currentHourData = $schedule[$currentHour];
         $currentOnlineUserIds = $currentHourData['user_ids'];
         
-        // Set current hour users online
+        // Set current hour users online (only update last_seen_at)
+        // Existing activity system will handle making them offline automatically
         \App\Models\User::whereIn('id', $currentOnlineUserIds)
             ->update([
-                'last_seen_at' => now(), // Set to now (within 5 minutes = online)
-                'scheduled_offline_at' => $currentHourData['end'] // Schedule to go offline at end of hour
+                'last_seen_at' => now() // Set to now (within 5 minutes = online)
             ]);
-        
-        // For remaining hours today, we'll schedule them to come online
-        // Since we can only set one scheduled_offline_at, we'll use a cron approach
-        // But for now, we'll document the schedule
         
         $currentOnlineCount = count($currentOnlineUserIds);
         
@@ -168,6 +163,7 @@ Route::get('/rotate-users-online', function () {
         }
         
         $scheduleHtml .= '</table>';
+
         
         return '<h1 style="color: green;">Daily User Rotation Scheduled!</h1>
                 <div style="margin: 20px 0; padding: 15px; background: #1a1a1a; border-radius: 8px;">
@@ -190,7 +186,8 @@ Route::get('/rotate-users-online', function () {
                     <p>✅ Users rotate throughout the day using round-robin distribution</p>
                     <p>✅ Schedule is calculated for the <strong style="color: white;">entire day</strong> (24 hours)</p>
                     <p>✅ Current hour is <strong style="color: #90ee90;">active now</strong> - users are online</p>
-                    <p>⚠️ <em style="color: #ffa500;">Note: For automatic hourly rotation, set up a cron job to run this route every hour, or run it once per day and it will handle the current hour.</em></p>
+                    <p>✅ Users will automatically go offline based on existing activity system (no activity = offline)</p>
+                    <p>⚠️ <em style="color: #ffa500;">Note: For automatic hourly rotation, set up a cron job to run this route every hour. The existing activity system will handle making users offline automatically.</em></p>
                 </div>
                 <p style="margin-top: 20px;"><a href="/" style="color: #4a9eff; text-decoration: none; margin-right: 15px;">← Go to Home</a> <a href="/rotate-users-online" style="color: #4a9eff; text-decoration: none;">🔄 Refresh Schedule</a></p>';
     } catch (\Exception $e) {

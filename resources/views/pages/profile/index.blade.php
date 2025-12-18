@@ -895,19 +895,44 @@ function toggleLike(userId, button) {
     const countSpan = button.querySelector('.likes-count-' + userId);
     const isLiked = button.dataset.liked === 'true';
     
-    // Optimistic UI update
+    // Also get hover button if it exists
+    const hoverButton = document.querySelector('.like-hover-btn-' + userId);
+    const hoverIcon = hoverButton ? hoverButton.querySelector('i') : null;
+    const hoverText = hoverButton ? hoverButton.querySelector('span:last-child') : null;
+    
+    // Optimistic UI update for main button
     if (isLiked) {
         icon.classList.remove('ri-heart-fill');
         icon.classList.add('ri-heart-line');
         button.classList.remove('text-red-500');
         button.classList.add('text-gray-400');
         button.dataset.liked = 'false';
+        
+        // Update hover button
+        if (hoverButton) {
+            if (hoverIcon) {
+                hoverIcon.classList.remove('ri-heart-fill');
+                hoverIcon.classList.add('ri-heart-line');
+            }
+            if (hoverText) hoverText.textContent = 'Like';
+            hoverButton.dataset.liked = 'false';
+        }
     } else {
         icon.classList.remove('ri-heart-line');
         icon.classList.add('ri-heart-fill');
         button.classList.remove('text-gray-400');
         button.classList.add('text-red-500');
         button.dataset.liked = 'true';
+        
+        // Update hover button
+        if (hoverButton) {
+            if (hoverIcon) {
+                hoverIcon.classList.remove('ri-heart-line');
+                hoverIcon.classList.add('ri-heart-fill');
+            }
+            if (hoverText) hoverText.textContent = 'Unlike';
+            hoverButton.dataset.liked = 'true';
+        }
     }
     
     // Make API call
@@ -933,12 +958,32 @@ function toggleLike(userId, button) {
                 button.classList.remove('text-gray-400');
                 button.classList.add('text-red-500');
                 button.dataset.liked = 'true';
+                
+                // Update hover button
+                if (hoverButton) {
+                    if (hoverIcon) {
+                        hoverIcon.classList.remove('ri-heart-line');
+                        hoverIcon.classList.add('ri-heart-fill');
+                    }
+                    if (hoverText) hoverText.textContent = 'Unlike';
+                    hoverButton.dataset.liked = 'true';
+                }
             } else {
                 icon.classList.remove('ri-heart-fill');
                 icon.classList.add('ri-heart-line');
                 button.classList.remove('text-red-500');
                 button.classList.add('text-gray-400');
                 button.dataset.liked = 'false';
+                
+                // Update hover button
+                if (hoverButton) {
+                    if (hoverIcon) {
+                        hoverIcon.classList.remove('ri-heart-fill');
+                        hoverIcon.classList.add('ri-heart-line');
+                    }
+                    if (hoverText) hoverText.textContent = 'Like';
+                    hoverButton.dataset.liked = 'false';
+                }
             }
         }
     })
@@ -951,14 +996,117 @@ function toggleLike(userId, button) {
             button.classList.remove('text-gray-400');
             button.classList.add('text-red-500');
             button.dataset.liked = 'true';
+            
+            if (hoverButton) {
+                if (hoverIcon) {
+                    hoverIcon.classList.remove('ri-heart-line');
+                    hoverIcon.classList.add('ri-heart-fill');
+                }
+                if (hoverText) hoverText.textContent = 'Unlike';
+                hoverButton.dataset.liked = 'true';
+            }
         } else {
             icon.classList.remove('ri-heart-fill');
             icon.classList.add('ri-heart-line');
             button.classList.remove('text-red-500');
             button.classList.add('text-gray-400');
             button.dataset.liked = 'false';
+            
+            if (hoverButton) {
+                if (hoverIcon) {
+                    hoverIcon.classList.remove('ri-heart-fill');
+                    hoverIcon.classList.add('ri-heart-line');
+                }
+                if (hoverText) hoverText.textContent = 'Like';
+                hoverButton.dataset.liked = 'false';
+            }
         }
     });
+}
+
+// Send Friend Request
+function sendFriendRequest(userId, button) {
+    const textSpan = button.querySelector('.friend-request-text-' + userId);
+    const originalText = textSpan ? textSpan.textContent : 'Friend request';
+    
+    // Update button to show success state
+    if (textSpan) {
+        textSpan.textContent = 'Friend request sent';
+    }
+    button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+    button.classList.add('bg-blue-500', 'cursor-not-allowed');
+    button.disabled = true;
+    
+    // Show success notification
+    showNotification('Friend request sent successfully!', 'success');
+    
+    // Revert after 3 seconds
+    setTimeout(() => {
+        if (textSpan) {
+            textSpan.textContent = originalText;
+        }
+        button.classList.remove('bg-blue-500', 'cursor-not-allowed');
+        button.classList.add('bg-blue-600', 'hover:bg-blue-700');
+        button.disabled = false;
+    }, 3000);
+}
+
+// Remember User
+function rememberUser(userId, button) {
+    const textSpan = button.querySelector('.remember-text-' + userId);
+    const originalText = textSpan ? textSpan.textContent : 'Remember';
+    
+    // Update button to show success state
+    if (textSpan) {
+        textSpan.textContent = 'Remembered successfully';
+    }
+    button.classList.remove('bg-green-600', 'hover:bg-green-700');
+    button.classList.add('bg-green-500', 'cursor-not-allowed');
+    button.disabled = true;
+    
+    // Show success notification
+    showNotification('User remembered successfully!', 'success');
+    
+    // Revert after 3 seconds
+    setTimeout(() => {
+        if (textSpan) {
+            textSpan.textContent = originalText;
+        }
+        button.classList.remove('bg-green-500', 'cursor-not-allowed');
+        button.classList.add('bg-green-600', 'hover:bg-green-700');
+        button.disabled = false;
+    }, 3000);
+}
+
+// Show notification (simple toast-like notification)
+function showNotification(message, type = 'success') {
+    // Remove existing notification if any
+    const existingNotification = document.getElementById('action-notification');
+    if (existingNotification) {
+        existingNotification.remove();
+    }
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.id = 'action-notification';
+    notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300 transform translate-x-full ${
+        type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+    }`;
+    notification.textContent = message;
+    
+    // Add to body
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 10);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
 }
 
 // Toggle dislike functionality

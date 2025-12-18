@@ -779,7 +779,7 @@
                             $isMatchedOnline = !$hideMatchedOnlineStatus && $matchedUser->isOnline();
                         @endphp
                         
-                        <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg hover:shadow-purple-500/20">
+                        <div class="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-purple-500 transition-all hover:shadow-lg hover:shadow-purple-500/20 relative">
                             <!-- Profile Image -->
                             <a href="{{ route('user.profile', $matchedUser->username ?: $matchedUser->id) }}" class="block relative">
                                 <img 
@@ -805,6 +805,47 @@
                                         <span class="font-light">{{ $matchedProfile->city }}</span>
                                     </div>
                                 @endif
+                                
+                                <!-- Hover Action Buttons Overlay -->
+                                <div class="absolute inset-0 bg-black/70 dark:bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <div class="flex flex-col gap-3 px-4 w-full">
+                                        <!-- Message Button -->
+                                        <a href="{{ route('messages.show', $matchedUser->id) }}" 
+                                           class="flex items-center gap-3 bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-xl transition-colors">
+                                            <i class="ri-message-3-line text-xl"></i>
+                                            <span class="font-semibold">Messenger</span>
+                                        </a>
+                                        
+                                        <!-- Like Button -->
+                                        @php
+                                            $isMatchedLikedHover = isset($userLikes[$matchedUser->id]) && $userLikes[$matchedUser->id]->type === 'like';
+                                        @endphp
+                                        <button type="button"
+                                                onclick="event.stopPropagation(); toggleLike({{ $matchedUser->id }}, this); event.preventDefault();"
+                                                class="flex items-center gap-3 bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-xl transition-colors like-hover-btn-{{ $matchedUser->id }}"
+                                                data-user-id="{{ $matchedUser->id }}"
+                                                data-liked="{{ $isMatchedLikedHover ? 'true' : 'false' }}">
+                                            <i class="ri-heart-{{ $isMatchedLikedHover ? 'fill' : 'line' }} text-xl"></i>
+                                            <span class="font-semibold">{{ $isMatchedLikedHover ? 'Unlike' : 'Like' }}</span>
+                                        </button>
+                                        
+                                        <!-- Friend Request Button -->
+                                        <button type="button"
+                                                onclick="event.stopPropagation(); sendFriendRequest({{ $matchedUser->id }}, this); event.preventDefault();"
+                                                class="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl transition-colors friend-request-btn-{{ $matchedUser->id }}">
+                                            <i class="ri-user-add-line text-xl"></i>
+                                            <span class="font-semibold friend-request-text-{{ $matchedUser->id }}">Friend request</span>
+                                        </button>
+                                        
+                                        <!-- Remember Button -->
+                                        <button type="button"
+                                                onclick="event.stopPropagation(); rememberUser({{ $matchedUser->id }}, this); event.preventDefault();"
+                                                class="flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl transition-colors remember-btn-{{ $matchedUser->id }}">
+                                            <i class="ri-bookmark-line text-xl"></i>
+                                            <span class="font-semibold remember-text-{{ $matchedUser->id }}">Remember</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </a>
 
                             <!-- Profile Info -->

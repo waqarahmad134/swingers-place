@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class Message extends Model
 {
@@ -24,6 +25,21 @@ class Message extends Model
     protected $casts = [
         'read_at' => 'datetime',
     ];
+
+    /**
+     * Boot the model and add event listeners.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Delete attachment file when message is deleted
+        static::deleting(function ($message) {
+            if ($message->attachment && Storage::disk('public')->exists($message->attachment)) {
+                Storage::disk('public')->delete($message->attachment);
+            }
+        });
+    }
 
     /**
      * Scope messages exchanged between two users.

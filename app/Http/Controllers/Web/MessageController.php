@@ -151,7 +151,7 @@ class MessageController extends Controller
         if ($request->hasFile('attachment')) {
             $file = $request->file('attachment');
             $attachmentName = $file->getClientOriginalName();
-            $attachmentPath = $file->store('attachments', 'public');
+            $attachmentPath = $file->store('profiles/messages/attachments', 'public');
             $attachmentType = 'file';
         }
 
@@ -159,7 +159,7 @@ class MessageController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $attachmentName = $file->getClientOriginalName();
-            $attachmentPath = $file->store('images', 'public');
+            $attachmentPath = $file->store('profiles/messages/images', 'public');
             $attachmentType = 'image';
         }
 
@@ -459,14 +459,19 @@ class MessageController extends Controller
         abort_unless($user->is_active, 404);
         abort_if($user->id === $currentUser->id, 403, 'Invalid action.');
 
-        // Delete all messages between the two users
-        Message::where(function ($query) use ($currentUser, $user) {
+        // Get all messages between the two users
+        $messages = Message::where(function ($query) use ($currentUser, $user) {
             $query->where('sender_id', $currentUser->id)
                   ->where('receiver_id', $user->id);
         })->orWhere(function ($query) use ($currentUser, $user) {
             $query->where('sender_id', $user->id)
                   ->where('receiver_id', $currentUser->id);
-        })->delete();
+        })->get();
+
+        // Delete each message (this will trigger the model's deleting event to clean up attachments)
+        foreach ($messages as $message) {
+            $message->delete();
+        }
 
         return response()->json([
             'success' => true,

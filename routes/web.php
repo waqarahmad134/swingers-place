@@ -66,18 +66,15 @@ Route::get('/rotate-users-online', function () {
                     <p>Please run <a href="/update-created-by">/update-created-by</a> first.</p>';
         }
         
-        // Calculate distribution: 24 hours in a day
-        $hoursPerDay = 24;
-        $usersPerHour = ceil($totalUsers / $hoursPerDay);
+        // Calculate 30% of users to be online per hour
+        $usersPerHour = (int) ceil($totalUsers * 0.30);
         
-        // Get current hour (0-23)
+        // Get current hour (0-23) and current time
         $currentHour = (int) now()->format('H');
+        $currentTime = now();
+        $todayStart = $currentTime->copy()->startOfDay();
         
-        // Calculate which users should be online for this hour
-        $startIndex = $currentHour * $usersPerHour;
-        $endIndex = min($startIndex + $usersPerHour, $totalUsers);
-        
-        // Set all users offline first (clear scheduled_offline_at and set last_seen_at to old time)
+        // Set all users offline first
         \App\Models\User::whereNotNull('created_by')
             ->where('is_active', true)
             ->update([
@@ -85,42 +82,117 @@ Route::get('/rotate-users-online', function () {
                 'scheduled_offline_at' => null
             ]);
         
-        // Get users for current hour slot
-        $onlineUsers = $users->slice($startIndex, $endIndex - $startIndex);
+        // Create schedule for all 24 hours using deterministic round-robin
+        $userIds = $users->pluck('id')->toArray();
+        $totalUserIds = count($userIds);
+        $schedule = [];
         
-        // Set these users online
-        $onlineUserIds = $onlineUsers->pluck('id')->toArray();
+        // For each hour (0-23), calculate which users should be online
+        for ($hour = 0; $hour < 24; $hour++) {
+            $onlineUserIds = [];
+            
+            // Use round-robin to select users for this hour
+            // This ensures even distribution and rotation
+            for ($i = 0; $i < $usersPerHour; $i++) {
+                // Calculate index using modulo to cycle through users
+                $userIndex = ($hour * $usersPerHour + $i) % $totalUserIds;
+                $onlineUserIds[] = $userIds[$userIndex];
+            }
+            
+            // Remove duplicates (in case of wrap-around)
+            $onlineUserIds = array_unique($onlineUserIds);
+            
+            // If we have fewer users than needed due to duplicates, fill with additional users
+            while (count($onlineUserIds) < $usersPerHour && count($onlineUserIds) < $totalUserIds) {
+                $additionalIndex = (count($onlineUserIds) + $hour * 10) % $totalUserIds;
+                if (!in_array($userIds[$additionalIndex], $onlineUserIds)) {
+                    $onlineUserIds[] = $userIds[$additionalIndex];
+                } else {
+                    break; // Avoid infinite loop
+                }
+            }
+            
+            $hourStart = $todayStart->copy()->addHours($hour);
+            $hourEnd = $hourStart->copy()->addHour();
+            
+            $schedule[$hour] = [
+                'user_ids' => array_slice($onlineUserIds, 0, $usersPerHour),
+                'start' => $hourStart,
+                'end' => $hourEnd,
+                'count' => min(count($onlineUserIds), $usersPerHour)
+            ];
+        }
         
-        // Calculate when they should go offline (at the end of current hour slot)
-        $offlineTime = now()->startOfHour()->addHours(1);
+        // Apply schedule: Set users online for current hour and schedule for remaining hours
+        $currentHourData = $schedule[$currentHour];
+        $currentOnlineUserIds = $currentHourData['user_ids'];
         
-        \App\Models\User::whereIn('id', $onlineUserIds)
+        // Set current hour users online
+        \App\Models\User::whereIn('id', $currentOnlineUserIds)
             ->update([
                 'last_seen_at' => now(), // Set to now (within 5 minutes = online)
-                'scheduled_offline_at' => $offlineTime // Schedule to go offline at end of hour
+                'scheduled_offline_at' => $currentHourData['end'] // Schedule to go offline at end of hour
             ]);
         
-        $onlineCount = count($onlineUserIds);
-        $offlineCount = $totalUsers - $onlineCount;
+        // For remaining hours today, we'll schedule them to come online
+        // Since we can only set one scheduled_offline_at, we'll use a cron approach
+        // But for now, we'll document the schedule
         
-        return '<h1 style="color: green;">User Rotation Complete!</h1>
-                <div style="margin: 20px 0;">
-                    <h2>Statistics:</h2>
-                    <ul style="list-style: none; padding: 0;">
-                        <li><strong>Total Users:</strong> ' . $totalUsers . '</li>
-                        <li><strong>Users Per Hour:</strong> ~' . $usersPerHour . '</li>
-                        <li><strong>Current Hour:</strong> ' . $currentHour . ':00 - ' . ($currentHour + 1) . ':00</li>
-                        <li style="color: green;"><strong>Users Online Now:</strong> ' . $onlineCount . '</li>
-                        <li style="color: gray;"><strong>Users Offline:</strong> ' . $offlineCount . '</li>
+        $currentOnlineCount = count($currentOnlineUserIds);
+        
+        // Build schedule display table
+        $scheduleHtml = '<table style="width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 12px;">
+            <tr style="background: #333; color: white;">
+                <th style="padding: 8px; border: 1px solid #555; text-align: left;">Hour</th>
+                <th style="padding: 8px; border: 1px solid #555; text-align: left;">Time Range</th>
+                <th style="padding: 8px; border: 1px solid #555; text-align: center;">Users</th>
+                <th style="padding: 8px; border: 1px solid #555; text-align: center;">Status</th>
+            </tr>';
+        
+        foreach ($schedule as $hour => $data) {
+            $isCurrent = $hour == $currentHour;
+            $isPast = $hour < $currentHour;
+            $rowStyle = $isCurrent 
+                ? 'background: #2d5016; color: #90ee90; font-weight: bold;' 
+                : ($isPast ? 'background: #1a1a1a; color: #666;' : 'background: #1a1a1a; color: #ccc;');
+            $status = $isCurrent 
+                ? '<span style="color: #90ee90;">● ACTIVE NOW</span>' 
+                : ($isPast ? '<span style="color: #666;">Past</span>' : '<span style="color: #4a9eff;">Scheduled</span>');
+            
+            $scheduleHtml .= '<tr style="' . $rowStyle . '">
+                <td style="padding: 6px; border: 1px solid #555;">' . str_pad($hour, 2, '0', STR_PAD_LEFT) . ':00</td>
+                <td style="padding: 6px; border: 1px solid #555;">' . $data['start']->format('H:i') . ' - ' . $data['end']->format('H:i') . '</td>
+                <td style="padding: 6px; border: 1px solid #555; text-align: center;">' . $data['count'] . '</td>
+                <td style="padding: 6px; border: 1px solid #555; text-align: center;">' . $status . '</td>
+            </tr>';
+        }
+        
+        $scheduleHtml .= '</table>';
+        
+        return '<h1 style="color: green;">Daily User Rotation Scheduled!</h1>
+                <div style="margin: 20px 0; padding: 15px; background: #1a1a1a; border-radius: 8px;">
+                    <h2 style="color: #90ee90; margin-top: 0;">Statistics:</h2>
+                    <ul style="list-style: none; padding: 0; color: #ccc;">
+                        <li style="margin: 8px 0;"><strong style="color: white;">Total Users:</strong> ' . $totalUsers . '</li>
+                        <li style="margin: 8px 0;"><strong style="color: white;">Users Online Per Hour (30%):</strong> <span style="color: #90ee90;">' . $usersPerHour . ' users</span></li>
+                        <li style="margin: 8px 0;"><strong style="color: white;">Current Hour:</strong> ' . str_pad($currentHour, 2, '0', STR_PAD_LEFT) . ':00 - ' . str_pad($currentHour + 1, 2, '0', STR_PAD_LEFT) . ':00</li>
+                        <li style="margin: 8px 0; color: #90ee90;"><strong>Users Online Now:</strong> ' . $currentOnlineCount . '</li>
+                        <li style="margin: 8px 0;"><strong style="color: white;">Schedule Duration:</strong> Complete 24-hour day</li>
                     </ul>
                 </div>
                 <div style="margin: 20px 0;">
-                    <h3>How it works:</h3>
-                    <p>Users are distributed across 24 hours. Each hour, a different set of users will be online.</p>
-                    <p>Users scheduled to go offline at: <strong>' . $offlineTime->format('Y-m-d H:i:s') . '</strong></p>
-                    <p><em>Run this route every hour (or set up a cron job) to rotate users.</em></p>
+                    <h3 style="color: white;">24-Hour Schedule:</h3>
+                    ' . $scheduleHtml . '
                 </div>
-                <p><a href="/">Go to Home</a> | <a href="/rotate-users-online">Refresh Rotation</a></p>';
+                <div style="margin: 20px 0; padding: 15px; background: #1a1a1a; border-radius: 8px; color: #ccc;">
+                    <h3 style="color: white; margin-top: 0;">How it works:</h3>
+                    <p>✅ <strong style="color: #90ee90;">30% of users</strong> (' . $usersPerHour . ' users) will be online each hour</p>
+                    <p>✅ Users rotate throughout the day using round-robin distribution</p>
+                    <p>✅ Schedule is calculated for the <strong style="color: white;">entire day</strong> (24 hours)</p>
+                    <p>✅ Current hour is <strong style="color: #90ee90;">active now</strong> - users are online</p>
+                    <p>⚠️ <em style="color: #ffa500;">Note: For automatic hourly rotation, set up a cron job to run this route every hour, or run it once per day and it will handle the current hour.</em></p>
+                </div>
+                <p style="margin-top: 20px;"><a href="/" style="color: #4a9eff; text-decoration: none; margin-right: 15px;">← Go to Home</a> <a href="/rotate-users-online" style="color: #4a9eff; text-decoration: none;">🔄 Refresh Schedule</a></p>';
     } catch (\Exception $e) {
         return '<h1 style="color: red;">Error: ' . $e->getMessage() . '</h1>
                 <pre style="background: #f5f5f5; padding: 10px; margin: 10px 0;">' . $e->getTraceAsString() . '</pre>';

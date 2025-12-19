@@ -132,6 +132,7 @@ class MessageController extends Controller
                 'body' => ['nullable', 'string', 'max:2000'],
                 'attachment' => ['nullable', 'file', 'max:10240'], // 10MB max
                 'image' => ['nullable', 'image', 'max:5120'], // 5MB max
+                'video' => ['nullable', 'mimes:mp4,avi,mov,wmv,flv,webm', 'max:51200'], // 50MB max
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($request->expectsJson() || $request->ajax()) {
@@ -161,6 +162,14 @@ class MessageController extends Controller
             $attachmentName = $file->getClientOriginalName();
             $attachmentPath = $file->store('profiles/messages/images', 'public');
             $attachmentType = 'image';
+        }
+
+        // Handle video attachment
+        if ($request->hasFile('video')) {
+            $file = $request->file('video');
+            $attachmentName = $file->getClientOriginalName();
+            $attachmentPath = $file->store('profiles/messages/videos', 'public');
+            $attachmentType = 'video';
         }
 
         /** @var \App\Models\Message $message */
@@ -525,6 +534,9 @@ class MessageController extends Controller
             'is_me' => $message->sender_id === $currentUserId,
             'created_at' => $message->created_at->toIso8601String(),
             'time_for_humans' => $message->created_at->format('M j, g:i A'),
+            'attachment' => $message->attachment ? asset('storage/' . $message->attachment) : null,
+            'attachment_type' => $message->attachment_type,
+            'attachment_name' => $message->attachment_name,
         ];
     }
 }

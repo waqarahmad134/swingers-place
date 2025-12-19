@@ -250,6 +250,12 @@
                                 <img src="{{ asset('storage/' . $message->attachment) }}" alt="Image" class="max-w-full rounded-lg mb-2 max-h-64 object-cover">
                             @endif
                             
+                            @if($message->attachment && $message->attachment_type === 'video')
+                                <video src="{{ asset('storage/' . $message->attachment) }}" controls class="max-w-full rounded-lg mb-2 max-h-96 w-full">
+                                    Your browser does not support the video tag.
+                                </video>
+                            @endif
+                            
                             @if($message->attachment && $message->attachment_type === 'file')
                                 <a href="{{ asset('storage/' . $message->attachment) }}" download="{{ $message->attachment_name }}" class="flex items-center gap-2 p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors mb-2">
                                     <i class="ri-file-line text-2xl"></i>
@@ -298,6 +304,16 @@
                     </div>
                 </div>
 
+                <!-- Video Preview Area -->
+                <div id="videoPreviewArea" class="hidden mb-3 p-2 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                    <div class="relative inline-block">
+                        <video id="videoPreview" src="" controls class="max-h-32 rounded-lg max-w-xs"></video>
+                        <button type="button" onclick="removeVideoAttachment()" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600">
+                            <i class="ri-close-line text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
                 <form 
                     data-chat-form 
                     action="javascript:void(0);" 
@@ -309,6 +325,7 @@
                     <!-- Hidden File Inputs -->
                     <input type="file" id="fileAttachment" name="attachment" class="hidden" accept=".pdf,.doc,.docx,.txt,.zip,.rar">
                     <input type="file" id="imageAttachment" name="image" class="hidden" accept="image/*">
+                    <input type="file" id="videoAttachment" name="video" class="hidden" accept="video/*">
                     
                     <!-- Left Action Buttons -->
                     <button type="button" onclick="document.getElementById('fileAttachment').click()" class="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex-shrink-0" title="Attach File">
@@ -316,6 +333,9 @@
                     </button>
                     <button type="button" onclick="document.getElementById('imageAttachment').click()" class="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex-shrink-0" title="Add Photo">
                         <i class="ri-image-line text-xl"></i>
+                    </button>
+                    <button type="button" onclick="document.getElementById('videoAttachment').click()" class="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors flex-shrink-0" title="Add Video">
+                        <i class="ri-video-line text-xl"></i>
                     </button>
                     
                     <!-- Emoji Picker Button -->
@@ -493,6 +513,25 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Video Attachment Handler
+    const videoAttachment = document.getElementById('videoAttachment');
+    if (videoAttachment) {
+        videoAttachment.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const videoPreviewArea = document.getElementById('videoPreviewArea');
+                    const videoPreview = document.getElementById('videoPreview');
+                    
+                    videoPreview.src = e.target.result;
+                    videoPreviewArea.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
 
     // More Options Dropdown Toggle
     const moreOptionsBtn = document.getElementById('moreOptionsBtn');
@@ -559,9 +598,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const body = input.value.trim();
             const fileInput = document.getElementById('fileAttachment');
             const imageInput = document.getElementById('imageAttachment');
+            const videoInput = document.getElementById('videoAttachment');
             
             // Check if there's a message or attachment
-            if (!body && (!fileInput || !fileInput.files.length) && (!imageInput || !imageInput.files.length)) {
+            if (!body && (!fileInput || !fileInput.files.length) && (!imageInput || !imageInput.files.length) && (!videoInput || !videoInput.files.length)) {
                 return;
             }
 
@@ -586,6 +626,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 if (imageInput && imageInput.files.length) {
                     formData.append('image', imageInput.files[0]);
+                }
+                
+                if (videoInput && videoInput.files.length) {
+                    formData.append('video', videoInput.files[0]);
                 }
 
                 const response = await fetch(sendUrl, {
@@ -612,10 +656,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (imageInput) {
                             imageInput.value = '';
                         }
+                        if (videoInput) {
+                            videoInput.value = '';
+                        }
                         const filePreviewArea = document.getElementById('filePreviewArea');
                         const imagePreviewArea = document.getElementById('imagePreviewArea');
+                        const videoPreviewArea = document.getElementById('videoPreviewArea');
                         if (filePreviewArea) filePreviewArea.classList.add('hidden');
                         if (imagePreviewArea) imagePreviewArea.classList.add('hidden');
+                        if (videoPreviewArea) videoPreviewArea.classList.add('hidden');
                         
                         if (emptyState) emptyState.classList.add('hidden');
                         
@@ -731,7 +780,64 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const bubbleDiv = document.createElement('div');
             bubbleDiv.className = `max-w-[65%] rounded-2xl px-4 py-2.5 text-sm break-words ${message.is_me ? 'bg-gradient-to-r from-[#9810FA] to-[#E60076] text-white rounded-br-sm' : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm rounded-bl-sm'}`;
-            bubbleDiv.textContent = message.body;
+            
+            // Handle image attachment
+            if (message.attachment && message.attachment_type === 'image') {
+                const img = document.createElement('img');
+                img.src = message.attachment;
+                img.alt = 'Image';
+                img.className = 'max-w-full rounded-lg mb-2 max-h-64 object-cover';
+                bubbleDiv.appendChild(img);
+            }
+            
+            // Handle video attachment
+            if (message.attachment && message.attachment_type === 'video') {
+                const video = document.createElement('video');
+                video.src = message.attachment;
+                video.controls = true;
+                video.className = 'max-w-full rounded-lg mb-2 max-h-96 w-full';
+                video.textContent = 'Your browser does not support the video tag.';
+                bubbleDiv.appendChild(video);
+            }
+            
+            // Handle file attachment
+            if (message.attachment && message.attachment_type === 'file') {
+                const fileLink = document.createElement('a');
+                fileLink.href = message.attachment;
+                fileLink.download = message.attachment_name || 'file';
+                fileLink.className = `flex items-center gap-2 p-2 ${message.is_me ? 'bg-white/10 hover:bg-white/20' : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'} rounded-lg transition-colors mb-2`;
+                
+                const fileIcon = document.createElement('i');
+                fileIcon.className = 'ri-file-line text-2xl';
+                fileLink.appendChild(fileIcon);
+                
+                const fileInfo = document.createElement('div');
+                fileInfo.className = 'flex-1 min-w-0';
+                
+                const fileName = document.createElement('p');
+                fileName.className = 'text-sm font-medium truncate';
+                fileName.textContent = message.attachment_name || 'File';
+                fileInfo.appendChild(fileName);
+                
+                const fileDesc = document.createElement('p');
+                fileDesc.className = `text-xs ${message.is_me ? 'opacity-75' : 'text-gray-500 dark:text-gray-400'}`;
+                fileDesc.textContent = 'Click to download';
+                fileInfo.appendChild(fileDesc);
+                
+                fileLink.appendChild(fileInfo);
+                
+                const downloadIcon = document.createElement('i');
+                downloadIcon.className = 'ri-download-line text-lg';
+                fileLink.appendChild(downloadIcon);
+                
+                bubbleDiv.appendChild(fileLink);
+            }
+            
+            // Handle message body
+            if (message.body && message.body.trim()) {
+                const bodyText = document.createTextNode(message.body);
+                bubbleDiv.appendChild(bodyText);
+            }
 
             const timeSpan = document.createElement('span');
             timeSpan.className = 'text-xs text-gray-500 dark:text-gray-400 px-1 mt-0.5';
@@ -911,6 +1017,14 @@ function removeImageAttachment() {
     
     if (imageInput) imageInput.value = '';
     if (imagePreviewArea) imagePreviewArea.classList.add('hidden');
+}
+
+function removeVideoAttachment() {
+    const videoInput = document.getElementById('videoAttachment');
+    const videoPreviewArea = document.getElementById('videoPreviewArea');
+    
+    if (videoInput) videoInput.value = '';
+    if (videoPreviewArea) videoPreviewArea.classList.add('hidden');
 }
 
 function formatFileSize(bytes) {

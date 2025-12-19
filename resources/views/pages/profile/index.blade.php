@@ -892,21 +892,40 @@ console.warn('Google Maps API key is not configured. Please add GOOGLE_MAPS_API_
 // Toggle like functionality
 function toggleLike(userId, button) {
     const icon = button.querySelector('i');
-    const countSpan = button.querySelector('.likes-count-' + userId);
     const isLiked = button.dataset.liked === 'true';
     
-    // Also get hover button if it exists
+    // Find the count span in the card body (not in the button) - this is the key fix
+    const countSpan = document.querySelector('.likes-count-' + userId);
+    
+    // Get both buttons (main card body button and hover button)
+    const allButtons = document.querySelectorAll(`button[data-user-id="${userId}"]`);
+    let mainButton = null;
+    for (let btn of allButtons) {
+        if (!btn.classList.contains('like-hover-btn-' + userId)) {
+            mainButton = btn;
+            break;
+        }
+    }
+    if (!mainButton) {
+        mainButton = document.querySelector(`button[data-user-id="${userId}"]:not(.like-hover-btn-${userId})`);
+    }
     const hoverButton = document.querySelector('.like-hover-btn-' + userId);
+    
+    // Get icons and text for both buttons
+    const mainIcon = mainButton ? mainButton.querySelector('i') : icon;
     const hoverIcon = hoverButton ? hoverButton.querySelector('i') : null;
     const hoverText = hoverButton ? hoverButton.querySelector('span:last-child') : null;
     
-    // Optimistic UI update for main button
+    // Optimistic UI update
     if (isLiked) {
-        icon.classList.remove('ri-heart-fill');
-        icon.classList.add('ri-heart-line');
-        button.classList.remove('text-red-500');
-        button.classList.add('text-gray-400');
-        button.dataset.liked = 'false';
+        // Update main button
+        if (mainButton && mainIcon) {
+            mainIcon.classList.remove('ri-heart-fill');
+            mainIcon.classList.add('ri-heart-line');
+            mainButton.classList.remove('text-red-500');
+            mainButton.classList.add('text-gray-400');
+            mainButton.dataset.liked = 'false';
+        }
         
         // Update hover button
         if (hoverButton) {
@@ -918,11 +937,14 @@ function toggleLike(userId, button) {
             hoverButton.dataset.liked = 'false';
         }
     } else {
-        icon.classList.remove('ri-heart-line');
-        icon.classList.add('ri-heart-fill');
-        button.classList.remove('text-gray-400');
-        button.classList.add('text-red-500');
-        button.dataset.liked = 'true';
+        // Update main button
+        if (mainButton && mainIcon) {
+            mainIcon.classList.remove('ri-heart-line');
+            mainIcon.classList.add('ri-heart-fill');
+            mainButton.classList.remove('text-gray-400');
+            mainButton.classList.add('text-red-500');
+            mainButton.dataset.liked = 'true';
+        }
         
         // Update hover button
         if (hoverButton) {
@@ -947,17 +969,21 @@ function toggleLike(userId, button) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Update count
+            // Update count (this is the key fix - update count regardless of which button was clicked)
             if (countSpan) {
                 countSpan.textContent = data.likes_count;
             }
-            // Update button state based on response
+            
+            // Update button states based on response
             if (data.is_liked) {
-                icon.classList.remove('ri-heart-line');
-                icon.classList.add('ri-heart-fill');
-                button.classList.remove('text-gray-400');
-                button.classList.add('text-red-500');
-                button.dataset.liked = 'true';
+                // Update main button
+                if (mainButton && mainIcon) {
+                    mainIcon.classList.remove('ri-heart-line');
+                    mainIcon.classList.add('ri-heart-fill');
+                    mainButton.classList.remove('text-gray-400');
+                    mainButton.classList.add('text-red-500');
+                    mainButton.dataset.liked = 'true';
+                }
                 
                 // Update hover button
                 if (hoverButton) {
@@ -969,11 +995,14 @@ function toggleLike(userId, button) {
                     hoverButton.dataset.liked = 'true';
                 }
             } else {
-                icon.classList.remove('ri-heart-fill');
-                icon.classList.add('ri-heart-line');
-                button.classList.remove('text-red-500');
-                button.classList.add('text-gray-400');
-                button.dataset.liked = 'false';
+                // Update main button
+                if (mainButton && mainIcon) {
+                    mainIcon.classList.remove('ri-heart-fill');
+                    mainIcon.classList.add('ri-heart-line');
+                    mainButton.classList.remove('text-red-500');
+                    mainButton.classList.add('text-gray-400');
+                    mainButton.dataset.liked = 'false';
+                }
                 
                 // Update hover button
                 if (hoverButton) {
@@ -991,12 +1020,16 @@ function toggleLike(userId, button) {
         console.error('Error:', error);
         // Revert optimistic update on error
         if (isLiked) {
-            icon.classList.remove('ri-heart-line');
-            icon.classList.add('ri-heart-fill');
-            button.classList.remove('text-gray-400');
-            button.classList.add('text-red-500');
-            button.dataset.liked = 'true';
+            // Revert main button
+            if (mainButton && mainIcon) {
+                mainIcon.classList.remove('ri-heart-line');
+                mainIcon.classList.add('ri-heart-fill');
+                mainButton.classList.remove('text-gray-400');
+                mainButton.classList.add('text-red-500');
+                mainButton.dataset.liked = 'true';
+            }
             
+            // Revert hover button
             if (hoverButton) {
                 if (hoverIcon) {
                     hoverIcon.classList.remove('ri-heart-line');
@@ -1006,12 +1039,16 @@ function toggleLike(userId, button) {
                 hoverButton.dataset.liked = 'true';
             }
         } else {
-            icon.classList.remove('ri-heart-fill');
-            icon.classList.add('ri-heart-line');
-            button.classList.remove('text-red-500');
-            button.classList.add('text-gray-400');
-            button.dataset.liked = 'false';
+            // Revert main button
+            if (mainButton && mainIcon) {
+                mainIcon.classList.remove('ri-heart-fill');
+                mainIcon.classList.add('ri-heart-line');
+                mainButton.classList.remove('text-red-500');
+                mainButton.classList.add('text-gray-400');
+                mainButton.dataset.liked = 'false';
+            }
             
+            // Revert hover button
             if (hoverButton) {
                 if (hoverIcon) {
                     hoverIcon.classList.remove('ri-heart-fill');

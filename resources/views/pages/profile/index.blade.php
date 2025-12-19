@@ -911,10 +911,9 @@ function toggleLike(userId, button) {
     }
     const hoverButton = document.querySelector('.like-hover-btn-' + userId);
     
-    // Get icons and text for both buttons
+    // Get icons for both buttons
     const mainIcon = mainButton ? mainButton.querySelector('i') : icon;
     const hoverIcon = hoverButton ? hoverButton.querySelector('i') : null;
-    const hoverText = hoverButton ? hoverButton.querySelector('span:last-child') : null;
     
     // Optimistic UI update
     if (isLiked) {
@@ -928,12 +927,9 @@ function toggleLike(userId, button) {
         }
         
         // Update hover button
-        if (hoverButton) {
-            if (hoverIcon) {
-                hoverIcon.classList.remove('ri-heart-fill');
-                hoverIcon.classList.add('ri-heart-line');
-            }
-            if (hoverText) hoverText.textContent = 'Like';
+        if (hoverButton && hoverIcon) {
+            hoverIcon.classList.remove('ri-heart-fill');
+            hoverIcon.classList.add('ri-heart-line');
             hoverButton.dataset.liked = 'false';
         }
     } else {
@@ -947,12 +943,9 @@ function toggleLike(userId, button) {
         }
         
         // Update hover button
-        if (hoverButton) {
-            if (hoverIcon) {
-                hoverIcon.classList.remove('ri-heart-line');
-                hoverIcon.classList.add('ri-heart-fill');
-            }
-            if (hoverText) hoverText.textContent = 'Unlike';
+        if (hoverButton && hoverIcon) {
+            hoverIcon.classList.remove('ri-heart-line');
+            hoverIcon.classList.add('ri-heart-fill');
             hoverButton.dataset.liked = 'true';
         }
     }
@@ -986,12 +979,9 @@ function toggleLike(userId, button) {
                 }
                 
                 // Update hover button
-                if (hoverButton) {
-                    if (hoverIcon) {
-                        hoverIcon.classList.remove('ri-heart-line');
-                        hoverIcon.classList.add('ri-heart-fill');
-                    }
-                    if (hoverText) hoverText.textContent = 'Unlike';
+                if (hoverButton && hoverIcon) {
+                    hoverIcon.classList.remove('ri-heart-line');
+                    hoverIcon.classList.add('ri-heart-fill');
                     hoverButton.dataset.liked = 'true';
                 }
             } else {
@@ -1005,12 +995,9 @@ function toggleLike(userId, button) {
                 }
                 
                 // Update hover button
-                if (hoverButton) {
-                    if (hoverIcon) {
-                        hoverIcon.classList.remove('ri-heart-fill');
-                        hoverIcon.classList.add('ri-heart-line');
-                    }
-                    if (hoverText) hoverText.textContent = 'Like';
+                if (hoverButton && hoverIcon) {
+                    hoverIcon.classList.remove('ri-heart-fill');
+                    hoverIcon.classList.add('ri-heart-line');
                     hoverButton.dataset.liked = 'false';
                 }
             }
@@ -1030,12 +1017,9 @@ function toggleLike(userId, button) {
             }
             
             // Revert hover button
-            if (hoverButton) {
-                if (hoverIcon) {
-                    hoverIcon.classList.remove('ri-heart-line');
-                    hoverIcon.classList.add('ri-heart-fill');
-                }
-                if (hoverText) hoverText.textContent = 'Unlike';
+            if (hoverButton && hoverIcon) {
+                hoverIcon.classList.remove('ri-heart-line');
+                hoverIcon.classList.add('ri-heart-fill');
                 hoverButton.dataset.liked = 'true';
             }
         } else {
@@ -1049,12 +1033,9 @@ function toggleLike(userId, button) {
             }
             
             // Revert hover button
-            if (hoverButton) {
-                if (hoverIcon) {
-                    hoverIcon.classList.remove('ri-heart-fill');
-                    hoverIcon.classList.add('ri-heart-line');
-                }
-                if (hoverText) hoverText.textContent = 'Like';
+            if (hoverButton && hoverIcon) {
+                hoverIcon.classList.remove('ri-heart-fill');
+                hoverIcon.classList.add('ri-heart-line');
                 hoverButton.dataset.liked = 'false';
             }
         }
@@ -1063,13 +1044,7 @@ function toggleLike(userId, button) {
 
 // Send Friend Request
 function sendFriendRequest(userId, button) {
-    const textSpan = button.querySelector('.friend-request-text-' + userId);
-    const originalText = textSpan ? textSpan.textContent : 'Friend request';
-    
     // Update button to show success state
-    if (textSpan) {
-        textSpan.textContent = 'Friend request sent';
-    }
     button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
     button.classList.add('bg-blue-500', 'cursor-not-allowed');
     button.disabled = true;
@@ -1079,9 +1054,6 @@ function sendFriendRequest(userId, button) {
     
     // Revert after 3 seconds
     setTimeout(() => {
-        if (textSpan) {
-            textSpan.textContent = originalText;
-        }
         button.classList.remove('bg-blue-500', 'cursor-not-allowed');
         button.classList.add('bg-blue-600', 'hover:bg-blue-700');
         button.disabled = false;
@@ -1090,13 +1062,7 @@ function sendFriendRequest(userId, button) {
 
 // Remember User
 function rememberUser(userId, button) {
-    const textSpan = button.querySelector('.remember-text-' + userId);
-    const originalText = textSpan ? textSpan.textContent : 'Remember';
-    
     // Update button to show success state
-    if (textSpan) {
-        textSpan.textContent = 'Remembered successfully';
-    }
     button.classList.remove('bg-green-600', 'hover:bg-green-700');
     button.classList.add('bg-green-500', 'cursor-not-allowed');
     button.disabled = true;
@@ -1106,9 +1072,6 @@ function rememberUser(userId, button) {
     
     // Revert after 3 seconds
     setTimeout(() => {
-        if (textSpan) {
-            textSpan.textContent = originalText;
-        }
         button.classList.remove('bg-green-500', 'cursor-not-allowed');
         button.classList.add('bg-green-600', 'hover:bg-green-700');
         button.disabled = false;
@@ -1211,6 +1174,154 @@ function toggleDislike(userId, button) {
             button.dataset.disliked = 'false';
         }
     });
+}
+
+// Toggle profile like (for the main profile like button)
+function toggleProfileLike(userId, button) {
+    const icon = button.querySelector('i');
+    const countSpan = button.querySelector('.profile-likes-count');
+    const isLiked = button.dataset.liked === 'true';
+    
+    // Optimistic UI update
+    if (isLiked) {
+        icon.classList.remove('ri-thumb-up-fill');
+        icon.classList.add('ri-thumb-up-line');
+        button.classList.remove('text-white');
+        button.classList.add('text-gray-300');
+        button.dataset.liked = 'false';
+        if (countSpan) {
+            const currentCount = parseInt(countSpan.textContent) || 0;
+            countSpan.textContent = Math.max(0, currentCount - 1);
+        }
+    } else {
+        icon.classList.remove('ri-thumb-up-line');
+        icon.classList.add('ri-thumb-up-fill');
+        button.classList.remove('text-gray-300');
+        button.classList.add('text-white');
+        button.dataset.liked = 'true';
+        if (countSpan) {
+            const currentCount = parseInt(countSpan.textContent) || 0;
+            countSpan.textContent = currentCount + 1;
+        }
+    }
+    
+    // Make API call
+    fetch(`/users/${userId}/like`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update count
+            if (countSpan) {
+                countSpan.textContent = data.likes_count;
+            }
+            // Update button state based on response
+            if (data.is_liked) {
+                icon.classList.remove('ri-thumb-up-line');
+                icon.classList.add('ri-thumb-up-fill');
+                button.classList.remove('text-gray-300');
+                button.classList.add('text-white');
+                button.dataset.liked = 'true';
+            } else {
+                icon.classList.remove('ri-thumb-up-fill');
+                icon.classList.add('ri-thumb-up-line');
+                button.classList.remove('text-white');
+                button.classList.add('text-gray-300');
+                button.dataset.liked = 'false';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Revert optimistic update on error
+        if (isLiked) {
+            icon.classList.remove('ri-thumb-up-line');
+            icon.classList.add('ri-thumb-up-fill');
+            button.classList.remove('text-gray-300');
+            button.classList.add('text-white');
+            button.dataset.liked = 'true';
+            if (countSpan) {
+                const currentCount = parseInt(countSpan.textContent) || 0;
+                countSpan.textContent = currentCount + 1;
+            }
+        } else {
+            icon.classList.remove('ri-thumb-up-fill');
+            icon.classList.add('ri-thumb-up-line');
+            button.classList.remove('text-white');
+            button.classList.add('text-gray-300');
+            button.dataset.liked = 'false';
+            if (countSpan) {
+                const currentCount = parseInt(countSpan.textContent) || 0;
+                countSpan.textContent = Math.max(0, currentCount - 1);
+            }
+        }
+    });
+}
+
+// Share profile function
+function shareProfile(userId) {
+    const profileUrl = window.location.href;
+    const username = document.querySelector('h1')?.textContent?.trim() || 'Profile';
+    
+    // Check if Web Share API is available
+    if (navigator.share) {
+        navigator.share({
+            title: `Check out ${username}'s profile`,
+            text: `Check out ${username}'s profile on Swingers Place`,
+            url: profileUrl
+        })
+        .then(() => {
+            showNotification('Profile shared successfully!', 'success');
+        })
+        .catch((error) => {
+            // User cancelled or error occurred, fallback to copy
+            copyToClipboard(profileUrl);
+        });
+    } else {
+        // Fallback: Copy to clipboard
+        copyToClipboard(profileUrl);
+    }
+}
+
+// Copy to clipboard fallback
+function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            showNotification('Profile link copied to clipboard!', 'success');
+        }).catch(() => {
+            // Fallback for older browsers
+            fallbackCopyToClipboard(text);
+        });
+    } else {
+        fallbackCopyToClipboard(text);
+    }
+}
+
+// Fallback copy method for older browsers
+function fallbackCopyToClipboard(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        document.execCommand('copy');
+        showNotification('Profile link copied to clipboard!', 'success');
+    } catch (err) {
+        showNotification('Failed to copy link. Please copy manually: ' + text, 'error');
+    }
+    
+    document.body.removeChild(textArea);
 }
 </script>
 @endpush

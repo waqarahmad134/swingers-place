@@ -165,7 +165,11 @@ class HomeController extends Controller
             ->get()
             ->keyBy('liked_user_id') : collect();
         
-        return view('pages.profile.index', compact('user', 'profile', 'age', 'ageHer', 'ageHim', 'isCouple', 'coupleData', 'joinDate', 'isOwnProfile', 'preferences', 'languages', 'matchedProfiles', 'userLikes'));
+        // Get like count and status for the profile being viewed
+        $likesCount = $user->likesReceived()->where('type', 'like')->count();
+        $isLikedByCurrentUser = $currentUserId ? $user->isLikedBy($currentUserId) : false;
+        
+        return view('pages.profile.index', compact('user', 'profile', 'age', 'ageHer', 'ageHim', 'isCouple', 'coupleData', 'joinDate', 'isOwnProfile', 'preferences', 'languages', 'matchedProfiles', 'userLikes', 'likesCount', 'isLikedByCurrentUser'));
     }
     
     /**

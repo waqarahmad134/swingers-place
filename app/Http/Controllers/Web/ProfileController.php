@@ -70,7 +70,11 @@ class ProfileController extends Controller
             ->get()
             ->keyBy('liked_user_id');
         
-        return view('pages.profile.index', compact('user', 'profile', 'age', 'ageHer', 'ageHim', 'isCouple', 'coupleData', 'joinDate', 'isOwnProfile', 'preferences', 'languages', 'matchedProfiles', 'userLikes'));
+        // Get like count and status for the profile being viewed (own profile, so not liked by self)
+        $likesCount = $user->likesReceived()->where('type', 'like')->count();
+        $isLikedByCurrentUser = false; // Can't like own profile
+        
+        return view('pages.profile.index', compact('user', 'profile', 'age', 'ageHer', 'ageHim', 'isCouple', 'coupleData', 'joinDate', 'isOwnProfile', 'preferences', 'languages', 'matchedProfiles', 'userLikes', 'likesCount', 'isLikedByCurrentUser'));
     }
     
     /**

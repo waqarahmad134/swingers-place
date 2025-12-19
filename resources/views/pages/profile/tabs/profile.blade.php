@@ -143,12 +143,34 @@
                                 </button>
                                 
                                 <!-- Like -->
-                                <button class="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group">
-                                    <div class="relative">
-                                        <i class="ri-thumb-up-line text-2xl"></i>
-                                        <span class="absolute -top-2 -right-2 bg-[#9810FA] text-white text-xs font-bold rounded-full px-1.5 py-0.5 flex items-center justify-center">141</span>
+                                @if(!isset($isOwnProfile) || !$isOwnProfile)
+                                    @php
+                                        $profileLikesCount = isset($likesCount) ? $likesCount : $user->likesReceived()->where('type', 'like')->count();
+                                        $isProfileLiked = isset($isLikedByCurrentUser) ? $isLikedByCurrentUser : (auth()->check() ? $user->isLikedBy(auth()->id()) : false);
+                                    @endphp
+                                    <button 
+                                        type="button"
+                                        onclick="toggleProfileLike({{ $user->id }}, this)"
+                                        class="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group profile-like-btn"
+                                        data-user-id="{{ $user->id }}"
+                                        data-liked="{{ $isProfileLiked ? 'true' : 'false' }}">
+                                        <div class="relative">
+                                            <i class="ri-thumb-up-{{ $isProfileLiked ? 'fill' : 'line' }} text-2xl"></i>
+                                            <span class="absolute -top-2 -right-2 bg-[#9810FA] text-white text-xs font-bold rounded-full px-1.5 py-0.5 flex items-center justify-center profile-likes-count">{{ $profileLikesCount }}</span>
+                                        </div>
+                                    </button>
+                                @else
+                                    <!-- Show like count only (read-only) for own profile -->
+                                    @php
+                                        $profileLikesCount = isset($likesCount) ? $likesCount : $user->likesReceived()->where('type', 'like')->count();
+                                    @endphp
+                                    <div class="flex items-center gap-2 text-gray-300 group">
+                                        <div class="relative">
+                                            <i class="ri-thumb-up-line text-2xl"></i>
+                                            <span class="absolute -top-2 -right-2 bg-[#9810FA] text-white text-xs font-bold rounded-full px-1.5 py-0.5 flex items-center justify-center">{{ $profileLikesCount }}</span>
+                                        </div>
                                     </div>
-                                </button>
+                                @endif
                                 
                                 <!-- Validation/Checkmark -->
                                 <button class="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group">
@@ -162,7 +184,11 @@
                             <!-- Right: Additional Actions -->
                             <div class="flex items-center gap-4">
                                 <!-- Share -->
-                                <button class="text-gray-300 hover:text-white transition-colors p-2" title="Share">
+                                <button 
+                                    type="button"
+                                    onclick="shareProfile({{ $user->id }})"
+                                    class="text-gray-300 hover:text-white transition-colors p-2" 
+                                    title="Share Profile">
                                     <i class="ri-share-line text-xl"></i>
                                 </button>
                                 
@@ -805,15 +831,17 @@
                                         <span class="font-light">{{ $matchedProfile->city }}</span>
                                     </div>
                                 @endif
-                                
+                            </a>
+
+                            <!-- Profile Info -->
+                            <div class="p-4 relative group">
                                 <!-- Hover Action Buttons Overlay -->
-                                <div class="absolute inset-0 bg-black/70 dark:bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <div class="flex flex-col gap-3 px-4 w-full">
+                                <div class="absolute inset-0 bg-black/70 dark:bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-lg z-10">
+                                    <div class="grid grid-cols-2 gap-2 px-2">
                                         <!-- Message Button -->
                                         <a href="{{ route('messages.show', $matchedUser->id) }}" 
-                                           class="flex items-center gap-3 bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-xl transition-colors">
+                                           class="flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-lg transition-colors">
                                             <i class="ri-message-3-line text-xl"></i>
-                                            <span class="font-semibold">Messenger</span>
                                         </a>
                                         
                                         <!-- Like Button -->
@@ -822,34 +850,27 @@
                                         @endphp
                                         <button type="button"
                                                 onclick="event.stopPropagation(); toggleLike({{ $matchedUser->id }}, this); event.preventDefault();"
-                                                class="flex items-center gap-3 bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-xl transition-colors like-hover-btn-{{ $matchedUser->id }}"
+                                                class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white p-3 rounded-lg transition-colors like-hover-btn-{{ $matchedUser->id }}"
                                                 data-user-id="{{ $matchedUser->id }}"
                                                 data-liked="{{ $isMatchedLikedHover ? 'true' : 'false' }}">
                                             <i class="ri-heart-{{ $isMatchedLikedHover ? 'fill' : 'line' }} text-xl"></i>
-                                            <span class="font-semibold">{{ $isMatchedLikedHover ? 'Unlike' : 'Like' }}</span>
                                         </button>
                                         
                                         <!-- Friend Request Button -->
                                         <button type="button"
                                                 onclick="event.stopPropagation(); sendFriendRequest({{ $matchedUser->id }}, this); event.preventDefault();"
-                                                class="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl transition-colors friend-request-btn-{{ $matchedUser->id }}">
+                                                class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition-colors friend-request-btn-{{ $matchedUser->id }}">
                                             <i class="ri-user-add-line text-xl"></i>
-                                            <span class="font-semibold friend-request-text-{{ $matchedUser->id }}">Friend request</span>
                                         </button>
                                         
                                         <!-- Remember Button -->
                                         <button type="button"
                                                 onclick="event.stopPropagation(); rememberUser({{ $matchedUser->id }}, this); event.preventDefault();"
-                                                class="flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl transition-colors remember-btn-{{ $matchedUser->id }}">
+                                                class="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg transition-colors remember-btn-{{ $matchedUser->id }}">
                                             <i class="ri-bookmark-line text-xl"></i>
-                                            <span class="font-semibold remember-text-{{ $matchedUser->id }}">Remember</span>
                                         </button>
                                     </div>
                                 </div>
-                            </a>
-
-                            <!-- Profile Info -->
-                            <div class="p-4">
                                 <a href="{{ route('user.profile', $matchedUser->username ?: $matchedUser->id) }}" class="block">
                                     <h3 class="text-gray-900 dark:text-white mb-1 font-semibold hover:text-purple-500 transition-colors cursor-pointer">{{ $matchedUser->name }}</h3>
                                 </a>

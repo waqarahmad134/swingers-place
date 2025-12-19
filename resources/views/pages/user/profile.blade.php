@@ -278,15 +278,17 @@
                                             <span class="font-light">{{ $matchedProfile->city }}</span>
                                         </div>
                                     @endif
-                                    
+                                </a>
+
+                                <!-- Profile Info -->
+                                <div class="p-4 relative group">
                                     <!-- Hover Action Buttons Overlay -->
-                                    <div class="absolute inset-0 bg-black/70 dark:bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                        <div class="flex flex-col gap-3 px-4 w-full">
+                                    <div class="absolute inset-0 bg-black/70 dark:bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-lg z-10">
+                                        <div class="grid grid-cols-2 gap-2 px-2">
                                             <!-- Message Button -->
                                             <a href="{{ route('messages.show', $matchedUser->id) }}" 
-                                               class="flex items-center gap-3 bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-xl transition-colors">
+                                               class="flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-lg transition-colors">
                                                 <i class="ri-message-3-line text-xl"></i>
-                                                <span class="font-semibold">Messenger</span>
                                             </a>
                                             
                                             <!-- Like Button -->
@@ -295,34 +297,27 @@
                                             @endphp
                                             <button type="button"
                                                     onclick="event.stopPropagation(); toggleLike({{ $matchedUser->id }}, this); event.preventDefault();"
-                                                    class="flex items-center gap-3 bg-red-500 hover:bg-red-600 text-white px-4 py-3 rounded-xl transition-colors like-hover-btn-{{ $matchedUser->id }}"
+                                                    class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white p-3 rounded-lg transition-colors like-hover-btn-{{ $matchedUser->id }}"
                                                     data-user-id="{{ $matchedUser->id }}"
                                                     data-liked="{{ $isMatchedLikedHover ? 'true' : 'false' }}">
                                                 <i class="ri-heart-{{ $isMatchedLikedHover ? 'fill' : 'line' }} text-xl"></i>
-                                                <span class="font-semibold">{{ $isMatchedLikedHover ? 'Unlike' : 'Like' }}</span>
                                             </button>
                                             
                                             <!-- Friend Request Button -->
                                             <button type="button"
                                                     onclick="event.stopPropagation(); sendFriendRequest({{ $matchedUser->id }}, this); event.preventDefault();"
-                                                    class="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-xl transition-colors friend-request-btn-{{ $matchedUser->id }}">
+                                                    class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition-colors friend-request-btn-{{ $matchedUser->id }}">
                                                 <i class="ri-user-add-line text-xl"></i>
-                                                <span class="font-semibold friend-request-text-{{ $matchedUser->id }}">Friend request</span>
                                             </button>
                                             
                                             <!-- Remember Button -->
                                             <button type="button"
                                                     onclick="event.stopPropagation(); rememberUser({{ $matchedUser->id }}, this); event.preventDefault();"
-                                                    class="flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-xl transition-colors remember-btn-{{ $matchedUser->id }}">
+                                                    class="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg transition-colors remember-btn-{{ $matchedUser->id }}">
                                                 <i class="ri-bookmark-line text-xl"></i>
-                                                <span class="font-semibold remember-text-{{ $matchedUser->id }}">Remember</span>
                                             </button>
                                         </div>
                                     </div>
-                                </a>
-
-                                <!-- Profile Info -->
-                                <div class="p-4">
                                     <a href="{{ route('user.profile', $matchedUser->username ?: $matchedUser->id) }}" class="block">
                                         <h3 class="text-gray-900 dark:text-white mb-1 font-semibold hover:text-purple-500 transition-colors cursor-pointer">{{ $matchedUser->name }}</h3>
                                     </a>
@@ -396,10 +391,9 @@ function toggleLike(userId, button) {
     }
     const hoverButton = document.querySelector('.like-hover-btn-' + userId);
     
-    // Get icons and text for both buttons
+    // Get icons for both buttons
     const mainIcon = mainButton ? mainButton.querySelector('i') : icon;
     const hoverIcon = hoverButton ? hoverButton.querySelector('i') : null;
-    const hoverText = hoverButton ? hoverButton.querySelector('span:last-child') : null;
     
     // Optimistic UI update
     if (isLiked) {
@@ -413,12 +407,9 @@ function toggleLike(userId, button) {
         }
         
         // Update hover button
-        if (hoverButton) {
-            if (hoverIcon) {
-                hoverIcon.classList.remove('ri-heart-fill');
-                hoverIcon.classList.add('ri-heart-line');
-            }
-            if (hoverText) hoverText.textContent = 'Like';
+        if (hoverButton && hoverIcon) {
+            hoverIcon.classList.remove('ri-heart-fill');
+            hoverIcon.classList.add('ri-heart-line');
             hoverButton.dataset.liked = 'false';
         }
     } else {
@@ -432,12 +423,9 @@ function toggleLike(userId, button) {
         }
         
         // Update hover button
-        if (hoverButton) {
-            if (hoverIcon) {
-                hoverIcon.classList.remove('ri-heart-line');
-                hoverIcon.classList.add('ri-heart-fill');
-            }
-            if (hoverText) hoverText.textContent = 'Unlike';
+        if (hoverButton && hoverIcon) {
+            hoverIcon.classList.remove('ri-heart-line');
+            hoverIcon.classList.add('ri-heart-fill');
             hoverButton.dataset.liked = 'true';
         }
     }
@@ -471,12 +459,9 @@ function toggleLike(userId, button) {
                 }
                 
                 // Update hover button
-                if (hoverButton) {
-                    if (hoverIcon) {
-                        hoverIcon.classList.remove('ri-heart-line');
-                        hoverIcon.classList.add('ri-heart-fill');
-                    }
-                    if (hoverText) hoverText.textContent = 'Unlike';
+                if (hoverButton && hoverIcon) {
+                    hoverIcon.classList.remove('ri-heart-line');
+                    hoverIcon.classList.add('ri-heart-fill');
                     hoverButton.dataset.liked = 'true';
                 }
             } else {
@@ -490,12 +475,9 @@ function toggleLike(userId, button) {
                 }
                 
                 // Update hover button
-                if (hoverButton) {
-                    if (hoverIcon) {
-                        hoverIcon.classList.remove('ri-heart-fill');
-                        hoverIcon.classList.add('ri-heart-line');
-                    }
-                    if (hoverText) hoverText.textContent = 'Like';
+                if (hoverButton && hoverIcon) {
+                    hoverIcon.classList.remove('ri-heart-fill');
+                    hoverIcon.classList.add('ri-heart-line');
                     hoverButton.dataset.liked = 'false';
                 }
             }
@@ -515,12 +497,9 @@ function toggleLike(userId, button) {
             }
             
             // Revert hover button
-            if (hoverButton) {
-                if (hoverIcon) {
-                    hoverIcon.classList.remove('ri-heart-line');
-                    hoverIcon.classList.add('ri-heart-fill');
-                }
-                if (hoverText) hoverText.textContent = 'Unlike';
+            if (hoverButton && hoverIcon) {
+                hoverIcon.classList.remove('ri-heart-line');
+                hoverIcon.classList.add('ri-heart-fill');
                 hoverButton.dataset.liked = 'true';
             }
         } else {
@@ -534,12 +513,9 @@ function toggleLike(userId, button) {
             }
             
             // Revert hover button
-            if (hoverButton) {
-                if (hoverIcon) {
-                    hoverIcon.classList.remove('ri-heart-fill');
-                    hoverIcon.classList.add('ri-heart-line');
-                }
-                if (hoverText) hoverText.textContent = 'Like';
+            if (hoverButton && hoverIcon) {
+                hoverIcon.classList.remove('ri-heart-fill');
+                hoverIcon.classList.add('ri-heart-line');
                 hoverButton.dataset.liked = 'false';
             }
         }
@@ -548,13 +524,7 @@ function toggleLike(userId, button) {
 
 // Send Friend Request
 function sendFriendRequest(userId, button) {
-    const textSpan = button.querySelector('.friend-request-text-' + userId);
-    const originalText = textSpan ? textSpan.textContent : 'Friend request';
-    
     // Update button to show success state
-    if (textSpan) {
-        textSpan.textContent = 'Friend request sent';
-    }
     button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
     button.classList.add('bg-blue-500', 'cursor-not-allowed');
     button.disabled = true;
@@ -564,9 +534,6 @@ function sendFriendRequest(userId, button) {
     
     // Revert after 3 seconds
     setTimeout(() => {
-        if (textSpan) {
-            textSpan.textContent = originalText;
-        }
         button.classList.remove('bg-blue-500', 'cursor-not-allowed');
         button.classList.add('bg-blue-600', 'hover:bg-blue-700');
         button.disabled = false;
@@ -575,13 +542,7 @@ function sendFriendRequest(userId, button) {
 
 // Remember User
 function rememberUser(userId, button) {
-    const textSpan = button.querySelector('.remember-text-' + userId);
-    const originalText = textSpan ? textSpan.textContent : 'Remember';
-    
     // Update button to show success state
-    if (textSpan) {
-        textSpan.textContent = 'Remembered successfully';
-    }
     button.classList.remove('bg-green-600', 'hover:bg-green-700');
     button.classList.add('bg-green-500', 'cursor-not-allowed');
     button.disabled = true;
@@ -591,9 +552,6 @@ function rememberUser(userId, button) {
     
     // Revert after 3 seconds
     setTimeout(() => {
-        if (textSpan) {
-            textSpan.textContent = originalText;
-        }
         button.classList.remove('bg-green-500', 'cursor-not-allowed');
         button.classList.add('bg-green-600', 'hover:bg-green-700');
         button.disabled = false;

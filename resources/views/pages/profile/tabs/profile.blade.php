@@ -89,10 +89,22 @@
                 <!-- Profile Picture Card -->
                 <div class="bg-gray-900 dark:bg-gray-900 flex rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div class="w-[400px] relative">
-                        @if($profile && $profile->profile_photo)
-                            <img src="{{ asset('storage/' . $profile->profile_photo) }}" alt="{{ $user->name }}" class="w-full h-96 object-cover">
-                        @elseif($user->profile_image)
-                            <img src="{{ asset('storage/' . $user->profile_image) }}" alt="{{ $user->name }}" class="w-full h-96 object-cover">
+                        @php
+                            $profileImageUrl = null;
+                            if ($profile && $profile->profile_photo) {
+                                $profileImageUrl = asset('storage/' . $profile->profile_photo);
+                            } elseif ($user->profile_image) {
+                                $profileImageUrl = asset('storage/' . $user->profile_image);
+                            }
+                        @endphp
+                        @if($profileImageUrl)
+                            <img 
+                                src="{{ $profileImageUrl }}" 
+                                alt="{{ $user->name }}" 
+                                class="w-full h-96 object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                                onclick="openProfileImagePreview('{{ $profileImageUrl }}')"
+                                title="Click to preview"
+                            >
                         @else
                             <div class="w-full h-96 bg-gradient-to-br from-purple-400 via-pink-400 to-orange-400 flex items-center justify-center">
                                 <div class="text-white text-6xl font-bold">
@@ -103,12 +115,33 @@
                 
                         <!-- Photo Count Badge -->
                         @php
-                            $photoCount = 0;
+                            // Get album photos and separate by category
+                            $albumPhotos = [];
+                            $nonAdultPhotos = [];
+                            $adultPhotos = [];
+                            
                             if ($profile && $profile->album_photos) {
-                                $photos = is_array($profile->album_photos) ? $profile->album_photos : json_decode($profile->album_photos, true) ?? [];
-                                $photoCount = is_array($photos) ? count($photos) : 0;
+                                $albumPhotos = is_array($profile->album_photos) 
+                                    ? $profile->album_photos 
+                                    : json_decode($profile->album_photos, true) ?? [];
+                                
+                                // Separate photos by category
+                                $adultPhotos = isset($albumPhotos['adult']) && is_array($albumPhotos['adult']) ? $albumPhotos['adult'] : [];
+                                $nonAdultPhotos = isset($albumPhotos['non_adult']) && is_array($albumPhotos['non_adult']) ? $albumPhotos['non_adult'] : [];
                             }
-                                $totalPhotos = $photoCount + (($profile && $profile->profile_photo) || $user->profile_image ? 1 : 0);
+                            
+                            // Count non-adult photos (including profile photo)
+                            $nonAdultCount = count($nonAdultPhotos);
+                            $hasProfilePhoto = ($profile && $profile->profile_photo) || $user->profile_image;
+                            if ($hasProfilePhoto) {
+                                $nonAdultCount += 1; // Profile photo is considered non-adult
+                            }
+                            
+                            // Count adult photos
+                            $adultCount = count($adultPhotos);
+                            
+                            // Total photos
+                            $totalPhotos = $nonAdultCount + $adultCount;
                         @endphp
                         <div class="absolute top-4 right-4 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-full flex items-center gap-2 text-sm font-semibold">
                             <i class="ri-camera-line"></i>
@@ -116,25 +149,62 @@
                         </div>
                 
                     <!-- Online Status Indicator -->
-                    <div class="absolute bottom-4 left-4 flex items-center gap-2 bg-black/70 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-medium">
+                    <div class="absolute top-4 left-4 flex items-center gap-2 bg-black/70 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-xs font-medium">
                         <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                         <span>Online</span>
                     </div>
                     <!-- Verified Badge -->
-                    @if($user->email_verified_at)
+                    <!-- @if($user->email_verified_at)
                         <div class="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold shadow-lg">
                             <i class="ri-checkbox-circle-fill"></i>
                             <span>Verified</span>
                         </div>
-                    @endif
-                    <!-- Action Buttons -->
+                    @endif -->
+                    
+                    
+                </div>
+                <!-- Right Sidebar: Photo Categories -->
+                <div class="w-24 bg-gray-900 dark:bg-gray-950 py-2 space-y-2 border-l border-gray-700">
+                    <!-- Non-adult -->
+                    <div 
+                        class="flex flex-col items-center cursor-pointer hover:bg-gray-800 rounded-lg p-3 transition-colors group"
+                        onclick="switchToProfileTab('pictures')"
+                        title="View Pictures"
+                    >
+                        <div class="relative">
+                            <i class="ri-camera-line text-2xl text-gray-400 group-hover:text-white transition-colors"></i>
+                            <span class="absolute -top-2 -right-2 bg-[#9810FA] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{{ $nonAdultCount }}</span>
+                        </div>
+                        <span class="text-xs text-gray-400 group-hover:text-white mt-2 text-center">Non-adult</span>
+                    </div>
+                    
+                    <!-- Adult -->
+                    <!-- <div class="flex flex-col items-center cursor-pointer hover:bg-gray-800 rounded-lg p-3 transition-colors group">
+                        <div class="relative">
+                            <i class="ri-camera-line text-2xl text-gray-400 group-hover:text-white transition-colors"></i>
+                            <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{{ $adultCount }}</span>
+                            <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[8px] font-bold text-red-500">XXX</span>
+                        </div>
+                        <span class="text-xs text-gray-400 group-hover:text-white mt-2 text-center">Adult</span>
+                    </div>
+                     -->
+                    <!-- Album -->
+                    <div 
+                        class="flex flex-col items-center cursor-pointer hover:bg-gray-800 rounded-lg p-3 transition-colors group"
+                        onclick="switchToProfileTab('album')"
+                        title="View Album"
+                    >
+                        <div class="relative">
+                            <i class="ri-folder-line text-2xl text-gray-400 group-hover:text-white transition-colors"></i>
+                            <span class="absolute -top-2 -right-2 bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{{ $totalPhotos }}</span>
+                        </div>
+                        <span class="text-xs text-gray-400 group-hover:text-white mt-2 text-center">Album</span>
+                    </div>
                     @if(!isset($isOwnProfile) || !$isOwnProfile)
                     <!-- bottom bar profile img  -->
-                    <div class="bg-gray-900/95 dark:bg-gray-950/95 backdrop-blur-sm border-t border-gray-700 px-6 py-4">
-                        <div class="flex items-center justify-between">
-                            <!-- Left: Social Actions -->
-                            <div class="flex items-center gap-6">
-                                <!-- Friend Request -->
+                    <div class="flex flex-col items-center backdrop-blur-sm border-t border-gray-700 px-6 py-4">
+                        <div class="flex flex-col items-center justify-between gap-5">
+                           
                                 <button class="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group">
                                     <div class="relative">
                                         <i class="ri-group-line text-2xl"></i>
@@ -142,7 +212,6 @@
                                     </div>
                                 </button>
                                 
-                                <!-- Like -->
                                 @if(!isset($isOwnProfile) || !$isOwnProfile)
                                     @php
                                         $profileLikesCount = isset($likesCount) ? $likesCount : $user->likesReceived()->where('type', 'like')->count();
@@ -172,69 +241,17 @@
                                     </div>
                                 @endif
                                 
-                                <!-- Validation/Checkmark -->
-                                <button class="flex items-center gap-2 text-gray-300 hover:text-white transition-colors group">
-                                    <div class="relative">
-                                        <i class="ri-checkbox-circle-line text-2xl"></i>
-                                        <span class="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">2</span>
-                                    </div>
-                                </button>
-                            </div>
-                            
-                            <!-- Right: Additional Actions -->
-                            <div class="flex items-center gap-4">
-                                <!-- Share -->
                                 <button 
                                     type="button"
                                     onclick="shareProfile({{ $user->id }})"
                                     class="text-gray-300 hover:text-white transition-colors p-2" 
                                     title="Share Profile">
-                                    <i class="ri-share-line text-xl"></i>
+                                    <i class="ri-share-line text-2xl"></i>
                                 </button>
-                                
-                                <!-- Pin -->
-                                <button class="text-gray-300 hover:text-white transition-colors p-2" title="Pin">
-                                    <i class="ri-pushpin-line text-xl"></i>
-                                </button>
-                                
-                                <!-- Notes -->
-                                <button class="text-gray-300 hover:text-white transition-colors p-2" title="Notes">
-                                    <i class="ri-file-text-line text-xl"></i>
-                                </button>
-                            </div>
+                            
                         </div>
                     </div>
                     @endif
-                </div>
-                <!-- Right Sidebar: Photo Categories -->
-                <div class="w-24 h-96 bg-gray-900 dark:bg-gray-950  py-6 space-y-6 border-l border-gray-700">
-                    <!-- Non-adult -->
-                    <div class="flex flex-col items-center cursor-pointer hover:bg-gray-800 rounded-lg p-3 transition-colors group">
-                        <div class="relative">
-                            <i class="ri-camera-line text-2xl text-gray-400 group-hover:text-white transition-colors"></i>
-                            <span class="absolute -top-2 -right-2 bg-[#9810FA] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">3</span>
-                        </div>
-                        <span class="text-xs text-gray-400 group-hover:text-white mt-2 text-center">Non-adult</span>
-                    </div>
-                    
-                    <!-- Adult -->
-                    <div class="flex flex-col items-center cursor-pointer hover:bg-gray-800 rounded-lg p-3 transition-colors group">
-                        <div class="relative">
-                            <i class="ri-camera-line text-2xl text-gray-400 group-hover:text-white transition-colors"></i>
-                            <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">2</span>
-                            <span class="absolute -bottom-1 left-1/2 -translate-x-1/2 text-[8px] font-bold text-red-500">XXX</span>
-                        </div>
-                        <span class="text-xs text-gray-400 group-hover:text-white mt-2 text-center">Adult</span>
-                    </div>
-                    
-                    <!-- Album -->
-                    <div class="flex flex-col items-center cursor-pointer hover:bg-gray-800 rounded-lg p-3 transition-colors group">
-                        <div class="relative">
-                            <i class="ri-folder-line text-2xl text-gray-400 group-hover:text-white transition-colors"></i>
-                            <span class="absolute -top-2 -right-2 bg-blue-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">1</span>
-                        </div>
-                        <span class="text-xs text-gray-400 group-hover:text-white mt-2 text-center">Album</span>
-                    </div>
                     
                     <!-- Navigation Arrow -->
                     <!-- <div class="mt-auto">
@@ -919,3 +936,76 @@
         @endif
     </div>
 </div>
+
+<!-- Profile Image Preview Modal -->
+<div id="profileImagePreviewModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-sm">
+    <div class="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center p-4">
+        <!-- Close Button -->
+        <button 
+            onclick="closeProfileImagePreview()" 
+            class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors bg-black/50 hover:bg-black/70 rounded-full p-3 z-10"
+            title="Close (Esc)"
+        >
+            <i class="ri-close-line text-3xl"></i>
+        </button>
+        
+        <!-- Preview Image -->
+        <img 
+            id="profileImagePreviewImg" 
+            src="" 
+            alt="Profile Preview" 
+            class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+        >
+    </div>
+</div>
+
+<script>
+function openProfileImagePreview(imageUrl) {
+    const modal = document.getElementById('profileImagePreviewModal');
+    const img = document.getElementById('profileImagePreviewImg');
+    
+    if (modal && img) {
+        img.src = imageUrl;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden'; // Prevent body scroll
+        
+        // Close on Escape key
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') {
+                closeProfileImagePreview();
+                document.removeEventListener('keydown', handleEscape);
+            }
+        };
+        document.addEventListener('keydown', handleEscape);
+        
+        // Close on background click
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeProfileImagePreview();
+            }
+        });
+    }
+}
+
+function closeProfileImagePreview() {
+    const modal = document.getElementById('profileImagePreviewModal');
+    
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = ''; // Restore body scroll
+    }
+}
+
+// Function to switch to a specific profile tab
+function switchToProfileTab(tabName) {
+    // Find the tab button with the matching data-tab attribute
+    const tabButton = document.querySelector(`.profile-tab[data-tab="${tabName}"]`);
+    
+    if (tabButton) {
+        // Trigger a click on the tab button to use the existing tab switching logic
+        tabButton.click();
+    }
+}
+</script>

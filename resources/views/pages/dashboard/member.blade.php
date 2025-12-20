@@ -155,11 +155,11 @@
                         <div class="p-4 relative group">
                             <!-- Hover Action Buttons Overlay -->
                             <div class="absolute inset-0 bg-black/70 dark:bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-lg z-10">
-                                <div class="grid grid-cols-2 gap-2 px-2">
+                                <div class="flex gap-2 px-2">
                                     <!-- Message Button -->
                                     <a href="{{ route('messages.show', $member->id) }}" 
-                                       class="flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-lg transition-colors">
-                                        <i class="ri-message-3-line text-xl"></i>
+                                       class="flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-lg transition-colors">
+                                        <i class="ri-message-3-line text-lg"></i>
                                     </a>
                                     
                                     <!-- Like Button -->
@@ -168,24 +168,24 @@
                                     @endphp
                                     <button type="button"
                                             onclick="event.stopPropagation(); toggleLike({{ $member->id }}, this); event.preventDefault();"
-                                            class="flex items-center justify-center bg-red-500 hover:bg-red-600 text-white p-3 rounded-lg transition-colors like-hover-btn-{{ $member->id }}"
+                                            class="flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-lg transition-colors like-hover-btn-{{ $member->id }}"
                                             data-user-id="{{ $member->id }}"
                                             data-liked="{{ $isLikedHover ? 'true' : 'false' }}">
-                                        <i class="ri-heart-{{ $isLikedHover ? 'fill' : 'line' }} text-xl"></i>
+                                        <i class="ri-heart-{{ $isLikedHover ? 'fill' : 'line' }} text-lg"></i>
                                     </button>
                                     
                                     <!-- Friend Request Button -->
                                     <button type="button"
                                             onclick="event.stopPropagation(); sendFriendRequest({{ $member->id }}, this); event.preventDefault();"
-                                            class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition-colors friend-request-btn-{{ $member->id }}">
-                                        <i class="ri-user-add-line text-xl"></i>
+                                            class="flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-lg transition-colors friend-request-btn-{{ $member->id }}">
+                                        <i class="ri-user-add-line text-lg"></i>
                                     </button>
                                     
                                     <!-- Remember Button -->
                                     <button type="button"
                                             onclick="event.stopPropagation(); rememberUser({{ $member->id }}, this); event.preventDefault();"
-                                            class="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg transition-colors remember-btn-{{ $member->id }}">
-                                        <i class="ri-bookmark-line text-xl"></i>
+                                            class="flex items-center justify-center bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-lg transition-colors remember-btn-{{ $member->id }}">
+                                        <i class="ri-bookmark-line text-lg"></i>
                                     </button>
                                 </div>
                             </div>

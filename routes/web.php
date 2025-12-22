@@ -243,6 +243,15 @@ Route::get('/terms', [\App\Http\Controllers\Web\PageController::class, 'terms'])
 // Example: domain.com/page/waqar, domain.com/page/custom-page
 Route::get('/page/{slug}', [\App\Http\Controllers\Web\PageController::class, 'show'])->name('page.show');
 
+// ============================================================================
+// BLOG ROUTES
+// ============================================================================
+// Blog listing and single post routes
+Route::get('/blog', [\App\Http\Controllers\Web\BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{slug}', [\App\Http\Controllers\Web\BlogController::class, 'show'])->name('blog.show');
+Route::get('/blog/category/{slug}', [\App\Http\Controllers\Web\BlogController::class, 'category'])->name('blog.category');
+Route::get('/blog/tag/{slug}', [\App\Http\Controllers\Web\BlogController::class, 'tag'])->name('blog.tag');
+
 // Username and Email validation (accessible to all)
 Route::get('/check-username', [\App\Http\Controllers\Auth\RegisterController::class, 'checkUsername'])->name('check-username');
 Route::get('/check-email', [\App\Http\Controllers\Auth\RegisterController::class, 'checkEmail'])->name('check-email');
@@ -342,6 +351,15 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Pages Management
     Route::resource('pages', \App\Http\Controllers\Admin\PageController::class);
+
+    // Blog Management
+    Route::resource('blog', \App\Http\Controllers\Admin\BlogController::class);
+    
+    // Categories Management
+    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+    
+    // Tags Management
+    Route::resource('tags', \App\Http\Controllers\Admin\TagController::class);
 
     // Media Library
     Route::get('/media', [\App\Http\Controllers\Admin\MediaController::class, 'index'])->name('media.index');

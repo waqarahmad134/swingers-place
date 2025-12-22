@@ -16,11 +16,22 @@ class Page extends Model
         'content',
         'meta_title',
         'meta_description',
+        'meta_keywords',
+        'og_title',
+        'og_description',
+        'og_image',
+        'twitter_title',
+        'twitter_description',
+        'twitter_image',
+        'allow_indexing',
+        'template',
         'is_active',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'allow_indexing' => 'boolean',
+        'template' => 'integer',
     ];
 }
 

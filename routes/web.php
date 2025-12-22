@@ -224,14 +224,23 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/{user}/dislike', [\App\Http\Controllers\Web\LikeController::class, 'toggleDislike'])->name('users.dislike')->whereNumber('user');
 });
 
-// Static Pages (with database fallback)
+// ============================================================================
+// PAGE MANAGEMENT ROUTES
+// ============================================================================
+// These routes handle dynamic page management system where admins can create
+// unlimited pages with custom slugs, SEO settings, and templates.
+// Pages are stored in the 'pages' table and can be accessed via direct slug URLs.
+
+// Static Page Routes (with database fallback)
+// These routes provide named routes for common pages while still using database content
 Route::get('/about', [\App\Http\Controllers\Web\PageController::class, 'about'])->name('about');
 Route::get('/contact', [\App\Http\Controllers\Web\PageController::class, 'contact'])->name('contact');
 Route::post('/contact', [\App\Http\Controllers\Web\PageController::class, 'contactSubmit'])->name('contact.submit');
 Route::get('/privacy', [\App\Http\Controllers\Web\PageController::class, 'privacy'])->name('privacy');
 Route::get('/terms', [\App\Http\Controllers\Web\PageController::class, 'terms'])->name('terms');
 
-// Dynamic Pages (catch-all for custom pages)
+// Dynamic Page Route (Alternative format: /page/{slug})
+// Example: domain.com/page/waqar, domain.com/page/custom-page
 Route::get('/page/{slug}', [\App\Http\Controllers\Web\PageController::class, 'show'])->name('page.show');
 
 // Username and Email validation (accessible to all)
@@ -392,3 +401,48 @@ Route::post('/deploy/{token}', [\App\Http\Controllers\Admin\DeploymentController
 Route::get('/api/health', function () {
     return response()->json(['status' => 'ok']);
 });
+
+// ============================================================================
+// DYNAMIC PAGE ROUTE (Direct Slug Access)
+// ============================================================================
+// This route enables direct slug access for pages created in the admin panel.
+// Example: domain.com/waqar, domain.com/custom-page, domain.com/terms
+// 
+// IMPORTANT: This route MUST be placed at the very end of the routes file
+// to avoid conflicts with other routes. It acts as a catch-all for page slugs.
+//
+// How it works:
+// 1. Checks if the slug is in the reserved routes list (if yes, returns 404)
+// 2. Queries the database for an active page with matching slug
+// 3. If found, displays the page using the selected template
+// 4. If not found, returns 404
+//
+// Reserved routes are protected to prevent conflicts with system routes.
+Route::get('/{slug}', function ($slug) {
+    // List of reserved routes that should not be treated as page slugs
+    $reservedRoutes = [
+        'login', 'register', 'logout', 'dashboard', 'messages', 'account', 
+        'albums', 'api', 'admin', 'editor', 'clear', 'migrations', 'seed', 
+        'rotate-users-online', 'check-username', 'check-email', 'forgot-password', 
+        'reset-password', 'send-otp', 'verify-otp', 'resend-otp', 'store-category', 
+        'about', 'contact', 'privacy', 'terms', 'page', 'user', 'deploy'
+    ];
+    
+    // If slug matches a reserved route, return 404
+    if (in_array($slug, $reservedRoutes)) {
+        abort(404);
+    }
+    
+    // Check if a page exists with this slug in the database
+    $page = \App\Models\Page::where('slug', $slug)
+        ->where('is_active', true)
+        ->first();
+    
+    // If page found, display it using the PageController
+    if ($page) {
+        return app(\App\Http\Controllers\Web\PageController::class)->show($slug);
+    }
+    
+    // If no page found, return 404
+    abort(404);
+})->where('slug', '[a-z0-9-]+'); // Only allow alphanumeric and hyphens in slugs

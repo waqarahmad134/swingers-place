@@ -16,7 +16,15 @@ class PageController extends Controller
             ->where('is_active', true)
             ->firstOrFail();
 
-        return view('pages.show', compact('page'));
+        $template = $page->template ?? 1;
+        $templateView = 'pages.templates.template-' . $template;
+
+        // Fallback to template-1 if template view doesn't exist
+        if (!view()->exists($templateView)) {
+            $templateView = 'pages.templates.template-1';
+        }
+
+        return view('pages.show', compact('page', 'templateView'));
     }
 
     public function about(): View
@@ -25,7 +33,15 @@ class PageController extends Controller
             ->where('is_active', true)
             ->firstOrFail();
 
-        return view('pages.show', compact('page'));
+        $template = $page->template ?? 1;
+        $templateView = 'pages.templates.template-' . $template;
+
+        // Fallback to template-1 if template view doesn't exist
+        if (!view()->exists($templateView)) {
+            $templateView = 'pages.templates.template-1';
+        }
+
+        return view('pages.show', compact('page', 'templateView'));
     }
 
     public function contact(): View
@@ -64,7 +80,15 @@ class PageController extends Controller
             ->where('is_active', true)
             ->firstOrFail();
 
-        return view('pages.show', compact('page'));
+        $template = $page->template ?? 1;
+        $templateView = 'pages.templates.template-' . $template;
+
+        // Fallback to template-1 if template view doesn't exist
+        if (!view()->exists($templateView)) {
+            $templateView = 'pages.templates.template-1';
+        }
+
+        return view('pages.show', compact('page', 'templateView'));
     }
 
     public function terms(): View
@@ -73,7 +97,15 @@ class PageController extends Controller
             ->where('is_active', true)
             ->firstOrFail();
 
-        return view('pages.show', compact('page'));
+        $template = $page->template ?? 1;
+        $templateView = 'pages.templates.template-' . $template;
+
+        // Fallback to template-1 if template view doesn't exist
+        if (!view()->exists($templateView)) {
+            $templateView = 'pages.templates.template-1';
+        }
+
+        return view('pages.show', compact('page', 'templateView'));
     }
 }
 

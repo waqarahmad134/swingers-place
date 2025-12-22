@@ -1,3 +1,10 @@
+@php
+    // Fetch pages from database dynamically
+    $aboutPage = \App\Models\Page::where('slug', 'about')->where('is_active', true)->first();
+    $termsPage = \App\Models\Page::where('slug', 'terms')->where('is_active', true)->first();
+    $privacyPage = \App\Models\Page::where('slug', 'privacy')->where('is_active', true)->first();
+    $contactPage = \App\Models\Page::where('slug', 'contact')->where('is_active', true)->first();
+@endphp
 
     <!-- Footer -->
     <footer class="mt-6 flex-col md:gap-10 flex py-[32px] bg-white dark:bg-gradient-to-b dark:from-gray-800 dark:to-gray-900 border-t border-gray-200 dark:border-gray-700">
@@ -13,7 +20,11 @@
         <div class="flex text-gray-700 dark:text-gray-300 gap-3 flex-col">
           <h2 class="font-semibold text-lg text-gray-900 dark:text-gray-300">Company</h2>
           <div>
-            <h2 class="mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity">About Us</h2>
+            @if($aboutPage)
+              <a href="{{ url('/' . $aboutPage->slug) }}" class="block mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white opacity-90 hover:opacity-100 transition-opacity">About Us</a>
+            @else
+              <h2 class="mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity">About Us</h2>
+            @endif
             <h2 class="mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity">Careers</h2>
             <h2 class="mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity">Press</h2>
           </div>
@@ -21,8 +32,16 @@
         <div class="flex text-gray-700 dark:text-gray-300 gap-3 flex-col">
           <h2 class="font-semibold text-lg text-gray-900 dark:text-gray-300">Legal</h2>
           <div>
-            <h2 class="mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity">Terms of Service</h2>
-            <h2 class="mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity">Privacy Policy</h2>
+            @if($termsPage)
+              <a href="{{ url('/' . $termsPage->slug) }}" class="block mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white opacity-90 hover:opacity-100 transition-opacity">Terms of Service</a>
+            @else
+              <h2 class="mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity">Terms of Service</h2>
+            @endif
+            @if($privacyPage)
+              <a href="{{ url('/' . $privacyPage->slug) }}" class="block mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white opacity-90 hover:opacity-100 transition-opacity">Privacy Policy</a>
+            @else
+              <h2 class="mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity">Privacy Policy</h2>
+            @endif
             <h2 class="mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity">Cookie Policy</h2>
           </div>
         </div>
@@ -31,7 +50,11 @@
           <div>
             <h2 class="mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity">Help Center</h2>
             <h2 class="mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity">Safety Tips</h2>
-            <h2 class="mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity">Contact Us</h2>
+            @if($contactPage)
+              <a href="{{ url('/' . $contactPage->slug) }}" class="block mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white opacity-90 hover:opacity-100 transition-opacity">Contact Us</a>
+            @else
+              <h2 class="mb-2 font-normal text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white cursor-pointer opacity-90 hover:opacity-100 transition-opacity">Contact Us</h2>
+            @endif
           </div>
         </div>
       </div>

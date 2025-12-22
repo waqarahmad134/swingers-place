@@ -42,11 +42,14 @@
                 </div>
 
                 <div>
-                    <label class="flex items-center gap-2 mt-6">
-                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Active</span>
-                    </label>
-                    <p class="mt-1 text-xs text-gray-500">Only active pages are accessible on the frontend</p>
+                    <label for="template" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Page Template</label>
+                    <select id="template" name="template" class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                        <option value="1" {{ old('template', 1) == 1 ? 'selected' : '' }}>Template 1 (Default)</option>
+                        <option value="2" {{ old('template') == 2 ? 'selected' : '' }}>Template 2</option>
+                        <option value="3" {{ old('template') == 3 ? 'selected' : '' }}>Template 3</option>
+                    </select>
+                    @error('template')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Choose the page design template</p>
                 </div>
             </div>
 
@@ -54,6 +57,72 @@
                 <label for="meta_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Meta Description</label>
                 <textarea id="meta_description" name="meta_description" rows="3" class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">{{ old('meta_description') }}</textarea>
                 @error('meta_description')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+            </div>
+
+            <div>
+                <label for="meta_keywords" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Meta Keywords</label>
+                <input type="text" id="meta_keywords" name="meta_keywords" value="{{ old('meta_keywords') }}" placeholder="keyword1, keyword2, keyword3" class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                @error('meta_keywords')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Comma-separated keywords for SEO</p>
+            </div>
+
+            <div class="border-t border-gray-200 pt-6 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Open Graph (Social Media) Settings</h3>
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div>
+                        <label for="og_title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">OG Title</label>
+                        <input type="text" id="og_title" name="og_title" value="{{ old('og_title') }}" class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                        @error('og_title')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                    </div>
+                    <div>
+                        <label for="og_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">OG Image URL</label>
+                        <input type="text" id="og_image" name="og_image" value="{{ old('og_image') }}" placeholder="https://example.com/image.jpg" class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                        @error('og_image')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label for="og_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">OG Description</label>
+                    <textarea id="og_description" name="og_description" rows="2" class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">{{ old('og_description') }}</textarea>
+                    @error('og_description')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                </div>
+            </div>
+
+            <div class="border-t border-gray-200 pt-6 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Twitter Card Settings</h3>
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div>
+                        <label for="twitter_title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Twitter Title</label>
+                        <input type="text" id="twitter_title" name="twitter_title" value="{{ old('twitter_title') }}" class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                        @error('twitter_title')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                    </div>
+                    <div>
+                        <label for="twitter_image" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Twitter Image URL</label>
+                        <input type="text" id="twitter_image" name="twitter_image" value="{{ old('twitter_image') }}" placeholder="https://example.com/image.jpg" class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                        @error('twitter_image')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <label for="twitter_description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Twitter Description</label>
+                    <textarea id="twitter_description" name="twitter_description" rows="2" class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-primary focus:outline-none focus:ring-primary dark:border-gray-600 dark:bg-gray-700 dark:text-white">{{ old('twitter_description') }}</textarea>
+                    @error('twitter_description')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 border-t border-gray-200 pt-6 dark:border-gray-700">
+                <div>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Active</span>
+                    </label>
+                    <p class="mt-1 text-xs text-gray-500">Only active pages are accessible on the frontend</p>
+                </div>
+                <div>
+                    <label class="flex items-center gap-2">
+                        <input type="checkbox" name="allow_indexing" value="1" {{ old('allow_indexing', true) ? 'checked' : '' }} class="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Allow Search Engine Indexing</span>
+                    </label>
+                    <p class="mt-1 text-xs text-gray-500">Uncheck to add noindex meta tag</p>
+                </div>
             </div>
 
             <div class="flex items-center justify-end gap-3 border-t border-gray-200 pt-6 dark:border-gray-700">

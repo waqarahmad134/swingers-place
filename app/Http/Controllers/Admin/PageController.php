@@ -31,6 +31,15 @@ class PageController extends Controller
             'content' => ['required', 'string'],
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string', 'max:500'],
+            'meta_keywords' => ['nullable', 'string', 'max:500'],
+            'og_title' => ['nullable', 'string', 'max:255'],
+            'og_description' => ['nullable', 'string', 'max:500'],
+            'og_image' => ['nullable', 'string', 'max:500'],
+            'twitter_title' => ['nullable', 'string', 'max:255'],
+            'twitter_description' => ['nullable', 'string', 'max:500'],
+            'twitter_image' => ['nullable', 'string', 'max:500'],
+            'allow_indexing' => ['nullable', 'boolean'],
+            'template' => ['nullable', 'integer', 'min:1', 'max:3'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
@@ -48,6 +57,8 @@ class PageController extends Controller
         }
 
         $validated['is_active'] = $request->has('is_active');
+        $validated['allow_indexing'] = $request->has('allow_indexing');
+        $validated['template'] = $request->input('template', 1);
 
         Page::create($validated);
 
@@ -68,6 +79,15 @@ class PageController extends Controller
             'content' => ['required', 'string'],
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string', 'max:500'],
+            'meta_keywords' => ['nullable', 'string', 'max:500'],
+            'og_title' => ['nullable', 'string', 'max:255'],
+            'og_description' => ['nullable', 'string', 'max:500'],
+            'og_image' => ['nullable', 'string', 'max:500'],
+            'twitter_title' => ['nullable', 'string', 'max:255'],
+            'twitter_description' => ['nullable', 'string', 'max:500'],
+            'twitter_image' => ['nullable', 'string', 'max:500'],
+            'allow_indexing' => ['nullable', 'boolean'],
+            'template' => ['nullable', 'integer', 'min:1', 'max:3'],
             'is_active' => ['nullable', 'boolean'],
         ]);
 
@@ -85,6 +105,8 @@ class PageController extends Controller
         }
 
         $validated['is_active'] = $request->has('is_active');
+        $validated['allow_indexing'] = $request->has('allow_indexing');
+        $validated['template'] = $request->input('template', $page->template ?? 1);
 
         $page->update($validated);
 

@@ -137,6 +137,16 @@
                     </div>
                 </a>
 
+                <!-- Pages Management -->
+                <a href="{{ route('admin.pages.index') }}">
+                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.pages.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                        <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
+                            <i class="ri-file-text-line text-[20px]"></i>
+                            <h2 class="text-[17px] md:block hidden font-normal">Pages Management</h2>
+                        </div>
+                    </div>
+                </a>
+
                 <!-- Settings -->
                 <a href="{{ route('admin.settings.general') }}">
                     <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.settings.*') ? 'bg-[#FF8FA3] text-white' : '' }}">

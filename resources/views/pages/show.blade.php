@@ -2,17 +2,52 @@
 
 @section('title', ($page->meta_title ?? $page->title) . ' - ' . config('app.name'))
 
-@section('meta_description', $page->meta_description)
+@section('meta_description', $page->meta_description ?? '')
+
+@push('head')
+    {{-- Meta Keywords --}}
+    @if($page->meta_keywords)
+        <meta name="keywords" content="{{ $page->meta_keywords }}">
+    @endif
+
+    {{-- Robots Meta Tag --}}
+    @if(!($page->allow_indexing ?? true))
+        <meta name="robots" content="noindex, nofollow">
+    @else
+        <meta name="robots" content="index, follow">
+    @endif
+
+    {{-- Open Graph Meta Tags --}}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ $page->og_title ?? $page->meta_title ?? $page->title }}">
+    <meta property="og:description" content="{{ $page->og_description ?? $page->meta_description ?? '' }}">
+    <meta property="og:url" content="{{ url('/' . $page->slug) }}">
+    @if($page->og_image)
+        <meta property="og:image" content="{{ $page->og_image }}">
+    @endif
+    <meta property="og:site_name" content="{{ config('app.name') }}">
+
+    {{-- Twitter Card Meta Tags --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $page->twitter_title ?? $page->og_title ?? $page->meta_title ?? $page->title }}">
+    <meta name="twitter:description" content="{{ $page->twitter_description ?? $page->og_description ?? $page->meta_description ?? '' }}">
+    @if($page->twitter_image)
+        <meta name="twitter:image" content="{{ $page->twitter_image }}">
+    @elseif($page->og_image)
+        <meta name="twitter:image" content="{{ $page->og_image }}">
+    @endif
+@endpush
 
 @section('content')
-    <div class="mx-auto max-w-4xl">
-        <h1 class="mb-6 text-4xl font-extrabold text-secondary dark:text-primary">{{ $page->title }}</h1>
-
-        <div class="rounded-lg border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-            <div class="prose prose-lg dark:prose-invert max-w-none prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-strong:text-gray-900 dark:prose-strong:text-gray-100 prose-a:text-primary dark:prose-a:text-primary prose-ul:text-gray-700 dark:prose-ul:text-gray-300 prose-ol:text-gray-700 dark:prose-ol:text-gray-300 prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-code:text-gray-900 dark:prose-code:text-gray-100 prose-pre:bg-gray-100 dark:prose-pre:bg-gray-900 prose-blockquote:text-gray-700 dark:prose-blockquote:text-gray-300">
-                {!! $page->content !!}
-            </div>
-        </div>
-    </div>
+    @php
+        if (!isset($templateView)) {
+            $template = $page->template ?? 1;
+            $templateView = 'pages.templates.template-' . $template;
+            if (!view()->exists($templateView)) {
+                $templateView = 'pages.templates.template-1';
+            }
+        }
+    @endphp
+    @include($templateView)
 @endsection
 

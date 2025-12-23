@@ -4,18 +4,74 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>@yield('title', config('app.name', 'swingers nest'))</title>
-
     @php
-        $defaultMetaDescription = config('app.meta_description', 'swingers nest');
+        $siteSettings = \App\Models\SiteSetting::getSettings();
+        $siteTitle = $siteSettings->site_title ?? config('app.name', 'swingers nest');
+        $siteDescription = $siteSettings->site_description ?? config('app.meta_description', 'swingers nest');
+        $siteKeywords = $siteSettings->site_keywords ?? '';
     @endphp
 
-    <meta name="description" content="@yield('meta_description', $defaultMetaDescription)">
+    <title>@yield('title', $siteTitle)</title>
+    <meta name="description" content="@yield('meta_description', $siteDescription)">
+    @if($siteKeywords)
+        <meta name="keywords" content="{{ $siteKeywords }}">
+    @endif
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
-    {{-- Favicon --}}
-    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
-    <link rel="apple-touch-icon" href="{{ asset('favicon.svg') }}">
+    {{-- Favicon & Icon --}}
+    @if($siteSettings->site_favicon)
+        <link rel="icon" type="image/x-icon" href="{{ asset($siteSettings->site_favicon) }}">
+    @else
+        <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    @endif
+    
+    @if($siteSettings->site_icon)
+        <link rel="apple-touch-icon" href="{{ asset($siteSettings->site_icon) }}">
+    @elseif($siteSettings->site_favicon)
+        <link rel="apple-touch-icon" href="{{ asset($siteSettings->site_favicon) }}">
+    @else
+        <link rel="apple-touch-icon" href="{{ asset('favicon.svg') }}">
+    @endif
+
+    {{-- Open Graph Meta Tags --}}
+    @if($siteSettings->og_title || $siteSettings->og_description)
+        <meta property="og:type" content="{{ $siteSettings->og_type ?? 'website' }}">
+        <meta property="og:title" content="{{ $siteSettings->og_title ?? $siteTitle }}">
+        <meta property="og:description" content="{{ $siteSettings->og_description ?? $siteDescription }}">
+        @if($siteSettings->og_image)
+            <meta property="og:image" content="{{ url(asset($siteSettings->og_image)) }}">
+        @endif
+        @if($siteSettings->og_site_name)
+            <meta property="og:site_name" content="{{ $siteSettings->og_site_name }}">
+        @endif
+        @if($siteSettings->og_url)
+            <meta property="og:url" content="{{ $siteSettings->og_url }}">
+        @endif
+    @endif
+
+    {{-- Twitter Card Meta Tags --}}
+    @if($siteSettings->twitter_title || $siteSettings->twitter_description)
+        <meta name="twitter:card" content="{{ $siteSettings->twitter_card_type ?? 'summary_large_image' }}">
+        <meta name="twitter:title" content="{{ $siteSettings->twitter_title ?? $siteTitle }}">
+        <meta name="twitter:description" content="{{ $siteSettings->twitter_description ?? $siteDescription }}">
+        @if($siteSettings->twitter_image)
+            <meta name="twitter:image" content="{{ url(asset($siteSettings->twitter_image)) }}">
+        @elseif($siteSettings->og_image)
+            <meta name="twitter:image" content="{{ url(asset($siteSettings->og_image)) }}">
+        @endif
+    @endif
+
+    {{-- Header Scripts (GSC, Analytics, etc.) --}}
+    @if($siteSettings->header_scripts)
+        {!! $siteSettings->header_scripts !!}
+    @endif
+
+    {{-- Custom CSS --}}
+    @if($siteSettings->custom_css)
+        <style>
+            {!! $siteSettings->custom_css !!}
+        </style>
+    @endif
 
     <!-- Remix Icons CDN -->
     <link
@@ -333,6 +389,18 @@
             </script>
         @endif
     @endauth
+
+    {{-- Footer Scripts --}}
+    @if($siteSettings->footer_scripts)
+        {!! $siteSettings->footer_scripts !!}
+    @endif
+
+    {{-- Custom JavaScript --}}
+    @if($siteSettings->custom_js)
+        <script>
+            {!! $siteSettings->custom_js !!}
+        </script>
+    @endif
 
     @stack('scripts')
     

@@ -1,6 +1,7 @@
 @php
-    $siteName = config('app.name', 'swingers nest');
-    $logoUrl = config('app.logo_url', null);
+    $siteSettings = \App\Models\SiteSetting::getSettings();
+    $siteName = $siteSettings->site_title ?? config('app.name', 'swingers nest');
+    $logoUrl = $siteSettings->site_icon ?? config('app.logo_url', null);
     $hasLogo = !empty($logoUrl);
 
     // Get active pages from database for navigation
@@ -54,12 +55,15 @@
       <!-- Logo -->
       <div class="flex gap-2 items-center">
         <a href="{{ Auth::check() ? route('dashboard.members') : (Route::has('home') ? route('home') : url('/')) }}" class="group">
-          <span class="text-xl md:text-2xl font-semibold text-gray-900 dark:text-white tracking-wide hover:text-[#9810FA] dark:hover:text-[#E60076] transition-colors duration-200">
-            Swingers Nest
-          </span>
+          @if($hasLogo)
+            <img src="{{ asset($logoUrl) }}" height="32" width="172" alt="{{ $siteName }}" class="h-8 md:h-10 w-auto" />
+          @else
+            <span class="text-xl md:text-2xl font-semibold text-gray-900 dark:text-white tracking-wide hover:text-[#9810FA] dark:hover:text-[#E60076] transition-colors duration-200">
+              {{ $siteName }}
+            </span>
+          @endif
         </a>
       </div>
-      <!-- <img src="{{ asset('assets/main-logo.png') }}" height="32" width="172" alt="{{ $siteName }}" /> -->
 
       <!-- Search Bar (Center) - Only show when logged in -->
       @auth

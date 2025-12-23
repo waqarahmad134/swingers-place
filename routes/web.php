@@ -418,6 +418,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/general', [\App\Http\Controllers\Admin\SettingsController::class, 'general'])->name('general');
         Route::post('/general', [\App\Http\Controllers\Admin\SettingsController::class, 'updateGeneral'])->name('general.update');
         Route::post('/password', [\App\Http\Controllers\Admin\SettingsController::class, 'updatePassword'])->name('password.update');
+        Route::get('/website', [\App\Http\Controllers\Admin\SettingsController::class, 'website'])->name('website');
+        Route::post('/website', [\App\Http\Controllers\Admin\SettingsController::class, 'updateWebsite'])->name('website.update');
         Route::get('/robots', [\App\Http\Controllers\Admin\SettingsController::class, 'robots'])->name('robots');
         Route::post('/robots', [\App\Http\Controllers\Admin\SettingsController::class, 'updateRobots'])->name('robots.update');
     });

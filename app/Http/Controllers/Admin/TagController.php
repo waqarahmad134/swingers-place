@@ -6,11 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class TagController extends Controller
 {
+    /**
+     * Get the correct route prefix based on user role
+     */
+    protected function getRoutePrefix(): string
+    {
+        $user = Auth::user();
+        return ($user && $user->is_editor) ? 'editor' : 'admin';
+    }
+
     public function index(): View
     {
         $tags = Tag::withCount('blogs')->orderBy('name')->get();
@@ -46,7 +56,7 @@ class TagController extends Controller
 
         Tag::create($validated);
 
-        return redirect()->route('admin.tags.index')
+        return redirect()->route($this->getRoutePrefix() . '.tags.index')
             ->with('success', 'Tag created successfully!');
     }
 
@@ -78,7 +88,7 @@ class TagController extends Controller
 
         $tag->update($validated);
 
-        return redirect()->route('admin.tags.index')
+        return redirect()->route($this->getRoutePrefix() . '.tags.index')
             ->with('success', 'Tag updated successfully!');
     }
 
@@ -86,7 +96,7 @@ class TagController extends Controller
     {
         $tag->delete();
 
-        return redirect()->route('admin.tags.index')
+        return redirect()->route($this->getRoutePrefix() . '.tags.index')
             ->with('success', 'Tag deleted successfully!');
     }
 }

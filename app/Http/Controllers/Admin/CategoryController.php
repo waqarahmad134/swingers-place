@@ -6,11 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
+    /**
+     * Get the correct route prefix based on user role
+     */
+    protected function getRoutePrefix(): string
+    {
+        $user = Auth::user();
+        return ($user && $user->is_editor) ? 'editor' : 'admin';
+    }
+
     public function index(): View
     {
         $categories = Category::withCount('blogs')->orderBy('name')->get();
@@ -46,7 +56,7 @@ class CategoryController extends Controller
 
         Category::create($validated);
 
-        return redirect()->route('admin.categories.index')
+        return redirect()->route($this->getRoutePrefix() . '.categories.index')
             ->with('success', 'Category created successfully!');
     }
 
@@ -78,7 +88,7 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
-        return redirect()->route('admin.categories.index')
+        return redirect()->route($this->getRoutePrefix() . '.categories.index')
             ->with('success', 'Category updated successfully!');
     }
 
@@ -86,7 +96,7 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return redirect()->route('admin.categories.index')
+        return redirect()->route($this->getRoutePrefix() . '.categories.index')
             ->with('success', 'Category deleted successfully!');
     }
 }

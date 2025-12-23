@@ -8,7 +8,7 @@
             <h1 class="text-3xl font-extrabold text-secondary">Blog Management</h1>
             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Create and manage blog posts with categories, tags, and templates</p>
         </div>
-        <a href="{{ route('admin.blog.create') }}" class="bg-[#FF8FA3] hover:bg-[#FF7A91] text-white px-6 py-2.5 rounded-xl font-semibold transition-colors flex items-center gap-2 shadow-md hover:shadow-lg">
+        <a href="{{ route(($routePrefix ?? 'admin') . '.blog.create') }}" class="bg-[#FF8FA3] hover:bg-[#FF7A91] text-white px-6 py-2.5 rounded-xl font-semibold transition-colors flex items-center gap-2 shadow-md hover:shadow-lg">
             <i class="ri-file-add-line text-lg"></i>
             <span>Create Post</span>
         </a>
@@ -16,7 +16,7 @@
 
     {{-- Search --}}
     <div class="mb-6">
-        <form action="{{ route('admin.blog.index') }}" method="GET" class="flex gap-2">
+        <form action="{{ route(($routePrefix ?? 'admin') . '.blog.index') }}" method="GET" class="flex gap-2">
             <input
                 type="text"
                 name="search"
@@ -28,7 +28,7 @@
                 Search
             </button>
             @if ($search)
-                <a href="{{ route('admin.blog.index') }}" class="rounded-md bg-gray-500 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-600">
+                <a href="{{ route(($routePrefix ?? 'admin') . '.blog.index') }}" class="rounded-md bg-gray-500 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-600">
                     Clear
                 </a>
             @endif
@@ -90,10 +90,10 @@
                             </td>
                             <td class="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2">
-                                    <a href="{{ route('admin.blog.edit', $blog) }}" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
+                                    <a href="{{ route(($routePrefix ?? 'admin') . '.blog.edit', $blog) }}" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
                                         Edit
                                     </a>
-                                    <form action="{{ route('admin.blog.destroy', $blog) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this blog post?');">
+                                    <form action="{{ route(($routePrefix ?? 'admin') . '.blog.destroy', $blog) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this blog post?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
@@ -106,7 +106,7 @@
                     @empty
                         <tr>
                             <td colspan="8" class="px-6 py-10 text-center text-sm text-gray-500">
-                                No blog posts found. <a href="{{ route('admin.blog.create') }}" class="font-semibold text-primary hover:underline">Create your first post</a>.
+                                No blog posts found. <a href="{{ route(($routePrefix ?? 'admin') . '.blog.create') }}" class="font-semibold text-primary hover:underline">Create your first post</a>.
                             </td>
                         </tr>
                     @endforelse

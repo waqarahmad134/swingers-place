@@ -5,13 +5,13 @@
 @section('content')
     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 class="text-3xl font-extrabold text-secondary">Create New Page</h1>
-        <a href="{{ route('admin.pages.index') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+        <a href="{{ route(($routePrefix ?? 'admin') . '.pages.index') }}" class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
             Back to Pages
         </a>
     </div>
 
     <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100">
-        <form action="{{ route('admin.pages.store') }}" method="POST" class="space-y-6">
+        <form action="{{ route(($routePrefix ?? 'admin') . '.pages.store') }}" method="POST" class="space-y-6">
             @csrf
 
             <div>
@@ -126,7 +126,7 @@
             </div>
 
             <div class="flex items-center justify-end gap-3 border-t border-gray-200 pt-6 dark:border-gray-700">
-                <a href="{{ route('admin.pages.index') }}" class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+                <a href="{{ route(($routePrefix ?? 'admin') . '.pages.index') }}" class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
                     Cancel
                 </a>
                 <button type="submit" class="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-primary-dark">

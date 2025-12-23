@@ -15,8 +15,9 @@ class EditorMiddleware
     {
         $user = $request->user();
 
-        if (! $user || ! (bool) ($user->is_editor ?? false)) {
-            abort(403, 'Unauthorized. Editor access required.');
+        // Allow both admin and editor access (admin has all access)
+        if (! $user || (! (bool) ($user->is_admin ?? false) && ! (bool) ($user->is_editor ?? false))) {
+            abort(403, 'Unauthorized. Admin or Editor access required.');
         }
 
         return $next($request);

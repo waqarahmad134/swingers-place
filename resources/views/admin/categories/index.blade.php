@@ -8,7 +8,7 @@
             <h1 class="text-3xl font-extrabold text-secondary">Categories Management</h1>
             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Manage blog post categories</p>
         </div>
-        <a href="{{ route('admin.categories.create') }}" class="bg-[#FF8FA3] hover:bg-[#FF7A91] text-white px-6 py-2.5 rounded-xl font-semibold transition-colors flex items-center gap-2 shadow-md hover:shadow-lg">
+        <a href="{{ route(($routePrefix ?? 'admin') . '.categories.create') }}" class="bg-[#FF8FA3] hover:bg-[#FF7A91] text-white px-6 py-2.5 rounded-xl font-semibold transition-colors flex items-center gap-2 shadow-md hover:shadow-lg">
             <i class="ri-add-line text-lg"></i>
             <span>Create Category</span>
         </a>
@@ -54,12 +54,12 @@
                             </td>
                             <td class="px-6 py-4 text-right text-sm font-medium">
                                 <div class="flex items-center justify-end gap-2">
-                                    <a href="{{ route('admin.categories.edit', $category) }}" class="text-primary hover:text-primary-dark" title="Edit Category">
+                                    <a href="{{ route(($routePrefix ?? 'admin') . '.categories.edit', $category) }}" class="text-primary hover:text-primary-dark" title="Edit Category">
                                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                         </svg>
                                     </a>
-                                    <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
+                                    <form action="{{ route(($routePrefix ?? 'admin') . '.categories.destroy', $category) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-800" title="Delete Category">
@@ -74,7 +74,7 @@
                     @empty
                         <tr>
                             <td colspan="5" class="px-6 py-12 text-center text-sm text-gray-500 dark:text-gray-400">
-                                No categories found. <a href="{{ route('admin.categories.create') }}" class="text-primary hover:underline">Create your first category</a>
+                                No categories found. <a href="{{ route(($routePrefix ?? 'admin') . '.categories.create') }}" class="text-primary hover:underline">Create your first category</a>
                             </td>
                         </tr>
                     @endforelse

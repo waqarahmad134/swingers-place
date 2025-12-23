@@ -6,11 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Models\Page;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class PageController extends Controller
 {
+    /**
+     * Get the correct route prefix based on user role
+     */
+    protected function getRoutePrefix(): string
+    {
+        $user = Auth::user();
+        return ($user && $user->is_editor) ? 'editor' : 'admin';
+    }
+
     public function index(): View
     {
         $pages = Page::orderBy('title')->get();
@@ -62,7 +72,7 @@ class PageController extends Controller
 
         Page::create($validated);
 
-        return redirect()->route('admin.pages.index')
+        return redirect()->route($this->getRoutePrefix() . '.pages.index')
             ->with('success', 'Page created successfully!');
     }
 
@@ -110,7 +120,7 @@ class PageController extends Controller
 
         $page->update($validated);
 
-        return redirect()->route('admin.pages.index')
+        return redirect()->route($this->getRoutePrefix() . '.pages.index')
             ->with('success', 'Page updated successfully!');
     }
 
@@ -118,7 +128,7 @@ class PageController extends Controller
     {
         $page->delete();
 
-        return redirect()->route('admin.pages.index')
+        return redirect()->route($this->getRoutePrefix() . '.pages.index')
             ->with('success', 'Page deleted successfully!');
     }
 }

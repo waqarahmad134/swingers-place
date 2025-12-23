@@ -60,16 +60,26 @@
         <!-- Sidebar -->
         <aside class="min-h-screen md:min-w-[290px] min-w-[70px] items-center gap-5 flex flex-col py-14 bg-[#FFF5F7]">
             <!-- Logo -->
-            <a href="{{ route('admin.dashboard') }}">
+            @php
+                $isAdmin = Auth::user()->is_admin ?? false;
+                $routePrefix = $isAdmin ? 'admin' : 'editor';
+            @endphp
+            <a href="{{ route($routePrefix . '.dashboard') }}">
                 <img src="{{ asset('admin-assets/Logo.png') }}" class="md:hidden block w-[20px]" alt="Logo" />
                 <img src="{{ asset('admin-assets/logo1.png') }}" class="md:w-[170px] md:block hidden" width="170" alt="Logo" />
             </a>
             
             <!-- Navigation Tabs -->
             <div class="flex gap-3 md:w-[90%] w-[50px] flex-col">
+                @php
+                    $isAdmin = Auth::user()->is_admin ?? false;
+                    $isEditor = Auth::user()->is_editor ?? false;
+                    $routePrefix = $isAdmin ? 'admin' : 'editor';
+                @endphp
+
                 <!-- Dashboard -->
-                <a href="{{ route('admin.dashboard') }}">
-                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-1 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.dashboard') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                <a href="{{ route($routePrefix . '.dashboard') }}">
+                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-1 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs($routePrefix . '.dashboard') ? 'bg-[#FF8FA3] text-white' : '' }}">
                         <div class="flex items-center gap-3">
                             <i class="ri-dashboard-line text-[20px]"></i>
                             <h2 class="text-[17px] md:block hidden font-normal">Dashboard</h2>
@@ -78,8 +88,8 @@
                 </a>
 
                 <!-- User Management -->
-                <a href="{{ route('admin.users.index') }}">
-                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.users.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                <a href="{{ route($routePrefix . '.users.index') }}">
+                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs($routePrefix . '.users.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
                         <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
                             <img src="{{ asset('admin-assets/Users.png') }}" width="20" alt="Users" />
                             <h2 class="text-[17px] md:block hidden font-normal">User Management</h2>
@@ -87,59 +97,61 @@
                     </div>
                 </a>
 
-                <!-- Verification Center - Hidden for now -->
-                {{-- <a href="{{ route('admin.verification.index') }}">
-                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.verification.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
-                        <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
-                            <img src="{{ asset('admin-assets/verification.png') }}" width="20" alt="Verification" />
-                            <h2 class="text-[17px] md:block hidden font-normal">Verification Center</h2>
+                @if($isAdmin)
+                    <!-- Verification Center - Hidden for now -->
+                    {{-- <a href="{{ route('admin.verification.index') }}">
+                        <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.verification.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                            <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
+                                <img src="{{ asset('admin-assets/verification.png') }}" width="20" alt="Verification" />
+                                <h2 class="text-[17px] md:block hidden font-normal">Verification Center</h2>
+                            </div>
                         </div>
-                    </div>
-                </a> --}}
+                    </a> --}}
 
-                <!-- Reported Users -->
-                <a href="{{ route('admin.reported-users.index') }}">
-                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] group {{ request()->routeIs('admin.reported-users.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
-                        <div class="flex gap-3 hover:text-white items-center">
-                            <img src="{{ asset('admin-assets/report.png') }}" width="20" alt="Report" class="group-hover:brightness-100" />
-                            <h2 class="text-[17px] md:block hidden font-normal">Reported Users</h2>
+                    <!-- Reported Users -->
+                    <a href="{{ route('admin.reported-users.index') }}">
+                        <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] group {{ request()->routeIs('admin.reported-users.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                            <div class="flex gap-3 hover:text-white items-center">
+                                <img src="{{ asset('admin-assets/report.png') }}" width="20" alt="Report" class="group-hover:brightness-100" />
+                                <h2 class="text-[17px] md:block hidden font-normal">Reported Users</h2>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
 
-                <!-- Registration Control -->
-                <a href="{{ route('admin.registration-control.index') }}">
-                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.registration-control.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
-                        <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
-                            <img src="{{ asset('admin-assets/register.png') }}" width="20" alt="Register" />
-                            <h2 class="text-[17px] md:block hidden font-normal">Registration Control</h2>
+                    <!-- Registration Control -->
+                    <a href="{{ route('admin.registration-control.index') }}">
+                        <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.registration-control.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                            <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
+                                <img src="{{ asset('admin-assets/register.png') }}" width="20" alt="Register" />
+                                <h2 class="text-[17px] md:block hidden font-normal">Registration Control</h2>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
 
-                <!-- Content Management -->
-                <a href="{{ route('admin.content-management.index') }}">
-                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.content-management.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
-                        <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
-                            <img src="{{ asset('admin-assets/content.png') }}" width="20" alt="Content" />
-                            <h2 class="text-[17px] md:block hidden font-normal">Content Management</h2>
+                    <!-- Content Management -->
+                    <a href="{{ route('admin.content-management.index') }}">
+                        <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.content-management.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                            <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
+                                <img src="{{ asset('admin-assets/content.png') }}" width="20" alt="Content" />
+                                <h2 class="text-[17px] md:block hidden font-normal">Content Management</h2>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
 
-                <!-- Photo Moderation -->
-                <a href="{{ route('admin.photo-moderation.index') }}">
-                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.photo-moderation.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
-                        <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
-                            <img src="{{ asset('admin-assets/photo.png') }}" width="20" alt="Photo" />
-                            <h2 class="text-[17px] md:block hidden font-normal">Photo Moderation</h2>
+                    <!-- Photo Moderation -->
+                    <a href="{{ route('admin.photo-moderation.index') }}">
+                        <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.photo-moderation.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                            <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
+                                <img src="{{ asset('admin-assets/photo.png') }}" width="20" alt="Photo" />
+                                <h2 class="text-[17px] md:block hidden font-normal">Photo Moderation</h2>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                @endif
 
                 <!-- Pages Management -->
-                <a href="{{ route('admin.pages.index') }}">
-                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.pages.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                <a href="{{ route($routePrefix . '.pages.index') }}">
+                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs($routePrefix . '.pages.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
                         <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
                             <i class="ri-file-text-line text-[20px]"></i>
                             <h2 class="text-[17px] md:block hidden font-normal">Pages Management</h2>
@@ -148,8 +160,8 @@
                 </a>
 
                 <!-- Blog Management -->
-                <a href="{{ route('admin.blog.index') }}">
-                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.blog.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                <a href="{{ route($routePrefix . '.blog.index') }}">
+                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs($routePrefix . '.blog.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
                         <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
                             <i class="ri-article-line text-[20px]"></i>
                             <h2 class="text-[17px] md:block hidden font-normal">Blog Management</h2>
@@ -158,8 +170,8 @@
                 </a>
 
                 <!-- Categories Management -->
-                <a href="{{ route('admin.categories.index') }}">
-                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.categories.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                <a href="{{ route($routePrefix . '.categories.index') }}">
+                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs($routePrefix . '.categories.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
                         <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
                             <i class="ri-folder-line text-[20px]"></i>
                             <h2 class="text-[17px] md:block hidden font-normal">Categories</h2>
@@ -168,8 +180,8 @@
                 </a>
 
                 <!-- Tags Management -->
-                <a href="{{ route('admin.tags.index') }}">
-                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.tags.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                <a href="{{ route($routePrefix . '.tags.index') }}">
+                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs($routePrefix . '.tags.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
                         <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
                             <i class="ri-price-tag-line text-[20px]"></i>
                             <h2 class="text-[17px] md:block hidden font-normal">Tags</h2>
@@ -177,25 +189,27 @@
                     </div>
                 </a>
 
-                <!-- Settings -->
-                <a href="{{ route('admin.settings.general') }}">
-                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.settings.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
-                        <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
-                            <img src="{{ asset('admin-assets/settings.png') }}" width="20" alt="Settings" />
-                            <h2 class="text-[17px] md:block hidden font-normal">Settings</h2>
+                @if($isAdmin)
+                    <!-- Settings -->
+                    <a href="{{ route('admin.settings.general') }}">
+                        <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.settings.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                            <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
+                                <img src="{{ asset('admin-assets/settings.png') }}" width="20" alt="Settings" />
+                                <h2 class="text-[17px] md:block hidden font-normal">Settings</h2>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
 
-                <!-- Deployment -->
-                <a href="{{ route('admin.deployment.index') }}">
-                    <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.deployment.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
-                        <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
-                            <i class="ri-rocket-line text-[20px]"></i>
-                            <h2 class="text-[17px] md:block hidden font-normal">Deployment</h2>
+                    <!-- Deployment -->
+                    <a href="{{ route('admin.deployment.index') }}">
+                        <div class="md:w-[229px] w-full rounded-2xl flex md:justify-start justify-center hover:shadow-md hover:text-white py-2 md:py-3 cursor-pointer md:rounded-3xl md:px-4 transition-all hover:bg-[#FF8FA3] {{ request()->routeIs('admin.deployment.*') ? 'bg-[#FF8FA3] text-white' : '' }}">
+                            <div class="flex gap-3 hover:text-white hover:brightness-[100] items-center">
+                                <i class="ri-rocket-line text-[20px]"></i>
+                                <h2 class="text-[17px] md:block hidden font-normal">Deployment</h2>
+                            </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
+                @endif
             </div>
         </aside>
 

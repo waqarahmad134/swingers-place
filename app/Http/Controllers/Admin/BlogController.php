@@ -8,12 +8,22 @@ use App\Models\Category;
 use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\File;
 
 class BlogController extends Controller
 {
+    /**
+     * Get the correct route prefix based on user role
+     */
+    protected function getRoutePrefix(): string
+    {
+        $user = Auth::user();
+        return ($user && $user->is_editor) ? 'editor' : 'admin';
+    }
+
     public function index(Request $request): View
     {
         $query = Blog::with(['author', 'categories', 'tags'])->latest();
@@ -146,7 +156,7 @@ class BlogController extends Controller
             $blog->tags()->sync($request->tags);
         }
 
-        return redirect()->route('admin.blog.index')
+        return redirect()->route($this->getRoutePrefix() . '.blog.index')
             ->with('success', 'Blog post created successfully!');
     }
 
@@ -283,7 +293,7 @@ class BlogController extends Controller
         $blog->categories()->sync($request->categories ?? []);
         $blog->tags()->sync($request->tags ?? []);
 
-        return redirect()->route('admin.blog.index')
+        return redirect()->route($this->getRoutePrefix() . '.blog.index')
             ->with('success', 'Blog post updated successfully!');
     }
 
@@ -302,7 +312,7 @@ class BlogController extends Controller
         
         $blog->delete();
 
-        return redirect()->route('admin.blog.index')
+        return redirect()->route($this->getRoutePrefix() . '.blog.index')
             ->with('success', 'Blog post deleted successfully!');
     }
 }

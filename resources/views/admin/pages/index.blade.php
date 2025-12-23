@@ -8,7 +8,7 @@
             <h1 class="text-3xl font-extrabold text-secondary">Pages Management</h1>
             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Create and manage unlimited dynamic pages with custom slugs, SEO settings, and templates</p>
         </div>
-        <a href="{{ route('admin.pages.create') }}" class="bg-[#FF8FA3] hover:bg-[#FF7A91] text-white px-6 py-2.5 rounded-xl font-semibold transition-colors flex items-center gap-2 shadow-md hover:shadow-lg">
+        <a href="{{ route(($routePrefix ?? 'admin') . '.pages.create') }}" class="bg-[#FF8FA3] hover:bg-[#FF7A91] text-white px-6 py-2.5 rounded-xl font-semibold transition-colors flex items-center gap-2 shadow-md hover:shadow-lg">
             <i class="ri-file-add-line text-lg"></i>
             <span>Create New Page</span>
         </a>
@@ -67,12 +67,12 @@
                                             </svg>
                                         </a>
                                     @endif
-                                    <a href="{{ route('admin.pages.edit', $page) }}" class="text-primary hover:text-primary-dark" title="Edit Page">
+                                    <a href="{{ route(($routePrefix ?? 'admin') . '.pages.edit', $page) }}" class="text-primary hover:text-primary-dark" title="Edit Page">
                                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                         </svg>
                                     </a>
-                                    <form action="{{ route('admin.pages.destroy', $page) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this page?');">
+                                    <form action="{{ route(($routePrefix ?? 'admin') . '.pages.destroy', $page) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this page?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-800" title="Delete Page">
@@ -87,7 +87,7 @@
                     @empty
                         <tr>
                             <td colspan="6" class="px-6 py-12 text-center text-sm text-gray-500 dark:text-gray-400">
-                                No pages found. <a href="{{ route('admin.pages.create') }}" class="text-primary hover:underline">Create your first page</a>
+                                No pages found. <a href="{{ route(($routePrefix ?? 'admin') . '.pages.create') }}" class="text-primary hover:underline">Create your first page</a>
                             </td>
                         </tr>
                     @endforelse

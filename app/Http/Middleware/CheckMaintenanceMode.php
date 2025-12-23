@@ -13,17 +13,17 @@ class CheckMaintenanceMode
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Allow admin users to bypass maintenance mode
+        // Allow admin and editor users to bypass maintenance mode
         $user = $request->user();
-        if ($user && (bool) ($user->is_admin ?? false)) {
+        if ($user && ((bool) ($user->is_admin ?? false) || (bool) ($user->is_editor ?? false))) {
             return $next($request);
         }
 
         // Check maintenance mode from config
         $isMaintenanceEnabled = config('app.maintenance_mode', false);
 
-        // Allow access to admin routes even during maintenance
-        if ($isMaintenanceEnabled && !$request->is('admin*') && !$request->is('login') && !$request->is('register')) {
+        // Allow access to admin and editor routes even during maintenance
+        if ($isMaintenanceEnabled && !$request->is('admin*') && !$request->is('editor*') && !$request->is('login') && !$request->is('register')) {
             return response()->view('pages.maintenance', [], 503);
         }
 

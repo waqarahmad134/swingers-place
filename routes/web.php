@@ -292,9 +292,12 @@ Route::middleware('auth')->prefix('albums')->name('albums.')->group(function () 
     Route::delete('/{albumId}/images/{imageId}', [\App\Http\Controllers\AlbumController::class, 'deleteImage'])->name('delete-image');
 });
 
-// Editor Routes (restricted to editors - user management only)
+// Editor Routes (restricted to editors - limited access)
 Route::middleware(['auth', 'editor'])->prefix('editor')->name('editor.')->group(function () {
-    // Users - Editors can only manage users
+    // Dashboard
+    Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    
+    // Users - Editors can manage users
     Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [\App\Http\Controllers\Admin\UserController::class, 'create'])->name('users.create');
     Route::post('/users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
@@ -308,6 +311,18 @@ Route::middleware(['auth', 'editor'])->prefix('editor')->name('editor.')->group(
     Route::post('/users/{user}/toggle-online-status', [\App\Http\Controllers\Admin\UserController::class, 'toggleOnlineStatus'])->name('users.toggle-online-status');
     Route::post('/users/{user}/set-scheduled-offline', [\App\Http\Controllers\Admin\UserController::class, 'setScheduledOffline'])->name('users.set-scheduled-offline');
     Route::post('/users/{user}/toggle-message-block', [\App\Http\Controllers\Admin\UserController::class, 'toggleMessageBlock'])->name('users.toggle-message-block');
+
+    // Pages Management - Editors can manage pages
+    Route::resource('pages', \App\Http\Controllers\Admin\PageController::class);
+
+    // Blog Management - Editors can manage blogs
+    Route::resource('blog', \App\Http\Controllers\Admin\BlogController::class);
+    
+    // Categories Management - Editors can manage categories
+    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+    
+    // Tags Management - Editors can manage tags
+    Route::resource('tags', \App\Http\Controllers\Admin\TagController::class);
 });
 
 // Admin Routes (restricted to admins)

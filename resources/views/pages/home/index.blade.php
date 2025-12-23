@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('full-width')
-    
+    @php
+        use App\Models\HomeContentSection;
+    @endphp
 
 <!-- SECTION: Hero -->
 <section class="relative min-h-screen flex items-center justify-center pb-10 overflow-hidden">
@@ -16,15 +18,15 @@
     <div class="relative z-10 mt-32 flex flex-col text-center px-4">
 
         <h1 class="text-6xl font-['Leckerli_One'] text-white font-thin mb-4 leading-tight">
-            Dating for <br />
-            <span class="text-[#FB4F7B]">Naughty</span> Adults
+            {{ HomeContentSection::getContent('hero_title', 'Dating for') }} <br />
+            <span class="text-[#FB4F7B]">{{ HomeContentSection::getContent('hero_title_highlight', 'Naughty') }}</span> {{ HomeContentSection::getContent('hero_title_ending', 'Adults') }}
         </h1>
 
         <p class="md:text-lg text-sm text-white mb-10">
-            Meet real people nearby who are ready for genuine connections
+            {{ HomeContentSection::getContent('hero_subtitle', 'Meet real people nearby who are ready for genuine connections') }}
         </p>
 
-        <p class="md:text-xl mt-7 text-white font-normal mb-6">Free Sign Up</p>
+        <p class="md:text-xl mt-7 text-white font-normal mb-6">{{ HomeContentSection::getContent('hero_cta_text', 'Free Sign Up') }}</p>
 
         <div class="grid md:grid-cols-2 gap-4 mx-auto">
             <a href="{{ route('register') }}?type=couple">
@@ -68,10 +70,10 @@
 <section class="w-full max-w-[1180px] mx-auto flex flex-col items-center py-20 px-6">
     <div class="text-center mb-10">
         <h2 class="text-4xl font-['Grand_Hotel'] text-[#FB4F7B] mb-3 font-medium">
-            Find the Best Option for You
+            {{ HomeContentSection::getContent('search_title', 'Find the Best Option for You') }}
         </h2>
         <p class="text-lg dark">
-            Search through categories to discover exactly what you need
+            {{ HomeContentSection::getContent('search_description', 'Search through categories to discover exactly what you need') }}
         </p>
     </div>
 
@@ -165,12 +167,10 @@
 <section class="w-full max-w-6xl mx-auto px-6 py-16">
     <div class="text-center mb-12">
         <h2 class="text-4xl font-['Grand_Hotel'] text-[#FB4F7B] mb-6 font-medium">
-            Want to Become a Member?
+            {{ HomeContentSection::getContent('member_title', 'Want to Become a Member?') }}
         </h2>
         <p class="text-lg dark max-w-3xl mx-auto leading-relaxed">
-            Why pay to use a dating app if you could use our platform? Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+            {{ HomeContentSection::getContent('member_description', 'Why pay to use a dating app if you could use our platform? Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.') }}
         </p>
     </div>
 
@@ -181,14 +181,13 @@
                     class="w-full h-full object-cover" />
             </div>
 
-            <h3 class="dark mb-3">100% for FREE</h3>
+            <h3 class="dark mb-3">{{ HomeContentSection::getContent('member_card_1_title', '100% for FREE') }}</h3>
             <p class="text-base dark mb-6">
-                Create your profile and start connecting with singles in your area
-                without paying a dime.
+                {{ HomeContentSection::getContent('member_card_1_description', 'Create your profile and start connecting with singles in your area without paying a dime.') }}
             </p>
             <button
                 class="px-8 py-3 text-sm font-semibold bg-[#FB4F7B] text-white rounded-lg transition duration-300 shadow-xl">
-                Learn More
+                {{ HomeContentSection::getContent('member_card_1_button', 'Learn More') }}
             </button>
         </div>
 
@@ -198,14 +197,13 @@
                     class="w-full h-full object-cover" />
             </div>
 
-            <h3 class="dark mb-3">Matching compatible partner</h3>
+            <h3 class="dark mb-3">{{ HomeContentSection::getContent('member_card_2_title', 'Matching compatible partner') }}</h3>
             <p class="text-base dark mb-6">
-                Our advanced algorithm helps you find the perfect match based on
-                your interests and preferences.
+                {{ HomeContentSection::getContent('member_card_2_description', 'Our advanced algorithm helps you find the perfect match based on your interests and preferences.') }}
             </p>
             <button
                 class="px-8 py-3 text-sm font-semibold bg-[#FB4F7B] text-white rounded-lg transition duration-300 shadow-xl">
-                Learn More
+                {{ HomeContentSection::getContent('member_card_2_button', 'Learn More') }}
             </button>
         </div>
 
@@ -215,14 +213,13 @@
                     class="w-full h-full object-cover" />
             </div>
 
-            <h3 class="dark mb-3">Share experiences</h3>
+            <h3 class="dark mb-3">{{ HomeContentSection::getContent('member_card_3_title', 'Share experiences') }}</h3>
             <p class="text-base dark mb-6">
-                Connect with people who share your passions and create meaningful
-                memories together.
+                {{ HomeContentSection::getContent('member_card_3_description', 'Connect with people who share your passions and create meaningful memories together.') }}
             </p>
             <button
                 class="px-8 py-3 text-sm font-semibold bg-[#FB4F7B] text-white rounded-lg transition duration-300 shadow-xl">
-                Learn More
+                {{ HomeContentSection::getContent('member_card_3_button', 'Learn More') }}
             </button>
         </div>
     </div>
@@ -232,7 +229,7 @@
 <section class="w-full max-w-[890px] mx-auto flex flex-col items-center py-16 mx-auto sm:px-0 px-4">
     <div class="text-center mb-12">
         <h2 class="text-4xl font-['Grand_Hotel'] text-[#FB4F7B] mb-3 font-medium">
-            Your Journey Starts Here
+            {{ HomeContentSection::getContent('journey_title', 'Your Journey Starts Here') }}
         </h2>
     </div>
 
@@ -244,10 +241,9 @@
                 <i class="ri-user-add-line text-2xl"></i>
             </div>
             <div>
-                <h3 class="font-bold mb-1">Sign Up For Free</h3>
+                <h3 class="font-bold mb-1">{{ HomeContentSection::getContent('journey_step_1_title', 'Sign Up For Free') }}</h3>
                 <p class="text-gray-600">
-                    Create your account in seconds and start your journey to finding
-                    love. It's completely free to join.
+                    {{ HomeContentSection::getContent('journey_step_1_description', 'Create your account in seconds and start your journey to finding love. It\'s completely free to join.') }}
                 </p>
             </div>
         </div>
@@ -258,10 +254,9 @@
                 <i class="ri-sparkling-line text-2xl"></i>
             </div>
             <div>
-                <h3 class="font-bold mb-1">Get Matches</h3>
+                <h3 class="font-bold mb-1">{{ HomeContentSection::getContent('journey_step_2_title', 'Get Matches') }}</h3>
                 <p class="text-gray-600">
-                    Our smart matching algorithm will connect you with compatible
-                    singles who share your interests and values.
+                    {{ HomeContentSection::getContent('journey_step_2_description', 'Our smart matching algorithm will connect you with compatible singles who share your interests and values.') }}
                 </p>
             </div>
         </div>
@@ -272,10 +267,9 @@
                 <i class="ri-heart-line text-2xl"></i>
             </div>
             <div>
-                <h3 class="font-bold mb-1">Start Dating</h3>
+                <h3 class="font-bold mb-1">{{ HomeContentSection::getContent('journey_step_3_title', 'Start Dating') }}</h3>
                 <p class="text-gray-600">
-                    Connect with your matches, start conversations, and begin your
-                    journey to finding meaningful relationships.
+                    {{ HomeContentSection::getContent('journey_step_3_description', 'Connect with your matches, start conversations, and begin your journey to finding meaningful relationships.') }}
                 </p>
             </div>
         </div>
@@ -286,10 +280,9 @@
                 <i class="ri-checkbox-circle-line text-2xl"></i>
             </div>
             <div>
-                <h3 class="font-bold mb-1">Find Love</h3>
+                <h3 class="font-bold mb-1">{{ HomeContentSection::getContent('journey_step_4_title', 'Find Love') }}</h3>
                 <p class="text-gray-600">
-                    Build lasting connections and discover the relationship you've
-                    been searching for with someone special.
+                    {{ HomeContentSection::getContent('journey_step_4_description', 'Build lasting connections and discover the relationship you\'ve been searching for with someone special.') }}
                 </p>
             </div>
         </div>
@@ -299,19 +292,17 @@
 <!-- Fifth section -->
 <section class="w-full max-w-6xl mx-auto px-6 py-12 text-center">
     <h2 class="text-4xl font-['Grand_Hotel'] text-[#FB4F7B] mb-6 font-medium">
-        It all starts with a Date
+        {{ HomeContentSection::getContent('date_title', 'It all starts with a Date') }}
     </h2>
 
     <p class="text-lg dark max-w-4xl mx-auto mb-10">
-        You find us, finally, and you are already in love. More than 5,000,000
-        around the world already shared the same experience and uses our system.
-        Joining us today just got easier!
+        {{ HomeContentSection::getContent('date_description', 'You find us, finally, and you are already in love. More than 5,000,000 around the world already shared the same experience and uses our system. Joining us today just got easier!') }}
     </p>
 
     <div class="flex flex-col md:flex-row md:gap-5 gap-4 justify-center items-center mb-20">
         <button
             class="px-8 py-3 text-lg font-semibold bg-[linear-gradient(180deg,#EC003F_0%,#C70036_100%)] hover:bg-[#D94269] text-white rounded-lg transition duration-300 shadow-xl">
-            Join Us FREE
+            {{ HomeContentSection::getContent('date_button', 'Join Us FREE') }}
         </button>
     </div>
 
@@ -320,16 +311,16 @@
             <div class="w-16 h-16 flex items-center justify-center rounded-full mb-4">
                 <img src="./assets/Container (1).png" width="50" alt="" />
             </div>
-            <p class="md:text-3xl text-xl font-bold mb-1 text-[#FB4F7B]">5 MILLION</p>
-            <p class="text-sm font-medium text-gray-500">Users in total</p>
+            <p class="md:text-3xl text-xl font-bold mb-1 text-[#FB4F7B]">{{ HomeContentSection::getContent('date_stat_1_number', '5 MILLION') }}</p>
+            <p class="text-sm font-medium text-gray-500">{{ HomeContentSection::getContent('date_stat_1_label', 'Users in total') }}</p>
         </div>
 
         <div class="flex flex-col items-center">
             <div class="w-16 h-16 flex items-center justify-center mb-4">
                 <i class="ri-group-line text-5xl text-[#FB4F7B]"></i>
             </div>
-            <p class="text-3xl font-bold mb-1 text-[#FB4F7B]">947</p>
-            <p class="text-sm font-medium text-gray-500">Verified online</p>
+            <p class="text-3xl font-bold mb-1 text-[#FB4F7B]">{{ HomeContentSection::getContent('date_stat_2_number', '947') }}</p>
+            <p class="text-sm font-medium text-gray-500">{{ HomeContentSection::getContent('date_stat_2_label', 'Verified online') }}</p>
         </div>
 
         <div class="flex flex-col items-center">
@@ -337,16 +328,16 @@
                 class="w-16 h-16 flex items-center justify-center rounded-full bg-[linear-gradient(180deg,#EC003F_0%,#C70036_100%)] mb-4">
                 <i class="ri-women-line text-3xl text-black"></i>
             </div>
-            <p class="text-3xl font-bold mb-1 text-[#FB4F7B]">530</p>
-            <p class="text-sm font-medium text-gray-500">Female users</p>
+            <p class="text-3xl font-bold mb-1 text-[#FB4F7B]">{{ HomeContentSection::getContent('date_stat_3_number', '530') }}</p>
+            <p class="text-sm font-medium text-gray-500">{{ HomeContentSection::getContent('date_stat_3_label', 'Female users') }}</p>
         </div>
 
         <div class="flex flex-col items-center">
             <div class="w-16 h-16 flex items-center justify-center rounded-full bg-blue-500 mb-4">
                 <i class="ri-men-line text-3xl text-white"></i>
             </div>
-            <p class="text-3xl font-bold mb-1 text-blue-500">417</p>
-            <p class="text-sm font-medium text-gray-500">Male users</p>
+            <p class="text-3xl font-bold mb-1 text-blue-500">{{ HomeContentSection::getContent('date_stat_4_number', '417') }}</p>
+            <p class="text-sm font-medium text-gray-500">{{ HomeContentSection::getContent('date_stat_4_label', 'Male users') }}</p>
         </div>
     </div>
 </section>
@@ -362,11 +353,10 @@
             <div
                 class="absolute inset-x-0 bottom-0 p-4 sm:p-6 bg-gradient-to-t from-black/80 to-transparent h-full flex flex-col justify-end text-left">
                 <h3 class="text-xl text-white sm:text-3xl font-bold mb-2">
-                    Swingers Partner Program
+                    {{ HomeContentSection::getContent('grid_card_1_title', 'Swingers Partner Program') }}
                 </h3>
                 <p class="text-xs sm:text-sm dark">
-                    It's now easier than ever for you to make money... and grow your
-                    business with Swingers - all in one.
+                    {{ HomeContentSection::getContent('grid_card_1_description', 'It\'s now easier than ever for you to make money... and grow your business with Swingers - all in one.') }}
                 </p>
             </div>
         </div>
@@ -375,10 +365,10 @@
             <img src="./assets/grid2.jpg" alt="Dealing With Love" class="w-full h-full object-cover absolute inset-0" />
             <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                 <h3 class="text-sm sm:text-lg font-bold text-white">
-                    Dealing With Love
+                    {{ HomeContentSection::getContent('grid_card_2_title', 'Dealing With Love') }}
                 </h3>
                 <p class="text-[10px] sm:text-xs text-gray-300">
-                    It's now easier than ever for you to make money...
+                    {{ HomeContentSection::getContent('grid_card_2_description', 'It\'s now easier than ever for you to make money...') }}
                 </p>
             </div>
         </div>
@@ -387,10 +377,10 @@
             <img src="./assets/grid3.jpg" alt="Dealing With Love" class="w-full h-full object-cover absolute inset-0" />
             <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                 <h3 class="text-sm sm:text-lg font-bold text-white">
-                    Dealing With Love
+                    {{ HomeContentSection::getContent('grid_card_3_title', 'Dealing With Love') }}
                 </h3>
                 <p class="text-[10px] sm:text-xs text-gray-300">
-                    It's now easier than ever for you to make money...
+                    {{ HomeContentSection::getContent('grid_card_3_description', 'It\'s now easier than ever for you to make money...') }}
                 </p>
             </div>
         </div>
@@ -400,10 +390,10 @@
                 class="w-full h-full object-cover absolute inset-0" />
             <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                 <h3 class="text-sm sm:text-lg font-bold text-white">
-                    Dealing With loneliness
+                    {{ HomeContentSection::getContent('grid_card_4_title', 'Dealing With loneliness') }}
                 </h3>
                 <p class="text-[10px] sm:text-xs text-gray-300">
-                    It's now easier than ever for you to make money...
+                    {{ HomeContentSection::getContent('grid_card_4_description', 'It\'s now easier than ever for you to make money...') }}
                 </p>
             </div>
         </div>
@@ -413,10 +403,10 @@
                 class="w-full h-full object-cover absolute inset-0" />
             <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                 <h3 class="text-sm sm:text-lg font-bold text-white">
-                    Dealing With loneliness
+                    {{ HomeContentSection::getContent('grid_card_5_title', 'Dealing With loneliness') }}
                 </h3>
                 <p class="text-[10px] sm:text-xs text-gray-300">
-                    It's now easier than ever for you to make money...
+                    {{ HomeContentSection::getContent('grid_card_5_description', 'It\'s now easier than ever for you to make money...') }}
                 </p>
             </div>
         </div>
@@ -433,10 +423,10 @@
 
             <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                 <h3 class="text-sm sm:text-lg font-bold text-white">
-                    Dealing With loneliness
+                    {{ HomeContentSection::getContent('grid_card_6_title', 'Dealing With loneliness') }}
                 </h3>
                 <p class="text-[10px] sm:text-xs text-gray-300">
-                    It's now easier than ever for you to make money...
+                    {{ HomeContentSection::getContent('grid_card_6_description', 'It\'s now easier than ever for you to make money...') }}
                 </p>
             </div>
         </div>
@@ -448,11 +438,10 @@
 
             <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                 <h3 class="text-sm sm:text-lg font-bold text-white">
-                    Swingers Partner Program
+                    {{ HomeContentSection::getContent('grid_card_7_title', 'Swingers Partner Program') }}
                 </h3>
                 <p class="text-[10px] sm:text-xs text-gray-300">
-                    It's now easier than ever for you to make money... and grow your
-                    business with Swingers - all in one.
+                    {{ HomeContentSection::getContent('grid_card_7_description', 'It\'s now easier than ever for you to make money... and grow your business with Swingers - all in one.') }}
                 </p>
             </div>
         </div>
@@ -464,10 +453,10 @@
 
             <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                 <h3 class="text-sm sm:text-lg font-bold text-white">
-                    Super Sexperience..
+                    {{ HomeContentSection::getContent('grid_card_8_title', 'Super Sexperience..') }}
                 </h3>
                 <p class="text-[10px] sm:text-xs text-gray-300">
-                    It’s now easier than ever for you to make money…
+                    {{ HomeContentSection::getContent('grid_card_8_description', 'It\'s now easier than ever for you to make money…') }}
                 </p>
             </div>
         </div>
@@ -479,10 +468,10 @@
 
             <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                 <h3 class="text-sm sm:text-lg font-bold text-white">
-                    Travel Journey
+                    {{ HomeContentSection::getContent('grid_card_9_title', 'Travel Journey') }}
                 </h3>
                 <p class="text-[10px] sm:text-xs text-gray-300">
-                    It's now easier than ever for you to make money...
+                    {{ HomeContentSection::getContent('grid_card_9_description', 'It\'s now easier than ever for you to make money...') }}
                 </p>
             </div>
         </div>
@@ -494,10 +483,10 @@
 
             <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                 <h3 class="text-sm sm:text-lg font-bold text-white">
-                    Travel Journey
+                    {{ HomeContentSection::getContent('grid_card_10_title', 'Travel Journey') }}
                 </h3>
                 <p class="text-[10px] sm:text-xs text-gray-300">
-                    It's now easier than ever for you to make money...
+                    {{ HomeContentSection::getContent('grid_card_10_description', 'It\'s now easier than ever for you to make money...') }}
                 </p>
             </div>
         </div>
@@ -509,10 +498,10 @@
 
             <div class="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
                 <h3 class="text-sm sm:text-lg font-bold text-white">
-                    Super Fitness
+                    {{ HomeContentSection::getContent('grid_card_11_title', 'Super Fitness') }}
                 </h3>
                 <p class="text-[10px] sm:text-xs text-gray-300">
-                    It's now easier than ever for you to make money...
+                    {{ HomeContentSection::getContent('grid_card_11_description', 'It\'s now easier than ever for you to make money...') }}
                 </p>
             </div>
         </div>
@@ -523,10 +512,10 @@
     <div class="text-center mt-12">
         <button
             class="px-8 py-3 text-lg font-semibold bg-[#FB4F7B] hover:bg-[#D94269] text-white rounded-lg transition duration-300 shadow-xl">
-            Start Your Love Story Today
+            {{ HomeContentSection::getContent('grid_footer_title', 'Start Your Love Story Today') }}
         </button>
         <p class="text-sm dark mt-4">
-            Over 2,000 success stories this month
+            {{ HomeContentSection::getContent('grid_footer_description', 'Over 2,000 success stories this month') }}
         </p>
     </div>
 </section>

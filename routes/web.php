@@ -351,6 +351,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // Content Management
     Route::get('/content-management', [\App\Http\Controllers\Admin\ContentManagementController::class, 'index'])->name('content-management.index');
     Route::get('/content-management/{id}/edit', [\App\Http\Controllers\Admin\ContentManagementController::class, 'edit'])->name('content-management.edit');
+    Route::put('/content-management/{id}', [\App\Http\Controllers\Admin\ContentManagementController::class, 'update'])->name('content-management.update');
     Route::get('/content-management/{id}/preview', [\App\Http\Controllers\Admin\ContentManagementController::class, 'preview'])->name('content-management.preview');
 
     // Registration Control

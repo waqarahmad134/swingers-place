@@ -11,20 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_likes', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // The user who likes/dislikes
-            $table->foreignId('liked_user_id')->constrained('users')->onDelete('cascade'); // The user being liked/disliked
-            $table->enum('type', ['like', 'dislike'])->default('like'); // like or dislike
-            $table->timestamps();
+        // Check if the table already exists to prevent "Table already exists" error
+        if (!Schema::hasTable('user_likes')) {
+            Schema::create('user_likes', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
+                $table->foreignId('liked_user_id')->constrained('users')->onDelete('cascade'); 
+                $table->enum('type', ['like', 'dislike'])->default('like'); 
+                $table->timestamps();
 
-            // Ensure a user can only have one like/dislike per other user
-            $table->unique(['user_id', 'liked_user_id']);
-            
-            // Index for faster queries
-            $table->index('liked_user_id');
-            $table->index('type');
-        });
+                $table->unique(['user_id', 'liked_user_id']);
+                
+                $table->index('liked_user_id');
+                $table->index('type');
+            });
+        }
     }
 
     /**

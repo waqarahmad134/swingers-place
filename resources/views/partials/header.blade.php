@@ -31,6 +31,11 @@
             'href' => Route::has('home') ? route('home') : url('/'),
             'is_active' => request()->routeIs('home') || request()->is('/'),
         ],
+        [
+            'label' => 'Blog',
+            'href' => Route::has('blog.index') ? route('blog.index') : url('/blog'),
+            'is_active' => request()->routeIs('blog.*'),
+        ],
     ];
     
     $navLinks = array_merge($navLinks, $activePages);
@@ -112,6 +117,13 @@
             <i class="ri-sun-line text-2xl hidden" data-theme-icon="dark"></i>
           </button>
           
+          <!-- Blog Link -->
+          <a href="{{ Route::has('blog.index') ? route('blog.index') : url('/blog') }}" 
+             class="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors {{ request()->routeIs('blog.*') ? 'text-purple-600 dark:text-purple-400' : '' }}" 
+             title="Blog">
+            <i class="ri-article-line text-2xl"></i>
+          </a>
+          
           <!-- Settings Icon -->
           <button id="settings-toggle-btn" class="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors" title="Settings">
             <i class="ri-settings-3-line text-2xl"></i>
@@ -175,12 +187,18 @@
             </div>
           </div>
         @else
-          <!-- Guest: Show Theme Toggle, Login & Sign Up -->
+          <!-- Guest: Show Theme Toggle, Blog, Login & Sign Up -->
           <!-- Theme Toggle -->
           <button id="theme-toggle" data-theme-toggle aria-label="Toggle theme" class="p-2 text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors">
             <i class="ri-moon-line text-2xl" data-theme-icon="light"></i>
             <i class="ri-sun-line text-2xl hidden" data-theme-icon="dark"></i>
           </button>
+          
+          <!-- Blog Link -->
+          <a href="{{ Route::has('blog.index') ? route('blog.index') : url('/blog') }}" 
+             class="text-gray-700 dark:text-gray-300 hover:text-[#9810FA] dark:hover:text-[#E60076] transition-colors font-semibold {{ request()->routeIs('blog.*') ? 'text-[#9810FA] dark:text-[#E60076]' : '' }}">
+            Blog
+          </a>
           
           <a href="{{ route('login') }}" 
              class="border-2 border-[#9810FA] md:py-2 py-1 md:text-base text-sm px-3 md:px-6 rounded-3xl text-[#9810FA] hover:bg-[#9810FA] hover:text-white transition-all">

@@ -52,34 +52,47 @@
 @endpush
 
 @section('content')
-    @include($templateView)
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        @include($templateView)
 
-    {{-- Related Posts --}}
-    @if($relatedBlogs->count() > 0)
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-16">
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Related Posts</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                @foreach($relatedBlogs as $relatedBlog)
-                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow">
-                        @if($relatedBlog->featured_image)
-                            <img src="{{ asset($relatedBlog->featured_image) }}" alt="{{ $relatedBlog->title }}" class="w-full h-48 object-cover">
-                        @endif
-                        <div class="p-6">
-                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                                <a href="{{ url('/blog/' . $relatedBlog->slug) }}" class="hover:text-primary">{{ $relatedBlog->title }}</a>
-                            </h3>
-                            @if($relatedBlog->excerpt)
-                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">{{ Str::limit($relatedBlog->excerpt, 100) }}</p>
+        {{-- Related Posts --}}
+        @if($relatedBlogs->count() > 0)
+            <div class="mt-16">
+                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Related Posts</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    @foreach($relatedBlogs as $relatedBlog)
+                        <article class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-300 group">
+                            @if($relatedBlog->featured_image)
+                                <a href="{{ route('blog.show', $relatedBlog->slug) }}" class="block overflow-hidden">
+                                    <img src="{{ asset($relatedBlog->featured_image) }}" alt="{{ $relatedBlog->title }}" class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                                </a>
+                            @else
+                                <div class="w-full h-48 bg-gradient-to-br from-primary/20 to-secondary/20 dark:from-primary/30 dark:to-secondary/30 flex items-center justify-center">
+                                    <i class="ri-article-line text-6xl text-gray-400 dark:text-gray-500"></i>
+                                </div>
                             @endif
-                            <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                                <span>{{ $relatedBlog->created_at->format('M d, Y') }}</span>
-                                <a href="{{ url('/blog/' . $relatedBlog->slug) }}" class="text-primary hover:underline">Read More →</a>
+                            <div class="p-6">
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+                                    <a href="{{ route('blog.show', $relatedBlog->slug) }}">{{ $relatedBlog->title }}</a>
+                                </h3>
+                                @if($relatedBlog->excerpt)
+                                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">{{ Str::limit($relatedBlog->excerpt, 100) }}</p>
+                                @endif
+                                <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                    <span>{{ $relatedBlog->created_at->format('M d, Y') }}</span>
+                                    <a href="{{ route('blog.show', $relatedBlog->slug) }}" class="text-primary hover:text-secondary font-medium flex items-center gap-1 transition-colors">
+                                        Read More
+                                        <i class="ri-arrow-right-line"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                @endforeach
+                        </article>
+                    @endforeach
+                </div>
             </div>
-        </div>
-    @endif
+        @endif
+    </div>
+</div>
 @endsection
 

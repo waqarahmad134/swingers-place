@@ -131,6 +131,61 @@ SSH
 ssh -p 65002 u756937133@82.29.80.213
 AAaa11@@AAopen2code.com 
 
+====================
+Storage Link Command 
+====================
+
+php artisan storage:link
+
+
+else  
+
+# 1. Go inside your CURRENT storage folder
+cd /home/u756937133/domains/swingers.place/public_html/storage
+
+# 2. Create a "profiles" shortcut that points to your uploads
+# This tells the server: "When someone asks for 'profiles', look in 'app/public/profiles'"
+ln -s app/public/profiles profiles
+ln -s app/public/cover_photos cover_photos
+
+# 3. Fix permissions so the images can load
+chmod -R 755 profiles
+chmod -R 755 cover_photos
+===========================
+
+
+Depoly 
+=======
+
+in root create .htaccess , if allow laravel to work from public
+
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+# Block access to Dotfiles (like .env)
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to Composer files
+<FilesMatch "(^composer\.json|^composer\.lock)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block access to package logs
+<FilesMatch "(^package\.json|^package-lock\.json)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+# Disable Directory Browsing
+Options -Indexes
+
+
+
 ------------------------------------------------------------
 DEPLOYMENT ROUTES (No SSH Required)
 ------------------------------------------------------------
